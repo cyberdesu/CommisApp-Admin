@@ -23,8 +23,8 @@ import { Label } from "@/components/ui/label";
 import { apiClient } from "@/lib/api/client";
 
 const loginSchema = z.object({
-  email: z.email("Email tidak valid"),
-  password: z.string().min(6, "Password minimal 6 karakter"),
+  email: z.email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type LoginValues = z.infer<typeof loginSchema>;
@@ -41,19 +41,19 @@ const highlights = [
     icon: ShieldCheck,
     title: "Secure admin access",
     description:
-      "Lapisan autentikasi untuk menjaga akses dashboard tetap aman dan terkontrol.",
+      "Authentication layer to keep dashboard access secure and controlled.",
   },
   {
     icon: TrendingUp,
     title: "Realtime monitoring",
     description:
-      "Pantau performa bisnis, aktivitas tim, dan insight operasional dalam satu panel.",
+      "Monitor business performance, team activity, and operational insights in one panel.",
   },
   {
     icon: Sparkles,
     title: "Modern workflow",
     description:
-      "Tampilan premium yang cepat, bersih, dan nyaman dipakai untuk kerja harian admin.",
+      "Premium interface that is fast, clean, and comfortable for daily admin tasks.",
   },
 ];
 
@@ -78,12 +78,12 @@ export default function LoginPage() {
       return response.data;
     },
     onSuccess: () => {
-      toast.success("Login berhasil");
+      toast.success("Login successful");
       router.replace("/dashboard");
       router.refresh();
     },
     onError: () => {
-      toast.error("Login gagal, cek email atau password");
+      toast.error("Login failed, please check your email or password");
     },
   });
 
@@ -144,13 +144,12 @@ export default function LoginPage() {
 
                 <div className="space-y-4">
                   <h2 className="max-w-lg text-4xl font-bold leading-tight tracking-tight text-white xl:text-5xl">
-                    Kelola operasional admin dengan tampilan yang lebih modern
-                    dan powerful.
+                    Manage admin operations with a more modern and powerful
+                    interface.
                   </h2>
                   <p className="max-w-xl text-base leading-7 text-slate-400">
-                    Satu dashboard untuk memantau aktivitas, mengelola data, dan
-                    mengambil keputusan lebih cepat dengan workflow yang rapi
-                    dan profesional.
+                    One dashboard to monitor activities, manage data, and make
+                    decisions faster with a neat and professional workflow.
                   </p>
                 </div>
               </div>
@@ -210,7 +209,7 @@ export default function LoginPage() {
                     Welcome back
                   </h2>
                   <p className="text-sm leading-6 text-slate-500">
-                    Masuk ke admin panel untuk mengelola operasional aplikasi.
+                    Log in to the admin panel to manage application operations.
                   </p>
                 </div>
               </div>
@@ -253,7 +252,7 @@ export default function LoginPage() {
                       <Input
                         id="password"
                         type={showPassword ? "text" : "password"}
-                        placeholder="Masukkan password"
+                        placeholder="Enter password"
                         autoComplete="current-password"
                         {...form.register("password")}
                         className="h-11 rounded-lg border-slate-200 bg-white px-3 pr-10 text-sm shadow-sm transition-colors focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20"
@@ -264,8 +263,8 @@ export default function LoginPage() {
                         className="absolute right-3 top-1/2 inline-flex -translate-y-1/2 items-center justify-center text-slate-400 transition hover:text-indigo-600 focus:outline-none"
                         aria-label={
                           showPassword
-                            ? "Sembunyikan password"
-                            : "Tampilkan password"
+                            ? "Hide password"
+                            : "Show password"
                         }
                       >
                         {showPassword ? (

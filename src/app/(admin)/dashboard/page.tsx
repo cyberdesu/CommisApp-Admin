@@ -20,9 +20,8 @@ export default function DashboardPage() {
                 Dashboard overview
               </h1>
               <p className="max-w-xl text-sm leading-6 text-slate-500 sm:text-base">
-                Pantau performa aplikasi, aktivitas operasional, dan insight
-                bisnis utama dalam satu tampilan yang lebih modern, rapi, dan
-                fokus.
+                Monitor app performance, operational activities, and key business
+                insights in one modern, neat, and focused view.
               </p>
             </div>
 
@@ -47,7 +46,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-2xl font-semibold text-slate-900">18.4%</p>
                   <p className="mt-1 text-xs text-slate-500">
-                    +2.1% dari minggu lalu
+                    +2.1% from last week
                   </p>
                 </div>
                 <div className="rounded-md bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-700 border border-emerald-100">
@@ -63,7 +62,7 @@ export default function DashboardPage() {
               <div className="mt-3 flex items-end justify-between gap-3">
                 <div>
                   <p className="text-2xl font-semibold text-slate-900">96.2%</p>
-                  <p className="mt-1 text-xs text-slate-500">SLA tetap stabil</p>
+                  <p className="mt-1 text-xs text-slate-500">SLA remains stable</p>
                 </div>
                 <div className="rounded-md bg-indigo-50 px-2.5 py-1 text-[10px] font-semibold text-indigo-700 border border-indigo-100">
                   Healthy
@@ -80,7 +79,7 @@ export default function DashboardPage() {
             Business snapshot
           </h2>
           <p className="text-sm text-muted-foreground">
-            Ringkasan metrik utama dan tren performa terbaru.
+            Summary of key metrics and latest performance trends.
           </p>
         </div>
 

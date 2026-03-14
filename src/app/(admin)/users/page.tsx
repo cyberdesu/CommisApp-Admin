@@ -256,7 +256,7 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
       {
         label: "Total Users",
         value: total.toLocaleString("id-ID"),
-        detail: "Semua akun terdaftar",
+        detail: "All registered accounts",
         icon: Users,
         color: "text-indigo-600",
         bgColor: "bg-indigo-50",
@@ -265,7 +265,7 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
       {
         label: "Verified",
         value: verifiedCount.toLocaleString("id-ID"),
-        detail: isPartial ? "Pada halaman ini" : "Email verified",
+        detail: isPartial ? "On this page only" : "Email verified",
         icon: CheckCircle2,
         color: "text-emerald-600",
         bgColor: "bg-emerald-50",
@@ -274,7 +274,7 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
       {
         label: "Verified Artists",
         value: verifiedArtistCount.toLocaleString("id-ID"),
-        detail: isPartial ? "Pada halaman ini" : "Artist terverifikasi",
+        detail: isPartial ? "On this page only" : "Verified artists",
         icon: Star,
         color: "text-violet-600",
         bgColor: "bg-violet-50",
@@ -283,7 +283,7 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
       {
         label: "Admin Role",
         value: adminCount.toLocaleString("id-ID"),
-        detail: isPartial ? "Pada halaman ini" : "Akses admin panel",
+        detail: isPartial ? "On this page only" : "Admin panel access",
         icon: ShieldCheck,
         color: "text-amber-600",
         bgColor: "bg-amber-50",
@@ -428,14 +428,14 @@ export default function UsersPage() {
       return response.data;
     },
     onSuccess: () => {
-      toast.success("User berhasil diupdate");
+      toast.success("User updated successfully");
       setEditOpen(false);
       setSelectedUserId(null);
       void queryClient.invalidateQueries({ queryKey: ["users"] });
       void queryClient.invalidateQueries({ queryKey: ["user-detail"] });
     },
     onError: () => {
-      toast.error("Gagal update user. Coba lagi.");
+      toast.error("Failed to update user. Please try again.");
     },
   });
 
@@ -445,12 +445,12 @@ export default function UsersPage() {
       return response.data;
     },
     onSuccess: () => {
-      toast.success("User berhasil dihapus");
+      toast.success("User deleted successfully");
       setDeleteTarget(null);
       void queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: () => {
-      toast.error("Gagal menghapus user. Coba lagi.");
+      toast.error("Failed to delete user. Please try again.");
     },
   });
 
@@ -464,13 +464,13 @@ export default function UsersPage() {
     onSuccess: (_data, variables) => {
       toast.success(
         variables.verified
-          ? "Verifikasi dibatalkan"
-          : "User berhasil diverifikasi",
+          ? "Verification revoked"
+          : "User verified successfully",
       );
       void queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: () => {
-      toast.error("Gagal update status verifikasi");
+      toast.error("Failed to update verification status");
     },
   });
 
@@ -559,18 +559,18 @@ export default function UsersPage() {
               User Management
             </div>
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-              Kelola Users
+              Manage Users
             </h1>
             <p className="max-w-xl text-sm leading-relaxed text-slate-400 md:text-base">
-              Cari, filter, edit, dan kelola akun user terdaftar secara langsung dari admin panel.
+              Search, filter, edit, and manage registered user accounts directly from the admin panel.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
             {[
               { label: "Database", value: "Prisma + Supabase" },
-              { label: "Media", value: "MinIO Store" },
-              { label: "Real-time", value: "Live Data" },
+              { label: "Storage", value: "MinIO Store" },
+              { label: "Status", value: "Live Data" },
             ].map(({ label, value }) => (
               <div
                 key={label}
@@ -599,12 +599,12 @@ export default function UsersPage() {
             <CardDescription className="text-sm text-zinc-500">
               {total > 0 ? (
                 <>
-                  <span className="font-semibold text-zinc-700">{total.toLocaleString("id-ID")}</span>{" "}
-                  user terdaftar
-                  {hasActiveFilters && " · filter aktif"}
+                  <span className="font-semibold text-zinc-700">{total.toLocaleString("en-US")}</span>{" "}
+                  registered users
+                  {hasActiveFilters && " · filters active"}
                 </>
               ) : (
-                "Search, filter, dan kelola akun user terdaftar."
+                "Search, filter, and manage registered user accounts."
               )}
             </CardDescription>
           </div>
@@ -618,7 +618,7 @@ export default function UsersPage() {
                 <Input
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  placeholder="Cari nama, username, email..."
+                  placeholder="Search name, username, email..."
                   className="h-10 rounded-xl border-zinc-200 bg-zinc-50 pl-9 pr-8 text-sm placeholder:text-zinc-400 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
                 />
                 {searchInput && (
@@ -635,7 +635,7 @@ export default function UsersPage() {
                 type="submit"
                 className="h-10 rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-700"
               >
-                Cari
+                Search
               </Button>
             </form>
 
@@ -652,7 +652,7 @@ export default function UsersPage() {
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-zinc-200 bg-white">
-                  <SelectItem value="all">Semua Role</SelectItem>
+                  <SelectItem value="all">All Roles</SelectItem>
                   <SelectItem value="user">User</SelectItem>
                   <SelectItem value="artist">Artist</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
@@ -671,9 +671,9 @@ export default function UsersPage() {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-zinc-200 bg-white">
-                  <SelectItem value="all">Semua Status</SelectItem>
+                  <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="true">Verified</SelectItem>
-                  <SelectItem value="false">Belum Verified</SelectItem>
+                  <SelectItem value="false">Unverified</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -689,7 +689,7 @@ export default function UsersPage() {
                     setPage(1);
                   }}
                 >
-                  Reset
+                  Clear
                 </Button>
               )}
             </div>
@@ -705,12 +705,12 @@ export default function UsersPage() {
                 <Users className="size-8" />
               </div>
               <h3 className="mt-5 text-base font-semibold text-zinc-900">
-                Tidak ada user ditemukan
+                No users found
               </h3>
               <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-zinc-500">
                 {hasActiveFilters
-                  ? "Coba ubah kata kunci pencarian atau reset filter."
-                  : "Belum ada user terdaftar di sistem."}
+                  ? "Try adjusting your search query or clearing the filters."
+                  : "No users have been registered yet."}
               </p>
               {hasActiveFilters && (
                 <Button
@@ -724,7 +724,7 @@ export default function UsersPage() {
                     setPage(1);
                   }}
                 >
-                  Reset Filter
+                  Clear Filters
                 </Button>
               )}
             </div>
@@ -741,13 +741,13 @@ export default function UsersPage() {
                         Role
                       </TableHead>
                       <TableHead className="hidden px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500 sm:table-cell">
-                        Verifikasi
+                        Verification
                       </TableHead>
                       <TableHead className="hidden px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500 md:table-cell">
-                        Bergabung
+                        Joined
                       </TableHead>
                       <TableHead className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500">
-                        Aksi
+                        Actions
                       </TableHead>
                     </TableRow>
                   </TableHeader>
@@ -769,7 +769,7 @@ export default function UsersPage() {
                                   <p className="truncate text-sm font-semibold text-zinc-900">
                                     {user.name || (
                                       <span className="italic text-zinc-400">
-                                        No name
+                                        No display name
                                       </span>
                                     )}
                                   </p>
@@ -867,7 +867,7 @@ export default function UsersPage() {
                                   onClick={() => handleOpenView(user)}
                                 >
                                   <Eye className="size-4 text-zinc-500" />
-                                  Lihat detail
+                                  View details
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   className="rounded-xl gap-2 text-sm"
@@ -885,7 +885,7 @@ export default function UsersPage() {
                                   ) : (
                                     <CheckCircle2 className="size-4 text-zinc-500" />
                                   )}
-                                  {user.verified ? "Batalkan verified" : "Set verified"}
+                                  {user.verified ? "Revoke verification" : "Set verified"}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className="my-1" />
                                 <DropdownMenuItem
@@ -893,7 +893,7 @@ export default function UsersPage() {
                                   onClick={() => setDeleteTarget(user)}
                                 >
                                   <Trash2 className="size-4" />
-                                  Hapus user
+                                  Delete user
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -985,10 +985,10 @@ export default function UsersPage() {
             <div className="pointer-events-none absolute -right-8 -top-8 size-40 rounded-full bg-indigo-500/15 blur-2xl" />
             <DialogHeader className="relative gap-1.5">
               <DialogTitle className="text-xl font-semibold text-white">
-                Profile Detail
+                User Profile
               </DialogTitle>
               <DialogDescription className="text-sm text-white/60">
-                Informasi lengkap akun user.
+                Complete account information.
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -1050,7 +1050,7 @@ export default function UsersPage() {
                     { label: "Email", value: activeDetail.email, full: false },
                     { label: "Country", value: activeDetail.country || "—", full: false },
                     {
-                      label: "Bergabung",
+                      label: "Joined",
                       value: formatDate(activeDetail.createdAt, true),
                       full: false,
                     },
@@ -1083,14 +1083,14 @@ export default function UsersPage() {
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-zinc-600">
                     {activeDetail.bio || (
-                      <span className="italic text-zinc-400">Belum ada bio.</span>
+                      <span className="italic text-zinc-400">No bio yet.</span>
                     )}
                   </p>
                 </div>
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 p-8 text-center text-sm text-zinc-500">
-                Detail user tidak tersedia.
+                User details not available.
               </div>
             )}
           </div>
@@ -1104,7 +1104,7 @@ export default function UsersPage() {
                 setSelectedUserId(null);
               }}
             >
-              Tutup
+              Close
             </Button>
             <Button
               className="rounded-xl bg-indigo-600 text-sm text-white hover:bg-indigo-500"
@@ -1141,7 +1141,7 @@ export default function UsersPage() {
                 Edit User
               </DialogTitle>
               <DialogDescription className="text-sm text-white/60">
-                Update data user langsung dari admin panel.
+                Update user data directly from the admin panel.
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -1160,8 +1160,8 @@ export default function UsersPage() {
                 <div className="flex gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm text-indigo-800">
                   <Sparkles className="mt-0.5 size-4 shrink-0 text-indigo-500" />
                   <p>
-                    Avatar dan banner dikelola via MinIO. Untuk mengubah media,
-                    arahkan upload ke MinIO terlebih dahulu.
+                    Avatars and banners are managed via MinIO. To update media,
+                    direct uploads to MinIO storage first.
                   </p>
                 </div>
 
@@ -1238,7 +1238,7 @@ export default function UsersPage() {
                       id="edit-country"
                       value={form.country}
                       onChange={(e) => patchForm("country", e.target.value)}
-                      placeholder="Contoh: Indonesia"
+                      placeholder="e.g. Indonesia"
                       className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
                     />
                   </div>
@@ -1299,7 +1299,7 @@ export default function UsersPage() {
                   <Label htmlFor="edit-bio" className="text-sm font-medium text-zinc-700">
                     Bio
                     <span className="ml-2 text-xs font-normal text-zinc-400">
-                      ({form.bio.length} karakter)
+                      ({form.bio.length} characters)
                     </span>
                   </Label>
                   <textarea
@@ -1307,7 +1307,7 @@ export default function UsersPage() {
                     value={form.bio}
                     onChange={(e) => patchForm("bio", e.target.value)}
                     rows={4}
-                    placeholder="Deskripsi singkat tentang user..."
+                    placeholder="Short description about the user..."
                     className="w-full resize-none rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 transition-all focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                   />
                 </div>
@@ -1325,7 +1325,7 @@ export default function UsersPage() {
                 setSelectedUserId(null);
               }}
             >
-              Batal
+              Cancel
             </Button>
             <Button
               className="rounded-xl bg-indigo-600 text-sm text-white hover:bg-indigo-500 disabled:opacity-50"
@@ -1338,10 +1338,10 @@ export default function UsersPage() {
               {updateMutation.isPending ? (
                 <>
                   <span className="mr-2 size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                  Menyimpan...
+                  Saving...
                 </>
               ) : (
-                "Simpan Perubahan"
+                "Save Changes"
               )}
             </Button>
           </DialogFooter>
@@ -1405,7 +1405,7 @@ export default function UsersPage() {
               className="rounded-xl border-zinc-200 bg-white text-sm"
               onClick={() => setDeleteTarget(null)}
             >
-              Batal
+              Cancel
             </Button>
             <Button
               variant="destructive"
@@ -1419,12 +1419,12 @@ export default function UsersPage() {
               {deleteMutation.isPending ? (
                 <>
                   <span className="mr-2 size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                  Menghapus...
+                  Deleting...
                 </>
               ) : (
                 <>
                   <Trash2 className="size-4" />
-                  Hapus User
+                  Delete User
                 </>
               )}
             </Button>

@@ -168,10 +168,10 @@ export default function ShowcasesPage() {
         <CardHeader className="flex flex-col gap-4 border-b border-slate-100 pb-5 pt-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-1">
             <CardTitle className="text-xl font-bold tracking-tight text-slate-900">
-              Semua Karya
+              All Works
             </CardTitle>
             <CardDescription className="text-sm text-slate-500">
-              Review katalog showcase dari semua user teratur secara kronologis.
+              Review showcase catalogs from all users arranged chronologically.
             </CardDescription>
           </div>
 
@@ -184,7 +184,7 @@ export default function ShowcasesPage() {
               <Input
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}
-                placeholder="Cari judul showcase..."
+                placeholder="Search showcase title..."
                 className="h-10 rounded-lg border-slate-200 bg-white pl-10 text-sm placeholder:text-slate-400 focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20 shadow-sm"
               />
             </div>
@@ -208,11 +208,11 @@ export default function ShowcasesPage() {
                 <Filter className="size-8" />
               </div>
               <h3 className="mt-5 text-lg font-semibold text-black">
-                Tidak ada showcase ditemukan
+                No showcases found
               </h3>
               <p className="mt-2 max-w-sm text-sm leading-relaxed text-black/50">
-                Pencarian Anda belum membuahkan hasil. Coba gunakan kata kunci
-                yang lain atau bersihkan filter.
+                Your search yielded no results. Try using different keywords
+                or clear the filters.
               </p>
             </div>
           ) : (

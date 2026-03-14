@@ -13,25 +13,25 @@ const settingGroups = [
   {
     title: "Appearance",
     description:
-      "Kelola tema admin panel, branding, dan preferensi tampilan antarmuka.",
+      "Manage admin panel themes, branding, and interface display preferences.",
     icon: Palette,
   },
   {
     title: "Notifications",
     description:
-      "Atur notifikasi email, update pesanan, dan aktivitas penting sistem.",
+      "Configure email notifications, order updates, and important system activities.",
     icon: BellRing,
   },
   {
     title: "Security",
     description:
-      "Konfigurasi akses admin, autentikasi, dan proteksi akun dashboard.",
+      "Configure admin access, authentication, and dashboard account protection.",
     icon: ShieldCheck,
   },
   {
     title: "Access Control",
     description:
-      "Atur role, permission, dan kebijakan penggunaan untuk tim internal.",
+      "Manage roles, permissions, and usage policies for internal teams.",
     icon: LockKeyhole,
   },
 ];
@@ -49,12 +49,12 @@ export default function SettingsPage() {
 
             <div className="space-y-2 max-w-2xl">
               <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Pengaturan Panel Admin
+                Admin Panel Settings
               </h1>
               <p className="text-sm leading-6 text-slate-500 md:text-base">
-                Halaman ini disiapkan untuk mengontrol berbagai preferensi. Saat ini
-                tampilannya menggunakan UI minimalist dan elegan untuk integrasi 
-                fungsionalitas mendatang.
+                This page is prepared to control various preferences. Currently,
+                the interface uses a minimalist and elegant design for future
+                functional integration.
               </p>
             </div>
           </div>
@@ -91,7 +91,7 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="p-6 pt-4">
               <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                Modul ini belum diaktifkan, tapi layout dan entry point sudah tersedia.
+                This module is not yet activated, but the layout and entry point are available.
               </div>
             </CardContent>
           </Card>
