@@ -750,13 +750,13 @@ export default function UsersPage() {
           if (!open) setSelectedUserId(null);
         }}
       >
-        <DialogContent className="max-w-2xl rounded-[28px] border border-zinc-200 bg-white p-0">
+        <DialogContent className="max-w-2xl rounded-[28px] border border-zinc-200 bg-white p-0" showCloseButton={false}>
           <div className="border-b border-zinc-100 bg-linear-to-r from-black to-zinc-900 p-6 text-white">
             <DialogHeader className="gap-2">
               <DialogTitle className="text-2xl font-semibold tracking-tight text-white">
                 User Detail
               </DialogTitle>
-              <DialogDescription className="text-sm text-white/70">
+              <DialogDescription className="text-sm text-white/90">
                 Informasi lengkap user dari data real.
               </DialogDescription>
             </DialogHeader>
@@ -853,6 +853,30 @@ export default function UsersPage() {
               </div>
             )}
           </div>
+
+          <DialogFooter className="mx-0 mb-0 rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80">
+            <Button
+              variant="outline"
+              className="rounded-xl border-zinc-200 bg-white"
+              onClick={() => {
+                setViewOpen(false);
+                setSelectedUserId(null);
+              }}
+            >
+              Tutup
+            </Button>
+            <Button
+              className="rounded-xl bg-indigo-600 text-white hover:bg-indigo-500"
+              disabled={!activeDetail}
+              onClick={() => {
+                if (activeDetail) handleOpenEdit(activeDetail);
+                setViewOpen(false);
+              }}
+            >
+              <Pencil className="size-4" />
+              Edit User
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -863,13 +887,13 @@ export default function UsersPage() {
           if (!open) setSelectedUserId(null);
         }}
       >
-        <DialogContent className="max-w-3xl rounded-[28px] border border-zinc-200 bg-white p-0">
+        <DialogContent className="max-w-3xl rounded-[28px] border border-zinc-200 bg-white p-0" showCloseButton={false}>
           <div className="border-b border-zinc-100 bg-linear-to-r from-black to-zinc-900 p-6 text-white">
             <DialogHeader className="gap-2">
               <DialogTitle className="text-2xl font-semibold tracking-tight text-white">
                 Edit User
               </DialogTitle>
-              <DialogDescription className="text-sm text-white/70">
+              <DialogDescription className="text-sm text-white/90">
                 Update data user langsung dari admin panel.
               </DialogDescription>
             </DialogHeader>
@@ -885,7 +909,7 @@ export default function UsersPage() {
             ) : (
               <>
                 {activeDetail ? (
-                  <div className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-900/70">
+                  <div className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-800">
                     Avatar dan banner di sistem utama diasumsikan menggunakan
                     object path dari MinIO. Kalau nanti mau edit media user,
                     sebaiknya flow upload diarahkan ke storage MinIO terlebih
@@ -941,17 +965,26 @@ export default function UsersPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="role">Role</Label>
-                    <Input
-                      id="role"
+                    <Select
                       value={form.role}
-                      onChange={(event) =>
-                        setForm((current) => ({
-                          ...current,
-                          role: event.target.value,
-                        }))
-                      }
-                      className="h-11 rounded-2xl"
-                    />
+                      onValueChange={(val) => {
+                        if (val)
+                          setForm((current) => ({ ...current, role: val }));
+                      }}
+                    >
+                      <SelectTrigger
+                        id="role"
+                        className="h-11 w-full rounded-2xl border-zinc-200 bg-white text-sm text-zinc-900"
+                      >
+                        <SelectValue placeholder="Pilih role" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl border-zinc-200 bg-white">
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="artist">Artist</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="manager">Manager</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-2">
@@ -1044,7 +1077,7 @@ export default function UsersPage() {
             )}
           </div>
 
-          <DialogFooter className="rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80">
+          <DialogFooter className="mx-0 mb-0 rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80">
             <Button
               variant="outline"
               className="rounded-xl border-zinc-200 bg-white"
