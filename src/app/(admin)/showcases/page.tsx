@@ -204,7 +204,7 @@ export default function ShowcasesPage() {
             </div>
           ) : showcases.length === 0 ? (
             <div className="flex flex-col items-center justify-center border-t border-dashed border-black/10 bg-zinc-50/30 px-6 py-20 text-center">
-              <div className="flex size-16 items-center justify-center rounded-3xl bg-orange-50 text-orange-500 shadow-inner">
+              <div className="flex size-16 items-center justify-center rounded-3xl bg-slate-100 text-slate-500 shadow-inner">
                 <Filter className="size-8" />
               </div>
               <h3 className="mt-5 text-lg font-semibold text-black">
@@ -242,7 +242,7 @@ export default function ShowcasesPage() {
                   {showcases.map((item) => (
                     <TableRow
                       key={item.id}
-                      className="border-black/5 transition-colors hover:bg-orange-50/40"
+                      className="border-black/5 transition-colors hover:bg-slate-50/50"
                     >
                       <TableCell className="px-6 py-4 align-top">
                         <div className="min-w-0 space-y-2">
@@ -277,7 +277,7 @@ export default function ShowcasesPage() {
                             @{item.showcase.user.username}
                           </p>
                           {item.showcase.isVerified && (
-                            <Badge className="rounded-full bg-orange-50 px-2 py-0.5 text-[10px] font-semibold text-orange-600 border border-orange-200">
+                            <Badge className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
                               <ShieldCheck className="mr-1 size-3" />
                               Verified Author
                             </Badge>
@@ -292,7 +292,7 @@ export default function ShowcasesPage() {
                             {item.viewCount}
                           </span>
                           <span className="flex items-center gap-1.5" title="Likes">
-                            <Star className="size-4 text-orange-500" />
+                            <Star className="size-4 text-indigo-500" />
                             {item.likeCount}
                           </span>
                         </div>
@@ -310,7 +310,7 @@ export default function ShowcasesPage() {
                             </Badge>
                           )}
                           {item.isFromVerifiedCommission && (
-                            <Badge className="w-fit rounded-full border-orange-200 bg-orange-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-orange-600 hover:bg-orange-100">
+                            <Badge className="w-fit rounded-full border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-indigo-700 hover:bg-indigo-100">
                               Commission
                             </Badge>
                           )}
@@ -324,7 +324,7 @@ export default function ShowcasesPage() {
                               <Button
                                 variant="outline"
                                 size="icon-sm"
-                                className="rounded-[10px] border-black/10 bg-white transition-all hover:border-orange-500 hover:bg-orange-50 hover:text-orange-600"
+                                className="rounded-[10px] border-black/10 bg-white transition-all hover:border-indigo-500 hover:bg-indigo-50 hover:text-indigo-600"
                               />
                             }
                           >
@@ -334,11 +334,11 @@ export default function ShowcasesPage() {
                             align="end"
                             className="w-48 rounded-2xl border border-black/10 bg-white p-1.5 shadow-xl"
                           >
-                            <DropdownMenuItem className="rounded-xl px-3 py-2 text-sm font-medium text-black focus:bg-orange-50 focus:text-orange-600">
+                            <DropdownMenuItem className="rounded-xl px-3 py-2 text-sm font-medium text-black focus:bg-indigo-50 focus:text-indigo-600">
                               <Eye className="mr-2 size-4" />
                               View detail
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="rounded-xl px-3 py-2 text-sm font-medium text-black focus:bg-orange-50 focus:text-orange-600">
+                            <DropdownMenuItem className="rounded-xl px-3 py-2 text-sm font-medium text-black focus:bg-indigo-50 focus:text-indigo-600">
                               <ShieldAlert className="mr-2 size-4" />
                               Moderate content
                             </DropdownMenuItem>

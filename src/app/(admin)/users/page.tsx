@@ -125,11 +125,11 @@ function getRoleBadgeClass(role: string) {
   }
 
   if (value.includes("artist")) {
-    return "bg-orange-500 text-black hover:bg-orange-400";
+    return "bg-indigo-500 text-white hover:bg-indigo-400";
   }
 
   if (value.includes("manager")) {
-    return "bg-orange-100 text-orange-700 hover:bg-orange-100";
+    return "bg-indigo-50 text-indigo-700 hover:bg-indigo-100";
   }
 
   return "bg-zinc-100 text-zinc-700 hover:bg-zinc-100";
@@ -165,7 +165,7 @@ function UserAvatar({
   return (
     <div
       className={cn(
-        "flex size-11 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 font-semibold text-orange-600",
+        "flex size-11 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 font-semibold text-slate-600",
         className,
       )}
     >
@@ -217,7 +217,7 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
       {stats.map(({ label, value, detail, icon: Icon }) => (
         <Card
           key={label}
-          className="rounded-3xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-500/10"
+          className="rounded-3xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/10"
         >
           <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
             <div className="space-y-1">
@@ -228,7 +228,7 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
                 {value}
               </CardTitle>
             </div>
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-orange-500/10 text-orange-600">
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600">
               <Icon className="size-5" />
             </div>
           </CardHeader>
@@ -351,14 +351,7 @@ export default function UsersPage() {
   const quickToggleMutation = useMutation({
     mutationFn: async (user: UserItem) => {
       const response = await apiClient.patch(`/users/${user.id}`, {
-        name: user.name ?? "",
-        username: user.username,
-        email: user.email,
-        role: user.role,
         verified: !user.verified,
-        verifiedArtists: user.verifiedArtists,
-        country: user.country ?? "",
-        bio: user.bio ?? "",
       });
       return response.data;
     },
@@ -529,7 +522,7 @@ export default function UsersPage() {
             <UsersTableSkeleton />
           ) : users.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-zinc-300 bg-zinc-50 px-6 py-12 text-center">
-              <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-orange-50 text-orange-500">
+              <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
                 <Users className="size-7" />
               </div>
               <h3 className="mt-4 text-lg font-semibold text-black">
@@ -566,7 +559,7 @@ export default function UsersPage() {
 
                   <TableBody>
                     {users.map((user) => (
-                      <TableRow key={user.id} className="hover:bg-orange-50/30">
+                      <TableRow key={user.id} className="hover:bg-slate-50/50">
                         <TableCell className="px-4 py-4 align-top">
                           <div className="flex min-w-0 items-start gap-3">
                             <UserAvatar user={user} />
@@ -612,7 +605,7 @@ export default function UsersPage() {
                           <div className="space-y-2">
                             <div className="flex items-center gap-2 text-sm text-zinc-700">
                               {user.verified ? (
-                                <CheckCircle2 className="size-4 text-orange-500" />
+                                <CheckCircle2 className="size-4 text-emerald-500" />
                               ) : (
                                 <XCircle className="size-4 text-zinc-400" />
                               )}
@@ -796,7 +789,7 @@ export default function UsersPage() {
                         {activeDetail.role}
                       </Badge>
                       {activeDetail.verified ? (
-                        <Badge className="rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-black hover:bg-orange-400">
+                        <Badge className="rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-400">
                           Verified
                         </Badge>
                       ) : (
@@ -892,7 +885,7 @@ export default function UsersPage() {
             ) : (
               <>
                 {activeDetail ? (
-                  <div className="rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-black/70">
+                  <div className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-900/70">
                     Avatar dan banner di sistem utama diasumsikan menggunakan
                     object path dari MinIO. Kalau nanti mau edit media user,
                     sebaiknya flow upload diarahkan ke storage MinIO terlebih
@@ -989,7 +982,7 @@ export default function UsersPage() {
                       className={cn(
                         "flex h-11 w-full items-center justify-between rounded-2xl border px-4 text-sm font-medium transition",
                         form.verified
-                          ? "border-orange-300 bg-orange-50 text-orange-700"
+                          ? "border-emerald-300 bg-emerald-50 text-emerald-700"
                           : "border-zinc-200 bg-white text-zinc-700",
                       )}
                     >
@@ -1044,7 +1037,7 @@ export default function UsersPage() {
                         bio: event.target.value,
                       }))
                     }
-                    className="min-h-32 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
+                    className="min-h-32 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
                   />
                 </div>
               </>
@@ -1066,7 +1059,7 @@ export default function UsersPage() {
               Cancel
             </Button>
             <Button
-              className="rounded-xl bg-orange-500 text-black hover:bg-orange-400"
+              className="rounded-xl bg-indigo-600 text-white hover:bg-indigo-500"
               disabled={selectedUserId === null || updateMutation.isPending}
               onClick={() => {
                 if (selectedUserId === null) return;
