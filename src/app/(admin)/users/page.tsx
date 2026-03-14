@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   BadgeCheck,
@@ -12,10 +12,13 @@ import {
   Pencil,
   Search,
   ShieldCheck,
+  Sparkles,
   Star,
   Trash2,
+  TrendingUp,
   UserRound,
   Users,
+  X,
   XCircle,
 } from "lucide-react";
 import {
@@ -49,6 +52,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -69,6 +73,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 type UserItem = {
   id: number;
@@ -112,35 +118,61 @@ type UpdateUserPayload = {
 
 const PAGE_SIZE = 10;
 
-function resolveMediaUrl(path?: string | null) {
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function resolveMediaUrl(path?: string | null): string | null {
   if (!path) return null;
   return path;
 }
 
-function getRoleBadgeClass(role: string) {
+function getRoleConfig(role: string): {
+  className: string;
+  dot: string;
+} {
   const value = role.toLowerCase();
-
   if (value.includes("admin")) {
-    return "bg-black text-white hover:bg-black";
+    return {
+      className: "bg-slate-900 text-white border-slate-800",
+      dot: "bg-white",
+    };
   }
-
   if (value.includes("artist")) {
-    return "bg-indigo-500 text-white hover:bg-indigo-400";
+    return {
+      className: "bg-violet-600 text-white border-violet-700",
+      dot: "bg-violet-200",
+    };
   }
-
   if (value.includes("manager")) {
-    return "bg-indigo-50 text-indigo-700 hover:bg-indigo-100";
+    return {
+      className: "bg-amber-500 text-white border-amber-600",
+      dot: "bg-amber-200",
+    };
   }
-
-  return "bg-zinc-100 text-zinc-700 hover:bg-zinc-100";
+  return {
+    className: "bg-zinc-100 text-zinc-700 border-zinc-200",
+    dot: "bg-zinc-400",
+  };
 }
+
+function formatDate(dateStr: string, withTime = false) {
+  return new Date(dateStr).toLocaleString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    ...(withTime ? { hour: "2-digit", minute: "2-digit" } : {}),
+  });
+}
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 function UserAvatar({
   user,
   className,
+  size = "md",
 }: {
   user: Pick<UserItem, "avatar" | "name" | "username">;
   className?: string;
+  size?: "sm" | "md" | "lg";
 }) {
   const avatarUrl = resolveMediaUrl(user.avatar);
   const fallback = (
@@ -149,23 +181,44 @@ function UserAvatar({
     "U"
   ).toUpperCase();
 
+  const sizeClass = {
+    sm: "size-8 text-xs rounded-xl",
+    md: "size-10 text-sm rounded-2xl",
+    lg: "size-16 text-lg rounded-3xl",
+  }[size];
+
   if (avatarUrl) {
     return (
       <img
         src={avatarUrl}
-        alt={user.name || user.username}
+        alt={user.name ?? user.username}
         className={cn(
-          "size-11 rounded-2xl border border-black/10 object-cover",
+          "border border-black/10 object-cover",
+          sizeClass,
           className,
         )}
       />
     );
   }
 
+  // Generate a deterministic gradient from username
+  const colors = [
+    "from-violet-500 to-indigo-600",
+    "from-rose-500 to-pink-600",
+    "from-amber-500 to-orange-600",
+    "from-emerald-500 to-teal-600",
+    "from-cyan-500 to-blue-600",
+    "from-fuchsia-500 to-purple-600",
+  ];
+  const colorIdx =
+    (user.username?.charCodeAt(0) ?? 0) % colors.length;
+
   return (
     <div
       className={cn(
-        "flex size-11 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 font-semibold text-slate-600",
+        "flex items-center justify-center bg-gradient-to-br font-bold text-white",
+        colors[colorIdx],
+        sizeClass,
         className,
       )}
     >
@@ -174,66 +227,105 @@ function UserAvatar({
   );
 }
 
+// ─── Stats Cards (computed from server-side total + current page slice) ───────
+// NOTE: verified/artist/admin counts are from the current page only.
+// For accurate global counts the API would need to return aggregates.
+// We display a "~" prefix when the total exceeds PAGE_SIZE to communicate this.
+
+interface StatItem {
+  label: string;
+  value: string;
+  detail: string;
+  icon: React.ElementType;
+  color: string;
+  bgColor: string;
+  approximate: boolean;
+}
+
 function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
-  const stats = useMemo(() => {
-    const verifiedCount = users.filter((user) => user.verified).length;
-    const verifiedArtistCount = users.filter(
-      (user) => user.verifiedArtists,
-    ).length;
-    const adminCount = users.filter((user) =>
-      user.role.toLowerCase().includes("admin"),
+  const isPartial = total > users.length;
+
+  const stats: StatItem[] = useMemo(() => {
+    const verifiedCount = users.filter((u) => u.verified).length;
+    const verifiedArtistCount = users.filter((u) => u.verifiedArtists).length;
+    const adminCount = users.filter((u) =>
+      u.role.toLowerCase().includes("admin"),
     ).length;
 
     return [
       {
         label: "Total Users",
         value: total.toLocaleString("id-ID"),
-        detail: "Semua user terdaftar",
+        detail: "Semua akun terdaftar",
         icon: Users,
+        color: "text-indigo-600",
+        bgColor: "bg-indigo-50",
+        approximate: false,
       },
       {
         label: "Verified",
         value: verifiedCount.toLocaleString("id-ID"),
-        detail: "Email/account verified",
+        detail: isPartial ? "Pada halaman ini" : "Email verified",
         icon: CheckCircle2,
+        color: "text-emerald-600",
+        bgColor: "bg-emerald-50",
+        approximate: isPartial,
       },
       {
         label: "Verified Artists",
         value: verifiedArtistCount.toLocaleString("id-ID"),
-        detail: "Artist yang lolos verifikasi",
+        detail: isPartial ? "Pada halaman ini" : "Artist terverifikasi",
         icon: Star,
+        color: "text-violet-600",
+        bgColor: "bg-violet-50",
+        approximate: isPartial,
       },
       {
         label: "Admin Role",
         value: adminCount.toLocaleString("id-ID"),
-        detail: "User dengan akses admin",
+        detail: isPartial ? "Pada halaman ini" : "Akses admin panel",
         icon: ShieldCheck,
+        color: "text-amber-600",
+        bgColor: "bg-amber-50",
+        approximate: isPartial,
       },
     ];
-  }, [total, users]);
+  }, [total, users, isPartial]);
 
   return (
-    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {stats.map(({ label, value, detail, icon: Icon }) => (
+    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {stats.map(({ label, value, detail, icon: Icon, color, bgColor, approximate }) => (
         <Card
           key={label}
-          className="rounded-3xl border border-zinc-200 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/10"
+          className="group relative overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/10"
         >
-          <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+          {/* subtle gradient overlay on hover */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white via-white to-indigo-50/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+          <CardHeader className="relative flex flex-row items-start justify-between space-y-0 pb-2">
             <div className="space-y-1">
-              <CardDescription className="text-xs font-medium uppercase tracking-[0.2em] text-zinc-500">
+              <CardDescription className="text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-400">
                 {label}
               </CardDescription>
-              <CardTitle className="text-3xl font-bold tracking-tight text-black">
+              <CardTitle className="flex items-baseline gap-1 text-3xl font-bold tracking-tight text-slate-900">
+                {approximate && (
+                  <span className="text-base font-semibold text-zinc-400">~</span>
+                )}
                 {value}
               </CardTitle>
             </div>
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600">
+            <div
+              className={cn(
+                "flex size-11 items-center justify-center rounded-2xl",
+                bgColor,
+                color,
+              )}
+            >
               <Icon className="size-5" />
             </div>
           </CardHeader>
-          <CardContent>
-            <p className="text-sm text-zinc-600">{detail}</p>
+          <CardContent className="relative">
+            <p className="text-xs text-zinc-500">{detail}</p>
           </CardContent>
         </Card>
       ))}
@@ -241,34 +333,44 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
   );
 }
 
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
 function UsersTableSkeleton() {
   return (
-    <div className="space-y-3">
-      {Array.from({ length: 6 }).map((_, index) => (
+    <div className="space-y-2">
+      {Array.from({ length: 6 }).map((_, i) => (
         <div
-          key={index}
-          className="grid grid-cols-[1.8fr_1.2fr_1fr_1fr_80px] gap-3 rounded-2xl border border-zinc-200 p-4"
+          key={i}
+          className="flex items-center gap-4 rounded-2xl border border-zinc-100 px-5 py-4"
         >
-          <Skeleton className="h-12 rounded-xl" />
-          <Skeleton className="h-12 rounded-xl" />
-          <Skeleton className="h-12 rounded-xl" />
-          <Skeleton className="h-12 rounded-xl" />
-          <Skeleton className="h-12 rounded-xl" />
+          <Skeleton className="size-10 shrink-0 rounded-2xl" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-3.5 w-36 rounded-full" />
+            <Skeleton className="h-3 w-52 rounded-full" />
+          </div>
+          <Skeleton className="h-6 w-20 rounded-full" />
+          <Skeleton className="h-6 w-24 rounded-full" />
+          <Skeleton className="h-4 w-20 rounded-full" />
+          <Skeleton className="size-8 rounded-xl" />
         </div>
       ))}
     </div>
   );
 }
 
+// ─── Main Page ────────────────────────────────────────────────────────────────
+
 export default function UsersPage() {
   const queryClient = useQueryClient();
 
+  // Search: debounced via form submit
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [roleFilter, setRoleFilter] = useState("all");
   const [verifiedFilter, setVerifiedFilter] = useState("all");
 
+  // Dialogs
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
@@ -284,6 +386,8 @@ export default function UsersPage() {
     country: "",
     bio: "",
   });
+
+  // ── Queries ────────────────────────────────────────────────────────────────
 
   const usersQuery = useQuery({
     queryKey: ["users", { page, search, roleFilter, verifiedFilter }],
@@ -313,6 +417,8 @@ export default function UsersPage() {
     enabled: selectedUserId !== null && (editOpen || viewOpen),
   });
 
+  // ── Mutations ──────────────────────────────────────────────────────────────
+
   const updateMutation = useMutation({
     mutationFn: async (payload: { id: number; data: UpdateUserPayload }) => {
       const response = await apiClient.patch(
@@ -329,7 +435,7 @@ export default function UsersPage() {
       void queryClient.invalidateQueries({ queryKey: ["user-detail"] });
     },
     onError: () => {
-      toast.error("Gagal update user");
+      toast.error("Gagal update user. Coba lagi.");
     },
   });
 
@@ -344,7 +450,7 @@ export default function UsersPage() {
       void queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: () => {
-      toast.error("Gagal menghapus user");
+      toast.error("Gagal menghapus user. Coba lagi.");
     },
   });
 
@@ -355,24 +461,42 @@ export default function UsersPage() {
       });
       return response.data;
     },
-    onSuccess: () => {
-      toast.success("Status verified berhasil diupdate");
+    onSuccess: (_data, variables) => {
+      toast.success(
+        variables.verified
+          ? "Verifikasi dibatalkan"
+          : "User berhasil diverifikasi",
+      );
       void queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: () => {
-      toast.error("Gagal update status verified");
+      toast.error("Gagal update status verifikasi");
     },
   });
+
+  // ── Derived state ──────────────────────────────────────────────────────────
 
   const users = usersQuery.data?.data ?? [];
   const meta = usersQuery.data?.meta;
   const total = meta?.total ?? 0;
   const totalPages = Math.max(meta?.totalPages ?? 1, 1);
+  const activeDetail = detailQuery.data;
 
-  function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const hasActiveFilters =
+    search !== "" || roleFilter !== "all" || verifiedFilter !== "all";
+
+  // ── Handlers ───────────────────────────────────────────────────────────────
+
+  function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setPage(1);
     setSearch(searchInput.trim());
+  }
+
+  function handleClearSearch() {
+    setSearchInput("");
+    setSearch("");
+    setPage(1);
   }
 
   function handleOpenEdit(user: UserItem) {
@@ -398,7 +522,6 @@ export default function UsersPage() {
   function handleDetailSync() {
     const user = detailQuery.data;
     if (!user) return;
-
     setForm({
       name: user.name ?? "",
       username: user.username,
@@ -411,87 +534,121 @@ export default function UsersPage() {
     });
   }
 
-  const activeDetail = detailQuery.data;
+  function patchForm<K extends keyof UpdateUserPayload>(
+    key: K,
+    value: UpdateUserPayload[K],
+  ) {
+    setForm((cur) => ({ ...cur, [key]: value }));
+  }
+
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-col gap-6 p-6 md:flex-row md:items-end md:justify-between md:p-8">
-          <div className="space-y-3">
-            <Badge className="rounded-md bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold text-indigo-700 hover:bg-indigo-100 border-indigo-100">
-              User Management
-            </Badge>
 
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                Kelola User Secara Real
-              </h1>
-              <p className="max-w-2xl text-sm leading-6 text-slate-500 md:text-base">
-                Modul ini terhubung ke data user real. Cari user, lihat detail,
-                edit metadata, ubah status verifikasi, hapus user, dan filter data.
-              </p>
+      {/* ── Hero Banner ─────────────────────────────────── */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 p-8 text-white shadow-lg">
+        {/* decorative blobs */}
+        <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-indigo-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-10 right-1/3 size-48 rounded-full bg-violet-500/15 blur-2xl" />
+
+        <div className="relative flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-500/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-indigo-300">
+              <Sparkles className="size-3.5" />
+              User Management
             </div>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+              Kelola Users
+            </h1>
+            <p className="max-w-xl text-sm leading-relaxed text-slate-400 md:text-base">
+              Cari, filter, edit, dan kelola akun user terdaftar secara langsung dari admin panel.
+            </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                Source Data
-              </p>
-              <p className="mt-1.5 text-base font-semibold text-slate-900">
-                Prisma DB
-              </p>
-            </div>
-            <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                Media
-              </p>
-              <p className="mt-1.5 text-base font-semibold text-slate-900">
-                MinIO Store
-              </p>
-            </div>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+            {[
+              { label: "Database", value: "Prisma + Supabase" },
+              { label: "Media", value: "MinIO Store" },
+              { label: "Real-time", value: "Live Data" },
+            ].map(({ label, value }) => (
+              <div
+                key={label}
+                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm"
+              >
+                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                  {label}
+                </p>
+                <p className="mt-1 text-sm font-semibold text-white">{value}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
+      {/* ── Stats ──────────────────────────────────────── */}
       <StatsCards users={users} total={total} />
 
-      <Card className="rounded-3xl border border-zinc-200 bg-white shadow-sm">
-        <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between border-b border-zinc-100 pb-5">
-          <div className="space-y-1">
-            <CardTitle className="text-xl font-bold text-black">
+      {/* ── Table Card ─────────────────────────────────── */}
+      <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
+        <CardHeader className="flex flex-col gap-4 border-b border-zinc-100 pb-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-0.5">
+            <CardTitle className="text-xl font-bold text-zinc-900">
               Daftar Users
             </CardTitle>
             <CardDescription className="text-sm text-zinc-500">
-              Search, filter dan kelola akun user terdaftar.
+              {total > 0 ? (
+                <>
+                  <span className="font-semibold text-zinc-700">{total.toLocaleString("id-ID")}</span>{" "}
+                  user terdaftar
+                  {hasActiveFilters && " · filter aktif"}
+                </>
+              ) : (
+                "Search, filter, dan kelola akun user terdaftar."
+              )}
             </CardDescription>
           </div>
 
+          {/* Controls */}
           <div className="flex w-full flex-col gap-3 lg:w-auto lg:flex-row lg:items-center">
-            <form
-              onSubmit={handleSearchSubmit}
-              className="flex w-full gap-2 sm:max-w-xs"
-            >
+            {/* Search */}
+            <form onSubmit={handleSearchSubmit} className="flex w-full gap-2 lg:w-72">
               <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
                 <Input
                   value={searchInput}
-                  onChange={(event) => setSearchInput(event.target.value)}
-                  placeholder="Cari user..."
-                  className="h-[38px] rounded-lg border-slate-200 bg-white pl-9 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20 shadow-sm"
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  placeholder="Cari nama, username, email..."
+                  className="h-10 rounded-xl border-zinc-200 bg-zinc-50 pl-9 pr-8 text-sm placeholder:text-zinc-400 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
                 />
+                {searchInput && (
+                  <button
+                    type="button"
+                    onClick={handleClearSearch}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                )}
               </div>
               <Button
                 type="submit"
-                className="h-[38px] rounded-lg bg-indigo-600 px-4 font-semibold text-white hover:bg-indigo-700 shadow-sm"
+                className="h-10 rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-700"
               >
-                Search
+                Cari
               </Button>
             </form>
 
+            {/* Filters */}
             <div className="flex gap-2">
-              <Select value={roleFilter} onValueChange={(val) => { setRoleFilter(val || "all"); setPage(1); }}>
-                <SelectTrigger className="h-[38px] w-[130px] rounded-xl border-zinc-200 bg-white text-sm">
+              <Select
+                value={roleFilter}
+                onValueChange={(val) => {
+                  setRoleFilter(val || "all");
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="h-10 w-[130px] rounded-xl border-zinc-200 bg-zinc-50 text-sm focus:ring-indigo-500/20">
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-zinc-200 bg-white">
@@ -503,238 +660,306 @@ export default function UsersPage() {
                 </SelectContent>
               </Select>
 
-              <Select value={verifiedFilter} onValueChange={(val) => { setVerifiedFilter(val || "all"); setPage(1); }}>
-                <SelectTrigger className="h-[38px] w-[140px] rounded-xl border-zinc-200 bg-white text-sm">
+              <Select
+                value={verifiedFilter}
+                onValueChange={(val) => {
+                  setVerifiedFilter(val || "all");
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="h-10 w-[140px] rounded-xl border-zinc-200 bg-zinc-50 text-sm focus:ring-indigo-500/20">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-zinc-200 bg-white">
                   <SelectItem value="all">Semua Status</SelectItem>
                   <SelectItem value="true">Verified</SelectItem>
-                  <SelectItem value="false">Unverified</SelectItem>
+                  <SelectItem value="false">Belum Verified</SelectItem>
                 </SelectContent>
               </Select>
+
+              {hasActiveFilters && (
+                <Button
+                  variant="outline"
+                  className="h-10 rounded-xl border-zinc-200 bg-zinc-50 text-sm text-zinc-600 hover:bg-zinc-100"
+                  onClick={() => {
+                    setSearchInput("");
+                    setSearch("");
+                    setRoleFilter("all");
+                    setVerifiedFilter("all");
+                    setPage(1);
+                  }}
+                >
+                  Reset
+                </Button>
+              )}
             </div>
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-4">
           {usersQuery.isLoading ? (
             <UsersTableSkeleton />
           ) : users.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-zinc-300 bg-zinc-50 px-6 py-12 text-center">
-              <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
-                <Users className="size-7" />
+            <div className="rounded-3xl border border-dashed border-zinc-200 bg-zinc-50/50 px-8 py-16 text-center">
+              <div className="mx-auto flex size-16 items-center justify-center rounded-3xl bg-white shadow-sm border border-zinc-200 text-zinc-400">
+                <Users className="size-8" />
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-black">
+              <h3 className="mt-5 text-base font-semibold text-zinc-900">
                 Tidak ada user ditemukan
               </h3>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500">
-                Coba ubah kata kunci pencarian atau reset filter untuk melihat
-                data user yang tersedia.
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-zinc-500">
+                {hasActiveFilters
+                  ? "Coba ubah kata kunci pencarian atau reset filter."
+                  : "Belum ada user terdaftar di sistem."}
               </p>
+              {hasActiveFilters && (
+                <Button
+                  variant="outline"
+                  className="mt-5 rounded-xl border-zinc-200"
+                  onClick={() => {
+                    setSearchInput("");
+                    setSearch("");
+                    setRoleFilter("all");
+                    setVerifiedFilter("all");
+                    setPage(1);
+                  }}
+                >
+                  Reset Filter
+                </Button>
+              )}
             </div>
           ) : (
             <>
-              <div className="overflow-hidden rounded-3xl border border-zinc-200">
+              <div className="overflow-hidden rounded-2xl border border-zinc-200/80">
                 <Table>
-                  <TableHeader className="bg-zinc-50">
-                    <TableRow className="hover:bg-zinc-50">
-                      <TableHead className="px-4 py-3 text-xs uppercase tracking-[0.18em] text-zinc-500">
+                  <TableHeader>
+                    <TableRow className="bg-zinc-50/80 hover:bg-zinc-50">
+                      <TableHead className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500">
                         User
                       </TableHead>
-                      <TableHead className="px-4 py-3 text-xs uppercase tracking-[0.18em] text-zinc-500">
+                      <TableHead className="px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500">
                         Role
                       </TableHead>
-                      <TableHead className="px-4 py-3 text-xs uppercase tracking-[0.18em] text-zinc-500">
-                        Status
+                      <TableHead className="hidden px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500 sm:table-cell">
+                        Verifikasi
                       </TableHead>
-                      <TableHead className="px-4 py-3 text-xs uppercase tracking-[0.18em] text-zinc-500">
-                        Created
+                      <TableHead className="hidden px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500 md:table-cell">
+                        Bergabung
                       </TableHead>
-                      <TableHead className="px-4 py-3 text-right text-xs uppercase tracking-[0.18em] text-zinc-500">
-                        Action
+                      <TableHead className="px-5 py-3.5 text-right text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500">
+                        Aksi
                       </TableHead>
                     </TableRow>
                   </TableHeader>
 
                   <TableBody>
-                    {users.map((user) => (
-                      <TableRow key={user.id} className="hover:bg-slate-50/50">
-                        <TableCell className="px-4 py-4 align-top">
-                          <div className="flex min-w-0 items-start gap-3">
-                            <UserAvatar user={user} />
-                            <div className="min-w-0 space-y-1">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <p className="truncate font-semibold text-slate-900">
-                                  {user.name || "No display name"}
+                    {users.map((user) => {
+                      const roleConfig = getRoleConfig(user.role);
+                      return (
+                        <TableRow
+                          key={user.id}
+                          className="group border-zinc-100 transition-colors hover:bg-indigo-50/30"
+                        >
+                          {/* User cell */}
+                          <TableCell className="px-5 py-3.5">
+                            <div className="flex min-w-0 items-center gap-3">
+                              <UserAvatar user={user} size="md" />
+                              <div className="min-w-0">
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  <p className="truncate text-sm font-semibold text-zinc-900">
+                                    {user.name || (
+                                      <span className="italic text-zinc-400">
+                                        No name
+                                      </span>
+                                    )}
+                                  </p>
+                                  {user.verified && (
+                                    <CheckCircle2 className="size-3.5 shrink-0 text-emerald-500" />
+                                  )}
+                                  {user.verifiedArtists && (
+                                    <BadgeCheck className="size-3.5 shrink-0 text-violet-500" />
+                                  )}
+                                </div>
+                                <p className="truncate text-xs text-zinc-400">
+                                  @{user.username}
+                                  {user.country && (
+                                    <span className="ml-1.5 text-zinc-300">·</span>
+                                  )}
+                                  {user.country && (
+                                    <span className="ml-1 text-zinc-400">{user.country}</span>
+                                  )}
                                 </p>
-                                {user.verified ? (
-                                  <Badge className="rounded-md bg-indigo-50 px-1.5 py-0 text-[10px] font-semibold text-indigo-700 hover:bg-indigo-100 border-indigo-100">
-                                    Verified
-                                  </Badge>
-                                ) : null}
-                                {user.verifiedArtists ? (
-                                  <Badge className="rounded-md bg-emerald-50 px-1.5 py-0 text-[10px] font-semibold text-emerald-700 hover:bg-emerald-100 border-emerald-100">
-                                    Artist
-                                  </Badge>
-                                ) : null}
                               </div>
-
-                              <p className="truncate text-sm text-zinc-500">
-                                @{user.username}
-                              </p>
-                              <p className="truncate text-sm text-zinc-500">
-                                {user.email}
-                              </p>
                             </div>
-                          </div>
-                        </TableCell>
+                          </TableCell>
 
-                        <TableCell className="px-4 py-4 align-top">
-                          <Badge
-                            className={cn(
-                              "rounded-full px-3 py-1 text-xs font-semibold",
-                              getRoleBadgeClass(user.role),
-                            )}
-                          >
-                            {user.role}
-                          </Badge>
-                        </TableCell>
-
-                        <TableCell className="px-4 py-4 align-top">
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2 text-sm text-zinc-700">
-                              {user.verified ? (
-                                <CheckCircle2 className="size-4 text-emerald-500" />
-                              ) : (
-                                <XCircle className="size-4 text-zinc-400" />
+                          {/* Role */}
+                          <TableCell className="px-5 py-3.5">
+                            <span
+                              className={cn(
+                                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold",
+                                roleConfig.className,
                               )}
-                              <span>
-                                {user.verified ? "Verified" : "Not verified"}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-zinc-700">
-                              {user.verifiedArtists ? (
-                                <BadgeCheck className="size-4 text-black" />
-                              ) : (
-                                <UserRound className="size-4 text-zinc-400" />
-                              )}
-                              <span>
-                                {user.verifiedArtists
-                                  ? "Verified artist"
-                                  : "Regular user"}
-                              </span>
-                            </div>
-                          </div>
-                        </TableCell>
-
-                        <TableCell className="px-4 py-4 align-top text-sm text-zinc-600">
-                          {new Date(user.createdAt).toLocaleDateString(
-                            "id-ID",
-                            {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            },
-                          )}
-                        </TableCell>
-
-                        <TableCell className="px-4 py-4 text-right align-top">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger
-                              render={
-                                <Button
-                                  variant="outline"
-                                  size="icon-sm"
-                                  className="rounded-xl border-zinc-200 bg-white"
-                                />
-                              }
                             >
-                              <MoreHorizontal className="size-4" />
-                            </DropdownMenuTrigger>
+                              <span
+                                className={cn(
+                                  "size-1.5 rounded-full",
+                                  roleConfig.dot,
+                                )}
+                              />
+                              {user.role}
+                            </span>
+                          </TableCell>
 
-                            <DropdownMenuContent
-                              align="end"
-                              className="w-48 rounded-2xl border border-zinc-200 bg-white p-1.5 shadow-xl"
-                            >
-                              <DropdownMenuItem
-                                className="rounded-xl"
-                                onClick={() => handleOpenView(user)}
-                              >
-                                <Eye className="size-4" />
-                                Lihat detail
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="rounded-xl"
-                                onClick={() => handleOpenEdit(user)}
-                              >
-                                <Pencil className="size-4" />
-                                Edit user
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="rounded-xl"
-                                onClick={() => quickToggleMutation.mutate(user)}
+                          {/* Verification status */}
+                          <TableCell className="hidden px-5 py-3.5 sm:table-cell">
+                            <div className="flex flex-col gap-1">
+                              <span
+                                className={cn(
+                                  "inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium",
+                                  user.verified
+                                    ? "bg-emerald-50 text-emerald-700"
+                                    : "bg-zinc-50 text-zinc-500",
+                                )}
                               >
                                 {user.verified ? (
-                                  <XCircle className="size-4" />
+                                  <CheckCircle2 className="size-3" />
                                 ) : (
-                                  <CheckCircle2 className="size-4" />
+                                  <XCircle className="size-3" />
                                 )}
-                                {user.verified
-                                  ? "Batalkan verified"
-                                  : "Set verified"}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="rounded-xl text-red-600 focus:bg-red-50 focus:text-red-600"
-                                onClick={() => setDeleteTarget(user)}
+                                {user.verified ? "Email verified" : "Not verified"}
+                              </span>
+                              {user.verifiedArtists && (
+                                <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-medium text-violet-700">
+                                  <BadgeCheck className="size-3" />
+                                  Verified artist
+                                </span>
+                              )}
+                            </div>
+                          </TableCell>
+
+                          {/* Joined date */}
+                          <TableCell className="hidden px-5 py-3.5 text-sm text-zinc-500 md:table-cell">
+                            {formatDate(user.createdAt)}
+                          </TableCell>
+
+                          {/* Actions */}
+                          <TableCell className="px-5 py-3.5 text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger
+                                render={
+                                  <Button
+                                    variant="outline"
+                                    size="icon-sm"
+                                    className="rounded-xl border-zinc-200 bg-white opacity-60 transition-opacity group-hover:opacity-100"
+                                  />
+                                }
                               >
-                                <Trash2 className="size-4" />
-                                Hapus user
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                                <MoreHorizontal className="size-4" />
+                              </DropdownMenuTrigger>
+
+                              <DropdownMenuContent
+                                align="end"
+                                className="w-48 rounded-2xl border border-zinc-200 bg-white p-1.5 shadow-xl shadow-black/5"
+                              >
+                                <DropdownMenuItem
+                                  className="rounded-xl gap-2 text-sm"
+                                  onClick={() => handleOpenView(user)}
+                                >
+                                  <Eye className="size-4 text-zinc-500" />
+                                  Lihat detail
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  className="rounded-xl gap-2 text-sm"
+                                  onClick={() => handleOpenEdit(user)}
+                                >
+                                  <Pencil className="size-4 text-zinc-500" />
+                                  Edit user
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  className="rounded-xl gap-2 text-sm"
+                                  onClick={() => quickToggleMutation.mutate(user)}
+                                >
+                                  {user.verified ? (
+                                    <XCircle className="size-4 text-zinc-500" />
+                                  ) : (
+                                    <CheckCircle2 className="size-4 text-zinc-500" />
+                                  )}
+                                  {user.verified ? "Batalkan verified" : "Set verified"}
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator className="my-1" />
+                                <DropdownMenuItem
+                                  className="rounded-xl gap-2 text-sm text-red-600 focus:bg-red-50 focus:text-red-600"
+                                  onClick={() => setDeleteTarget(user)}
+                                >
+                                  <Trash2 className="size-4" />
+                                  Hapus user
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>
 
-              <div className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-zinc-600">
-                  Menampilkan{" "}
-                  <span className="font-semibold text-black">
-                    {users.length}
-                  </span>{" "}
-                  dari <span className="font-semibold text-black">{total}</span>{" "}
-                  user
+              {/* Pagination */}
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-zinc-500">
+                  Halaman{" "}
+                  <span className="font-semibold text-zinc-900">{page}</span>{" "}
+                  dari{" "}
+                  <span className="font-semibold text-zinc-900">{totalPages}</span>
+                  {" "}·{" "}
+                  <span className="font-semibold text-zinc-900">{users.length}</span>{" "}
+                  dari{" "}
+                  <span className="font-semibold text-zinc-900">{total.toLocaleString("id-ID")}</span>{" "}
+                  user ditampilkan
                 </p>
 
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
-                    className="rounded-xl border-zinc-200 bg-white"
-                    disabled={page <= 1}
-                    onClick={() =>
-                      setPage((current) => Math.max(current - 1, 1))
-                    }
+                    size="sm"
+                    className="h-9 rounded-xl border-zinc-200 bg-white text-sm disabled:opacity-40"
+                    disabled={page <= 1 || usersQuery.isFetching}
+                    onClick={() => setPage(1)}
+                  >
+                    ««
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 rounded-xl border-zinc-200 bg-white text-sm disabled:opacity-40"
+                    disabled={page <= 1 || usersQuery.isFetching}
+                    onClick={() => setPage((p) => Math.max(p - 1, 1))}
                   >
                     <ChevronLeft className="size-4" />
                     Prev
                   </Button>
-                  <div className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-black">
-                    Page {page} / {totalPages}
+                  <div className="min-w-[80px] rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-center text-sm font-semibold text-zinc-800">
+                    {page} / {totalPages}
                   </div>
                   <Button
                     variant="outline"
-                    className="rounded-xl border-zinc-200 bg-white"
-                    disabled={page >= totalPages}
-                    onClick={() =>
-                      setPage((current) => Math.min(current + 1, totalPages))
-                    }
+                    size="sm"
+                    className="h-9 rounded-xl border-zinc-200 bg-white text-sm disabled:opacity-40"
+                    disabled={page >= totalPages || usersQuery.isFetching}
+                    onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                   >
                     Next
                     <ChevronRight className="size-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 rounded-xl border-zinc-200 bg-white text-sm disabled:opacity-40"
+                    disabled={page >= totalPages || usersQuery.isFetching}
+                    onClick={() => setPage(totalPages)}
+                  >
+                    »»
                   </Button>
                 </div>
               </div>
@@ -743,6 +968,7 @@ export default function UsersPage() {
         </CardContent>
       </Card>
 
+      {/* ── View Detail Dialog ──────────────────────────── */}
       <Dialog
         open={viewOpen}
         onOpenChange={(open) => {
@@ -750,114 +976,129 @@ export default function UsersPage() {
           if (!open) setSelectedUserId(null);
         }}
       >
-        <DialogContent className="max-w-2xl rounded-[28px] border border-zinc-200 bg-white p-0" showCloseButton={false}>
-          <div className="border-b border-zinc-100 bg-linear-to-r from-black to-zinc-900 p-6 text-white">
-            <DialogHeader className="gap-2">
-              <DialogTitle className="text-2xl font-semibold tracking-tight text-white">
-                User Detail
+        <DialogContent
+          className="flex max-h-[90dvh] w-full max-w-[calc(100%-2rem)] flex-col overflow-hidden rounded-[28px] border border-zinc-200 bg-white p-0 sm:max-w-lg"
+          showCloseButton={false}
+        >
+          {/* Header */}
+          <div className="relative shrink-0 overflow-hidden bg-gradient-to-r from-slate-900 to-indigo-950 p-6">
+            <div className="pointer-events-none absolute -right-8 -top-8 size-40 rounded-full bg-indigo-500/15 blur-2xl" />
+            <DialogHeader className="relative gap-1.5">
+              <DialogTitle className="text-xl font-semibold text-white">
+                Profile Detail
               </DialogTitle>
-              <DialogDescription className="text-sm text-white/90">
-                Informasi lengkap user dari data real.
+              <DialogDescription className="text-sm text-white/60">
+                Informasi lengkap akun user.
               </DialogDescription>
             </DialogHeader>
           </div>
 
-          <div className="p-6">
+          {/* Body */}
+          <div className="flex-1 overflow-y-auto p-6">
             {detailQuery.isLoading ? (
               <div className="space-y-4">
                 <Skeleton className="h-24 rounded-3xl" />
                 <Skeleton className="h-40 rounded-3xl" />
               </div>
             ) : activeDetail ? (
-              <div className="space-y-6">
-                <div className="flex flex-col gap-4 rounded-3xl border border-zinc-200 p-5 sm:flex-row sm:items-center">
-                  <UserAvatar user={activeDetail} className="size-16" />
+              <div className="space-y-5">
+                {/* Profile card */}
+                <div className="flex flex-col gap-4 rounded-3xl border border-zinc-200 bg-zinc-50/50 p-5 sm:flex-row sm:items-start">
+                  <UserAvatar user={activeDetail} size="lg" />
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-xl font-semibold text-black">
-                      {activeDetail.name || "No display name"}
+                    <h3 className="text-lg font-bold text-zinc-900">
+                      {activeDetail.name || (
+                        <span className="italic text-zinc-400">No display name</span>
+                      )}
                     </h3>
-                    <p className="truncate text-sm text-zinc-500">
-                      @{activeDetail.username}
-                    </p>
-                    <div className="mt-2 flex flex-wrap items-center gap-2">
-                      <Badge
+                    <p className="text-sm text-zinc-500">@{activeDetail.username}</p>
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                      {/* Role badge */}
+                      <span
                         className={cn(
-                          "rounded-full px-3 py-1 text-xs font-semibold",
-                          getRoleBadgeClass(activeDetail.role),
+                          "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold",
+                          getRoleConfig(activeDetail.role).className,
                         )}
                       >
+                        <span
+                          className={cn(
+                            "size-1.5 rounded-full",
+                            getRoleConfig(activeDetail.role).dot,
+                          )}
+                        />
                         {activeDetail.role}
-                      </Badge>
-                      {activeDetail.verified ? (
-                        <Badge className="rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white hover:bg-emerald-400">
+                      </span>
+                      {activeDetail.verified && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2.5 py-1 text-[11px] font-semibold text-white">
+                          <CheckCircle2 className="size-3" />
                           Verified
-                        </Badge>
-                      ) : (
-                        <Badge className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700 hover:bg-zinc-100">
-                          Unverified
-                        </Badge>
+                        </span>
+                      )}
+                      {activeDetail.verifiedArtists && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-2.5 py-1 text-[11px] font-semibold text-white">
+                          <BadgeCheck className="size-3" />
+                          Artist
+                        </span>
                       )}
                     </div>
                   </div>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-2xl border border-zinc-200 p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-                      Email
-                    </p>
-                    <p className="mt-2 break-all text-sm font-medium text-black">
-                      {activeDetail.email}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-zinc-200 p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-                      Country
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-black">
-                      {activeDetail.country || "-"}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-zinc-200 p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-                      Created At
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-black">
-                      {new Date(activeDetail.createdAt).toLocaleString("id-ID")}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-zinc-200 p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-                      Artist Status
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-black">
-                      {activeDetail.verifiedArtists
-                        ? "Verified Artist"
-                        : "Regular User"}
-                    </p>
-                  </div>
+                {/* Info grid */}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {[
+                    { label: "Email", value: activeDetail.email, full: false },
+                    { label: "Country", value: activeDetail.country || "—", full: false },
+                    {
+                      label: "Bergabung",
+                      value: formatDate(activeDetail.createdAt, true),
+                      full: false,
+                    },
+                    {
+                      label: "Artist Status",
+                      value: activeDetail.verifiedArtists
+                        ? "Verified Artist ✓"
+                        : "Regular User",
+                      full: false,
+                    },
+                  ].map(({ label, value }) => (
+                    <div
+                      key={label}
+                      className="rounded-2xl border border-zinc-200 bg-white p-4"
+                    >
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                        {label}
+                      </p>
+                      <p className="mt-2 break-all text-sm font-medium text-zinc-800">
+                        {value}
+                      </p>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="rounded-2xl border border-zinc-200 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+                {/* Bio */}
+                <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
                     Bio
                   </p>
-                  <p className="mt-2 text-sm leading-7 text-zinc-700">
-                    {activeDetail.bio || "Belum ada bio."}
+                  <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                    {activeDetail.bio || (
+                      <span className="italic text-zinc-400">Belum ada bio.</span>
+                    )}
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center text-sm text-zinc-500">
+              <div className="rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 p-8 text-center text-sm text-zinc-500">
                 Detail user tidak tersedia.
               </div>
             )}
           </div>
 
-          <DialogFooter className="mx-0 mb-0 rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80">
+          <DialogFooter className="shrink-0 rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80 px-6 py-4">
             <Button
               variant="outline"
-              className="rounded-xl border-zinc-200 bg-white"
+              className="rounded-xl border-zinc-200 bg-white text-sm"
               onClick={() => {
                 setViewOpen(false);
                 setSelectedUserId(null);
@@ -866,7 +1107,7 @@ export default function UsersPage() {
               Tutup
             </Button>
             <Button
-              className="rounded-xl bg-indigo-600 text-white hover:bg-indigo-500"
+              className="rounded-xl bg-indigo-600 text-sm text-white hover:bg-indigo-500"
               disabled={!activeDetail}
               onClick={() => {
                 if (activeDetail) handleOpenEdit(activeDetail);
@@ -880,6 +1121,7 @@ export default function UsersPage() {
         </DialogContent>
       </Dialog>
 
+      {/* ── Edit Dialog ─────────────────────────────────── */}
       <Dialog
         open={editOpen}
         onOpenChange={(open) => {
@@ -887,19 +1129,25 @@ export default function UsersPage() {
           if (!open) setSelectedUserId(null);
         }}
       >
-        <DialogContent className="max-w-3xl rounded-[28px] border border-zinc-200 bg-white p-0" showCloseButton={false}>
-          <div className="border-b border-zinc-100 bg-linear-to-r from-black to-zinc-900 p-6 text-white">
-            <DialogHeader className="gap-2">
-              <DialogTitle className="text-2xl font-semibold tracking-tight text-white">
+        <DialogContent
+          className="flex max-h-[90dvh] w-full max-w-[calc(100%-2rem)] flex-col overflow-hidden rounded-[28px] border border-zinc-200 bg-white p-0 sm:max-w-2xl"
+          showCloseButton={false}
+        >
+          {/* Header */}
+          <div className="relative shrink-0 overflow-hidden bg-gradient-to-r from-slate-900 to-indigo-950 p-6">
+            <div className="pointer-events-none absolute -right-8 -top-8 size-40 rounded-full bg-violet-500/15 blur-2xl" />
+            <DialogHeader className="relative gap-1.5">
+              <DialogTitle className="text-xl font-semibold text-white">
                 Edit User
               </DialogTitle>
-              <DialogDescription className="text-sm text-white/90">
+              <DialogDescription className="text-sm text-white/60">
                 Update data user langsung dari admin panel.
               </DialogDescription>
             </DialogHeader>
           </div>
 
-          <div className="space-y-6 p-6">
+          {/* Body */}
+          <div className="flex-1 overflow-y-auto space-y-5 p-6">
             {detailQuery.isLoading ? (
               <div className="space-y-4">
                 <Skeleton className="h-12 rounded-2xl" />
@@ -908,73 +1156,68 @@ export default function UsersPage() {
               </div>
             ) : (
               <>
-                {activeDetail ? (
-                  <div className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-800">
-                    Avatar dan banner di sistem utama diasumsikan menggunakan
-                    object path dari MinIO. Kalau nanti mau edit media user,
-                    sebaiknya flow upload diarahkan ke storage MinIO terlebih
-                    dahulu.
-                  </div>
-                ) : null}
+                {/* Info banner */}
+                <div className="flex gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm text-indigo-800">
+                  <Sparkles className="mt-0.5 size-4 shrink-0 text-indigo-500" />
+                  <p>
+                    Avatar dan banner dikelola via MinIO. Untuk mengubah media,
+                    arahkan upload ke MinIO terlebih dahulu.
+                  </p>
+                </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
+                {/* Form fields */}
+                <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Display Name</Label>
+                    <Label htmlFor="edit-name" className="text-sm font-medium text-zinc-700">
+                      Display Name
+                    </Label>
                     <Input
-                      id="name"
+                      id="edit-name"
                       value={form.name}
-                      onChange={(event) =>
-                        setForm((current) => ({
-                          ...current,
-                          name: event.target.value,
-                        }))
-                      }
-                      className="h-11 rounded-2xl"
+                      onChange={(e) => patchForm("name", e.target.value)}
+                      placeholder="Full name"
+                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="edit-username" className="text-sm font-medium text-zinc-700">
+                      Username
+                    </Label>
                     <Input
-                      id="username"
+                      id="edit-username"
                       value={form.username}
-                      onChange={(event) =>
-                        setForm((current) => ({
-                          ...current,
-                          username: event.target.value,
-                        }))
-                      }
-                      className="h-11 rounded-2xl"
+                      onChange={(e) => patchForm("username", e.target.value)}
+                      placeholder="@username"
+                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="edit-email" className="text-sm font-medium text-zinc-700">
+                      Email
+                    </Label>
                     <Input
-                      id="email"
+                      id="edit-email"
+                      type="email"
                       value={form.email}
-                      onChange={(event) =>
-                        setForm((current) => ({
-                          ...current,
-                          email: event.target.value,
-                        }))
-                      }
-                      className="h-11 rounded-2xl"
+                      onChange={(e) => patchForm("email", e.target.value)}
+                      placeholder="email@domain.com"
+                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="role">Role</Label>
+                    <Label htmlFor="edit-role" className="text-sm font-medium text-zinc-700">
+                      Role
+                    </Label>
                     <Select
                       value={form.role}
-                      onValueChange={(val) => {
-                        if (val)
-                          setForm((current) => ({ ...current, role: val }));
-                      }}
+                      onValueChange={(val) => { if (val) patchForm("role", val); }}
                     >
                       <SelectTrigger
-                        id="role"
-                        className="h-11 w-full rounded-2xl border-zinc-200 bg-white text-sm text-zinc-900"
+                        id="edit-role"
+                        className="h-11 w-full rounded-2xl border-zinc-200 bg-zinc-50 text-sm text-zinc-900 focus:ring-indigo-500/20"
                       >
                         <SelectValue placeholder="Pilih role" />
                       </SelectTrigger>
@@ -988,167 +1231,202 @@ export default function UsersPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="country">Country</Label>
+                    <Label htmlFor="edit-country" className="text-sm font-medium text-zinc-700">
+                      Country
+                    </Label>
                     <Input
-                      id="country"
+                      id="edit-country"
                       value={form.country}
-                      onChange={(event) =>
-                        setForm((current) => ({
-                          ...current,
-                          country: event.target.value,
-                        }))
-                      }
-                      className="h-11 rounded-2xl"
+                      onChange={(e) => patchForm("country", e.target.value)}
+                      placeholder="Contoh: Indonesia"
+                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
                     />
                   </div>
 
+                  {/* Email Verification toggle */}
                   <div className="space-y-2">
-                    <Label>Email Verification</Label>
+                    <Label className="text-sm font-medium text-zinc-700">
+                      Email Verification
+                    </Label>
                     <button
                       type="button"
-                      onClick={() =>
-                        setForm((current) => ({
-                          ...current,
-                          verified: !current.verified,
-                        }))
-                      }
+                      onClick={() => patchForm("verified", !form.verified)}
                       className={cn(
-                        "flex h-11 w-full items-center justify-between rounded-2xl border px-4 text-sm font-medium transition",
+                        "flex h-11 w-full items-center justify-between rounded-2xl border px-4 text-sm font-medium transition-all duration-200",
                         form.verified
-                          ? "border-emerald-300 bg-emerald-50 text-emerald-700"
-                          : "border-zinc-200 bg-white text-zinc-700",
+                          ? "border-emerald-200 bg-emerald-50 text-emerald-700 ring-2 ring-emerald-100"
+                          : "border-zinc-200 bg-zinc-50 text-zinc-600 hover:border-zinc-300",
                       )}
                     >
-                      <span>{form.verified ? "Verified" : "Not verified"}</span>
+                      <span>{form.verified ? "✓ Email verified" : "Not verified"}</span>
                       {form.verified ? (
-                        <CheckCircle2 className="size-4" />
+                        <CheckCircle2 className="size-4 text-emerald-500" />
                       ) : (
-                        <XCircle className="size-4" />
+                        <XCircle className="size-4 text-zinc-400" />
                       )}
                     </button>
                   </div>
                 </div>
 
+                {/* Artist verification - full width */}
                 <div className="space-y-2">
-                  <Label>Artist Verification</Label>
+                  <Label className="text-sm font-medium text-zinc-700">
+                    Artist Verification
+                  </Label>
                   <button
                     type="button"
-                    onClick={() =>
-                      setForm((current) => ({
-                        ...current,
-                        verifiedArtists: !current.verifiedArtists,
-                      }))
-                    }
+                    onClick={() => patchForm("verifiedArtists", !form.verifiedArtists)}
                     className={cn(
-                      "flex h-11 w-full items-center justify-between rounded-2xl border px-4 text-sm font-medium transition",
+                      "flex h-11 w-full items-center justify-between rounded-2xl border px-4 text-sm font-medium transition-all duration-200",
                       form.verifiedArtists
-                        ? "border-black/10 bg-black text-white"
-                        : "border-zinc-200 bg-white text-zinc-700",
+                        ? "border-violet-200 bg-violet-50 text-violet-700 ring-2 ring-violet-100"
+                        : "border-zinc-200 bg-zinc-50 text-zinc-600 hover:border-zinc-300",
                     )}
                   >
                     <span>
-                      {form.verifiedArtists
-                        ? "Verified Artist"
-                        : "Regular User"}
+                      {form.verifiedArtists ? "✓ Verified Artist" : "Regular User"}
                     </span>
                     {form.verifiedArtists ? (
-                      <BadgeCheck className="size-4" />
+                      <BadgeCheck className="size-4 text-violet-500" />
                     ) : (
-                      <UserRound className="size-4" />
+                      <UserRound className="size-4 text-zinc-400" />
                     )}
                   </button>
                 </div>
 
+                {/* Bio */}
                 <div className="space-y-2">
-                  <Label htmlFor="bio">Bio</Label>
+                  <Label htmlFor="edit-bio" className="text-sm font-medium text-zinc-700">
+                    Bio
+                    <span className="ml-2 text-xs font-normal text-zinc-400">
+                      ({form.bio.length} karakter)
+                    </span>
+                  </Label>
                   <textarea
-                    id="bio"
+                    id="edit-bio"
                     value={form.bio}
-                    onChange={(event) =>
-                      setForm((current) => ({
-                        ...current,
-                        bio: event.target.value,
-                      }))
-                    }
-                    className="min-h-32 w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+                    onChange={(e) => patchForm("bio", e.target.value)}
+                    rows={4}
+                    placeholder="Deskripsi singkat tentang user..."
+                    className="w-full resize-none rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 transition-all focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
                   />
                 </div>
               </>
             )}
           </div>
 
-          <DialogFooter className="mx-0 mb-0 rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80">
+          <DialogFooter className="shrink-0 rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80 px-6 py-4">
             <Button
               variant="outline"
-              className="rounded-xl border-zinc-200 bg-white"
+              className="rounded-xl border-zinc-200 bg-white text-sm"
               onClick={() => {
-                if (detailQuery.data) {
-                  handleDetailSync();
-                }
+                handleDetailSync();
                 setEditOpen(false);
                 setSelectedUserId(null);
               }}
             >
-              Cancel
+              Batal
             </Button>
             <Button
-              className="rounded-xl bg-indigo-600 text-white hover:bg-indigo-500"
+              className="rounded-xl bg-indigo-600 text-sm text-white hover:bg-indigo-500 disabled:opacity-50"
               disabled={selectedUserId === null || updateMutation.isPending}
               onClick={() => {
                 if (selectedUserId === null) return;
-                updateMutation.mutate({
-                  id: selectedUserId,
-                  data: form,
-                });
+                updateMutation.mutate({ id: selectedUserId, data: form });
               }}
             >
-              {updateMutation.isPending ? "Saving..." : "Save Changes"}
+              {updateMutation.isPending ? (
+                <>
+                  <span className="mr-2 size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  Menyimpan...
+                </>
+              ) : (
+                "Simpan Perubahan"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
+      {/* ── Delete Confirm Dialog ───────────────────────── */}
       <Dialog
         open={Boolean(deleteTarget)}
         onOpenChange={(open) => {
           if (!open) setDeleteTarget(null);
         }}
       >
-        <DialogContent className="max-w-lg rounded-[28px] border border-zinc-200 bg-white">
-          <DialogHeader className="gap-3">
-            <div className="flex size-12 items-center justify-center rounded-2xl bg-red-50 text-red-500">
-              <AlertTriangle className="size-6" />
-            </div>
-            <DialogTitle className="text-xl font-semibold text-black">
-              Hapus User
-            </DialogTitle>
-            <DialogDescription className="text-sm leading-6 text-zinc-500">
-              Tindakan ini akan menghapus user{" "}
-              <span className="font-semibold text-black">
-                {deleteTarget?.name || deleteTarget?.username}
-              </span>
-              . Pastikan kamu benar-benar yakin sebelum melanjutkan.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="w-full max-w-[calc(100%-2rem)] rounded-[28px] border border-zinc-200 bg-white p-0 sm:max-w-md">
+          <div className="p-6">
+            <DialogHeader className="gap-4">
+              <div className="flex size-14 items-center justify-center rounded-3xl bg-red-50 text-red-500">
+                <AlertTriangle className="size-7" />
+              </div>
+              <div className="space-y-1">
+                <DialogTitle className="text-xl font-bold text-zinc-900">
+                  Hapus User?
+                </DialogTitle>
+                <DialogDescription className="text-sm leading-relaxed text-zinc-500">
+                  Tindakan ini akan menghapus akun{" "}
+                  <span className="font-semibold text-zinc-900">
+                    {deleteTarget?.name || deleteTarget?.username}
+                  </span>{" "}
+                  secara permanen dan tidak dapat dikembalikan.
+                </DialogDescription>
+              </div>
+            </DialogHeader>
 
-          <DialogFooter className="rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80">
+            {/* User preview card */}
+            {deleteTarget && (
+              <div className="mt-5 flex items-center gap-3 rounded-2xl border border-red-100 bg-red-50/50 p-4">
+                <UserAvatar user={deleteTarget} size="sm" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-zinc-900">
+                    {deleteTarget.name || deleteTarget.username}
+                  </p>
+                  <p className="truncate text-xs text-zinc-500">
+                    {deleteTarget.email}
+                  </p>
+                </div>
+                <span
+                  className={cn(
+                    "shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold",
+                    getRoleConfig(deleteTarget.role).className,
+                  )}
+                >
+                  {deleteTarget.role}
+                </span>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80 px-6 py-4">
             <Button
               variant="outline"
-              className="rounded-xl border-zinc-200 bg-white"
+              className="rounded-xl border-zinc-200 bg-white text-sm"
               onClick={() => setDeleteTarget(null)}
             >
               Batal
             </Button>
             <Button
               variant="destructive"
-              className="rounded-xl"
+              className="rounded-xl text-sm"
               disabled={!deleteTarget || deleteMutation.isPending}
               onClick={() => {
                 if (!deleteTarget) return;
                 deleteMutation.mutate(deleteTarget.id);
               }}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Hapus User"}
+              {deleteMutation.isPending ? (
+                <>
+                  <span className="mr-2 size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  Menghapus...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="size-4" />
+                  Hapus User
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
