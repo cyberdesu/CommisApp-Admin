@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 
 export default async function Home() {
   const cookieStore = await cookies()
-  const hasSession = Boolean(cookieStore.get("admin_access_token")?.value)
+  const hasSession = Boolean(cookieStore.get("admin_session")?.value)
 
   if (hasSession) {
     redirect("/dashboard")

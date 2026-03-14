@@ -162,6 +162,21 @@ export async function GET(req: NextRequest, context: RouteContext) {
   }
 }
 
+import { z } from "zod";
+
+const updateUserSchema = z.object({
+  email: z.string().email("Invalid email format").optional(),
+  username: z.string().min(3, "Username must be at least 3 characters").max(30).optional(),
+  name: z.string().max(50).nullable().optional(),
+  role: z.string().min(1, "Role is required").optional(),
+  bio: z.string().max(500).nullable().optional(),
+  country: z.string().max(100).nullable().optional(),
+  avatar: z.string().nullable().optional(),
+  banner: z.string().nullable().optional(),
+  verified: z.boolean().optional(),
+  verifiedArtists: z.boolean().optional(),
+});
+
 export async function PATCH(req: NextRequest, context: RouteContext) {
   try {
     const admin = await getSessionAdmin(req);
@@ -187,34 +202,31 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     }
 
     const body = await req.json();
+    const validationResult = updateUserSchema.safeParse(body);
 
-    const email = normalizeString(body.email);
-    const username = normalizeString(body.username);
-    const name =
-      typeof body.name === "string" ? body.name.trim() || null : undefined;
-    const role = normalizeString(body.role);
-    const bio =
-      typeof body.bio === "string" ? body.bio.trim() || null : undefined;
-    const country =
-      typeof body.country === "string"
-        ? body.country.trim() || null
-        : undefined;
-    const avatar = normalizeOptionalMediaPath(body.avatar);
-    const banner = normalizeOptionalMediaPath(body.banner);
-
-    const verified =
-      typeof body.verified === "boolean" ? body.verified : undefined;
-    const verifiedArtists =
-      typeof body.verifiedArtists === "boolean"
-        ? body.verifiedArtists
-        : undefined;
-
-    if (body.email !== undefined && !email) {
+    if (!validationResult.success) {
       return NextResponse.json(
-        { message: "Email is required when provided" },
-        { status: 400 },
+        { 
+          message: "Validation failed", 
+          errors: validationResult.error.flatten().fieldErrors 
+        },
+        { status: 400 }
       );
     }
+
+    const validatedData = validationResult.data;
+    
+    // Normalize data (optional string fields should be trimmed)
+    const email = validatedData.email ? normalizeString(validatedData.email) : undefined;
+    const username = validatedData.username ? normalizeString(validatedData.username) : undefined;
+    const name = validatedData.name !== undefined ? (validatedData.name ? validatedData.name.trim() : null) : undefined;
+    const role = validatedData.role ? normalizeString(validatedData.role) : undefined;
+    const bio = validatedData.bio !== undefined ? (validatedData.bio ? validatedData.bio.trim() : null) : undefined;
+    const country = validatedData.country !== undefined ? (validatedData.country ? validatedData.country.trim() : null) : undefined;
+    const avatar = validatedData.avatar !== undefined ? normalizeOptionalMediaPath(validatedData.avatar) : undefined;
+    const banner = validatedData.banner !== undefined ? normalizeOptionalMediaPath(validatedData.banner) : undefined;
+    const verified = validatedData.verified;
+    const verifiedArtists = validatedData.verifiedArtists;
 
     if (body.username !== undefined && !username) {
       return NextResponse.json(

@@ -1,51 +1,71 @@
-import { BellRing, LockKeyhole, Palette, ShieldCheck } from "lucide-react"
+import { BellRing, LockKeyhole, Palette, ShieldCheck, Sparkles } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const settingGroups = [
   {
     title: "Appearance",
-    description: "Kelola tema admin panel, branding, dan preferensi tampilan antarmuka.",
+    description:
+      "Kelola tema admin panel, branding, dan preferensi tampilan antarmuka.",
     icon: Palette,
   },
   {
     title: "Notifications",
-    description: "Atur notifikasi email, update pesanan, dan aktivitas penting sistem.",
+    description:
+      "Atur notifikasi email, update pesanan, dan aktivitas penting sistem.",
     icon: BellRing,
   },
   {
     title: "Security",
-    description: "Konfigurasi akses admin, autentikasi, dan proteksi akun dashboard.",
+    description:
+      "Konfigurasi akses admin, autentikasi, dan proteksi akun dashboard.",
     icon: ShieldCheck,
   },
   {
     title: "Access Control",
-    description: "Atur role, permission, dan kebijakan penggunaan untuk tim internal.",
+    description:
+      "Atur role, permission, dan kebijakan penggunaan untuk tim internal.",
     icon: LockKeyhole,
   },
-]
+];
 
 export default function SettingsPage() {
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl border border-orange-200/70 bg-white p-6 shadow-sm shadow-black/5">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-1">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-orange-500">
-              Admin Settings
-            </p>
-            <h1 className="text-3xl font-black tracking-tight text-black">Pengaturan Panel Admin</h1>
-            <p className="max-w-2xl text-sm text-black/65">
-              Halaman ini sudah disiapkan supaya navigasi admin tidak error. Struktur ini juga siap
-              dipakai untuk pengembangan fitur settings yang lebih lengkap.
-            </p>
+      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300">
+        <div className="flex flex-col gap-6 p-6 md:flex-row md:items-end md:justify-between md:p-8">
+          <div className="space-y-3">
+            <Badge className="rounded-md bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold text-indigo-700 hover:bg-indigo-100 border-indigo-100">
+              <Sparkles className="mr-1.5 inline-block size-3.5" />
+              Admin Configuration
+            </Badge>
+
+            <div className="space-y-2 max-w-2xl">
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                Pengaturan Panel Admin
+              </h1>
+              <p className="text-sm leading-6 text-slate-500 md:text-base">
+                Halaman ini disiapkan untuk mengontrol berbagai preferensi. Saat ini
+                tampilannya menggunakan UI minimalist dan elegan untuk integrasi 
+                fungsionalitas mendatang.
+              </p>
+            </div>
           </div>
 
-          <div className="rounded-2xl border border-black/10 bg-black px-4 py-3 text-white shadow-lg shadow-orange-500/10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-orange-400">
-              Status
+          <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 w-full sm:w-auto">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              Module Status
             </p>
-            <p className="mt-1 text-sm font-medium text-white/90">Ready for implementation</p>
+            <p className="mt-1.5 text-base font-semibold text-slate-900">
+              Ready for Implementation
+            </p>
           </div>
         </div>
       </section>
@@ -54,19 +74,23 @@ export default function SettingsPage() {
         {settingGroups.map(({ title, description, icon: Icon }) => (
           <Card
             key={title}
-            className="rounded-3xl border border-black/10 bg-white py-0 shadow-sm shadow-black/5 transition-all hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-lg hover:shadow-orange-500/10"
+            className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-slate-300 hover:shadow-md"
           >
-            <CardHeader className="px-6 pt-6">
-              <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-orange-500 text-white shadow-md shadow-orange-500/25">
+            <CardHeader className="flex flex-row items-start justify-between gap-4 p-6 pb-2">
+              <div className="space-y-1">
+                <CardTitle className="text-xl font-bold tracking-tight text-slate-900">
+                  {title}
+                </CardTitle>
+                <CardDescription className="text-sm leading-relaxed text-slate-500 mt-1">
+                  {description}
+                </CardDescription>
+              </div>
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-500 border border-slate-100 transition-colors group-hover:bg-indigo-50 group-hover:text-indigo-600 group-hover:border-indigo-100">
                 <Icon className="size-5" />
               </div>
-              <CardTitle className="text-lg font-bold text-black">{title}</CardTitle>
-              <CardDescription className="text-sm leading-6 text-black/65">
-                {description}
-              </CardDescription>
             </CardHeader>
-            <CardContent className="px-6 pb-6 pt-0">
-              <div className="rounded-2xl border border-dashed border-orange-200 bg-orange-50/70 px-4 py-3 text-sm text-black/70">
+            <CardContent className="p-6 pt-4">
+              <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-600">
                 Modul ini belum diaktifkan, tapi layout dan entry point sudah tersedia.
               </div>
             </CardContent>
@@ -74,5 +98,5 @@ export default function SettingsPage() {
         ))}
       </section>
     </div>
-  )
+  );
 }

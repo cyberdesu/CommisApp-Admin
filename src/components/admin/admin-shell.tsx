@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   Sparkles,
   Users,
+  Image as ImageIcon,
 } from "lucide-react";
 
 import { LogoutButton } from "@/components/admin/logout-button";
@@ -44,6 +45,12 @@ const menus = [
     icon: Users,
   },
   {
+    href: "/showcases",
+    label: "Showcases",
+    description: "Manage app showcases",
+    icon: ImageIcon,
+  },
+  {
     href: "/settings",
     label: "Settings",
     description: "Control preferences",
@@ -54,6 +61,7 @@ const menus = [
 function getPageTitle(pathname: string) {
   if (pathname.startsWith("/dashboard")) return "Dashboard Overview";
   if (pathname.startsWith("/users")) return "Users Management";
+  if (pathname.startsWith("/showcases")) return "Showcases Management";
   if (pathname.startsWith("/settings")) return "System Settings";
 
   return "Admin Panel";
@@ -70,53 +78,49 @@ function SidebarContent({
     <div
       className={cn(
         "flex h-full flex-col",
-        mobile ? "bg-black text-white" : "text-white",
+        mobile ? "bg-slate-950 text-slate-100" : "bg-slate-950 text-slate-100",
       )}
     >
-      <div className="border-b border-white/10 px-5 py-5">
+      <div className="border-b border-white/5 px-6 py-6">
         <div className="flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-orange-500 text-black shadow-[0_10px_30px_rgba(249,115,22,0.35)]">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/20">
             <ShieldCheck className="size-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-orange-400">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-400">
               CommisApp
             </p>
-            <h2 className="truncate text-base font-semibold text-white">
+            <h2 className="truncate text-sm font-semibold text-white">
               Admin Console
             </h2>
           </div>
         </div>
 
-        <div className="mt-5 rounded-2xl border border-orange-500/20 bg-white/5 p-4 backdrop-blur">
+        <div className="mt-6 rounded-xl border border-white/5 bg-white/5 p-4 backdrop-blur-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-white/50">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
                 Workspace
               </p>
               <p className="mt-1 text-sm font-semibold text-white">
-                Premium Control Center
+                Main Platform
               </p>
             </div>
-            <Badge className="border border-orange-400/20 bg-orange-500/15 px-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-orange-300">
+            <Badge className="border border-emerald-400/20 bg-emerald-500/10 px-2.5 text-[10px] font-bold uppercase tracking-[0.1em] text-emerald-400 hover:bg-emerald-500/10">
               Live
             </Badge>
           </div>
-          <p className="mt-2 text-xs leading-5 text-white/65">
-            Modern admin experience with a bold orange, black, and white visual
-            system.
-          </p>
         </div>
       </div>
 
-      <div className="flex-1 px-4 py-5">
-        <div className="mb-3 px-2">
-          <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-white/40">
-            Navigation
+      <div className="flex-1 px-4 py-6">
+        <div className="mb-4 px-3">
+          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+            Overview
           </p>
         </div>
 
-        <nav className="space-y-2">
+        <nav className="space-y-1">
           {menus.map(({ href, label, description, icon: Icon }) => {
             const isActive =
               pathname === href || (href !== "/" && pathname.startsWith(href));
@@ -126,48 +130,30 @@ function SidebarContent({
                 key={href}
                 href={href}
                 className={cn(
-                  "group flex items-center gap-3 rounded-2xl border px-3 py-3 transition-all duration-200",
+                  "group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
                   isActive
-                    ? "border-orange-500/40 bg-orange-500 text-black shadow-[0_12px_30px_rgba(249,115,22,0.28)]"
-                    : "border-white/8 bg-white/[0.03] text-white hover:border-orange-500/30 hover:bg-white/[0.07]",
+                    ? "bg-indigo-600/10 text-indigo-400"
+                    : "text-slate-400 hover:bg-white/5 hover:text-slate-200",
                 )}
               >
-                <div
-                  className={cn(
-                    "flex size-11 shrink-0 items-center justify-center rounded-xl border transition-colors",
-                    isActive
-                      ? "border-black/15 bg-black/10 text-black"
-                      : "border-white/10 bg-white/5 text-orange-400 group-hover:border-orange-500/30",
-                  )}
-                >
-                  <Icon className="size-5" />
+                <div className="flex shrink-0 items-center justify-center">
+                  <Icon className={cn("size-5", isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300")} />
                 </div>
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
                     <span
                       className={cn(
-                        "truncate text-sm font-semibold",
-                        isActive ? "text-black" : "text-white",
+                        "truncate text-sm font-medium",
+                        isActive ? "text-indigo-300" : "text-slate-300",
                       )}
                     >
                       {label}
                     </span>
-                    <ChevronRight
-                      className={cn(
-                        "size-4 shrink-0 transition-transform group-hover:translate-x-0.5",
-                        isActive ? "text-black/70" : "text-white/35",
-                      )}
-                    />
-                  </div>
-                  <p
-                    className={cn(
-                      "mt-0.5 truncate text-xs",
-                      isActive ? "text-black/70" : "text-white/55",
+                    {isActive && (
+                      <ChevronRight className="size-4 shrink-0 text-indigo-400 opacity-70" />
                     )}
-                  >
-                    {description}
-                  </p>
+                  </div>
                 </div>
               </Link>
             );
@@ -175,23 +161,7 @@ function SidebarContent({
         </nav>
       </div>
 
-      <div className="border-t border-white/10 px-4 py-4">
-        <div className="mb-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-full bg-white text-black">
-              <Sparkles className="size-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-white">
-                Admin Session
-              </p>
-              <p className="truncate text-xs text-white/55">
-                Secure access enabled
-              </p>
-            </div>
-          </div>
-        </div>
-
+      <div className="border-t border-white/5 p-4">
         <LogoutButton />
       </div>
     </div>

@@ -55,6 +55,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -259,6 +266,8 @@ export default function UsersPage() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [verifiedFilter, setVerifiedFilter] = useState("all");
 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [editOpen, setEditOpen] = useState(false);
@@ -277,13 +286,15 @@ export default function UsersPage() {
   });
 
   const usersQuery = useQuery({
-    queryKey: ["users", { page, search }],
+    queryKey: ["users", { page, search, roleFilter, verifiedFilter }],
     queryFn: async () => {
       const response = await apiClient.get<UsersResponse>("/users", {
         params: {
           page,
           limit: PAGE_SIZE,
           search,
+          ...(roleFilter !== "all" ? { role: roleFilter } : {}),
+          ...(verifiedFilter !== "all" ? { verified: verifiedFilter } : {}),
         },
       });
       return response.data;
@@ -411,40 +422,39 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <section className="overflow-hidden rounded-3xl border border-orange-200 bg-linear-to-br from-black via-zinc-950 to-orange-950 text-white shadow-2xl shadow-orange-500/10">
+      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex flex-col gap-6 p-6 md:flex-row md:items-end md:justify-between md:p-8">
           <div className="space-y-3">
-            <Badge className="rounded-full bg-orange-500 px-3 py-1 text-[11px] font-semibold text-black hover:bg-orange-400">
+            <Badge className="rounded-md bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold text-indigo-700 hover:bg-indigo-100 border-indigo-100">
               User Management
             </Badge>
 
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
                 Kelola User Secara Real
               </h1>
-              <p className="max-w-2xl text-sm leading-6 text-white/75 md:text-base">
-                Modul ini sudah terhubung ke data user real dari admin panel.
-                Kamu bisa cari user, lihat detail, edit profile metadata, ubah
-                status verifikasi, dan hapus user dari sini.
+              <p className="max-w-2xl text-sm leading-6 text-slate-500 md:text-base">
+                Modul ini terhubung ke data user real. Cari user, lihat detail,
+                edit metadata, ubah status verifikasi, hapus user, dan filter data.
               </p>
             </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/6 p-4 backdrop-blur-sm">
-              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-zinc-400">
+            <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                 Source Data
               </p>
-              <p className="mt-2 text-lg font-semibold text-white">
-                Prisma / API Users
+              <p className="mt-1.5 text-base font-semibold text-slate-900">
+                Prisma DB
               </p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/6 p-4 backdrop-blur-sm">
-              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-zinc-400">
-                Media Policy
+            <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                Media
               </p>
-              <p className="mt-2 text-lg font-semibold text-white">
-                Avatar/Banner via MinIO
+              <p className="mt-1.5 text-base font-semibold text-slate-900">
+                MinIO Store
               </p>
             </div>
           </div>
@@ -454,36 +464,64 @@ export default function UsersPage() {
       <StatsCards users={users} total={total} />
 
       <Card className="rounded-3xl border border-zinc-200 bg-white shadow-sm">
-        <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between border-b border-zinc-100 pb-5">
           <div className="space-y-1">
             <CardTitle className="text-xl font-bold text-black">
               Daftar Users
             </CardTitle>
             <CardDescription className="text-sm text-zinc-500">
-              Search, review, dan manage akun user dari data real.
+              Search, filter dan kelola akun user terdaftar.
             </CardDescription>
           </div>
 
-          <form
-            onSubmit={handleSearchSubmit}
-            className="flex w-full flex-col gap-3 sm:flex-row lg:max-w-xl"
-          >
-            <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-              <Input
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-                placeholder="Cari nama, username, atau email..."
-                className="h-11 rounded-2xl border-zinc-200 bg-white pl-10 text-sm text-black placeholder:text-zinc-400 focus-visible:border-orange-400 focus-visible:ring-orange-200"
-              />
-            </div>
-            <Button
-              type="submit"
-              className="h-11 rounded-2xl bg-orange-500 px-5 font-semibold text-black hover:bg-orange-400"
+          <div className="flex w-full flex-col gap-3 lg:w-auto lg:flex-row lg:items-center">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="flex w-full gap-2 sm:max-w-xs"
             >
-              Search
-            </Button>
-          </form>
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                <Input
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  placeholder="Cari user..."
+                  className="h-[38px] rounded-lg border-slate-200 bg-white pl-9 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20 shadow-sm"
+                />
+              </div>
+              <Button
+                type="submit"
+                className="h-[38px] rounded-lg bg-indigo-600 px-4 font-semibold text-white hover:bg-indigo-700 shadow-sm"
+              >
+                Search
+              </Button>
+            </form>
+
+            <div className="flex gap-2">
+              <Select value={roleFilter} onValueChange={(val) => { setRoleFilter(val || "all"); setPage(1); }}>
+                <SelectTrigger className="h-[38px] w-[130px] rounded-xl border-zinc-200 bg-white text-sm">
+                  <SelectValue placeholder="Role" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-zinc-200 bg-white">
+                  <SelectItem value="all">Semua Role</SelectItem>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="artist">Artist</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="manager">Manager</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={verifiedFilter} onValueChange={(val) => { setVerifiedFilter(val || "all"); setPage(1); }}>
+                <SelectTrigger className="h-[38px] w-[140px] rounded-xl border-zinc-200 bg-white text-sm">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-zinc-200 bg-white">
+                  <SelectItem value="all">Semua Status</SelectItem>
+                  <SelectItem value="true">Verified</SelectItem>
+                  <SelectItem value="false">Unverified</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -534,16 +572,16 @@ export default function UsersPage() {
                             <UserAvatar user={user} />
                             <div className="min-w-0 space-y-1">
                               <div className="flex flex-wrap items-center gap-2">
-                                <p className="truncate font-semibold text-black">
+                                <p className="truncate font-semibold text-slate-900">
                                   {user.name || "No display name"}
                                 </p>
                                 {user.verified ? (
-                                  <Badge className="rounded-full bg-orange-500 px-2 py-0.5 text-[10px] font-semibold text-black hover:bg-orange-400">
+                                  <Badge className="rounded-md bg-indigo-50 px-1.5 py-0 text-[10px] font-semibold text-indigo-700 hover:bg-indigo-100 border-indigo-100">
                                     Verified
                                   </Badge>
                                 ) : null}
                                 {user.verifiedArtists ? (
-                                  <Badge className="rounded-full bg-black px-2 py-0.5 text-[10px] font-semibold text-white hover:bg-black">
+                                  <Badge className="rounded-md bg-emerald-50 px-1.5 py-0 text-[10px] font-semibold text-emerald-700 hover:bg-emerald-100 border-emerald-100">
                                     Artist
                                   </Badge>
                                 ) : null}

@@ -116,13 +116,13 @@ function TrendPill({ trend, value }: { trend: "up" | "down"; value: string }) {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold",
+        "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold",
         trend === "up"
-          ? "border-orange-200 bg-orange-50 text-orange-700"
-          : "border-black/10 bg-black text-white",
+          ? "border-emerald-100 bg-emerald-50 text-emerald-700"
+          : "border-slate-200 bg-slate-100 text-slate-600",
       )}
     >
-      <Icon className="size-3.5" />
+      <Icon className="size-3" />
       <span>{value}</span>
     </div>
   );
@@ -142,26 +142,26 @@ export function DashboardOverview() {
           ({ title, value, change, trend, description, icon: Icon }) => (
             <Card
               key={title}
-              className="border border-black/10 bg-white shadow-[0_10px_30px_-18px_rgba(0,0,0,0.35)]"
+              className="border border-slate-200 bg-white shadow-sm hover:border-slate-300 transition-colors"
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
-                    <CardDescription className="text-xs font-medium text-black/55">
+                    <CardDescription className="text-xs font-medium text-slate-500">
                       {title}
                     </CardDescription>
-                    <CardTitle className="text-3xl font-black tracking-tight text-black">
+                    <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
                       {value}
                     </CardTitle>
                   </div>
-                  <div className="flex size-11 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 text-orange-600">
+                  <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-slate-500">
                     <Icon className="size-5" />
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="flex items-center justify-between gap-3 pt-0">
                 <TrendPill trend={trend} value={change} />
-                <p className="text-right text-xs text-black/55">
+                <p className="text-right text-xs text-slate-500 truncate">
                   {description}
                 </p>
               </CardContent>
@@ -171,38 +171,38 @@ export function DashboardOverview() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(320px,0.95fr)]">
-        <Card className="border border-black/10 bg-white shadow-[0_10px_30px_-18px_rgba(0,0,0,0.35)]">
-          <CardHeader className="flex flex-col gap-4 border-b border-black/10 pb-5 sm:flex-row sm:items-center sm:justify-between">
+        <Card className="border border-slate-200 bg-white shadow-sm">
+          <CardHeader className="flex flex-col gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <CardTitle className="text-lg font-black tracking-tight text-black">
+                <CardTitle className="text-lg font-bold tracking-tight text-slate-900">
                   Traffic Overview
                 </CardTitle>
-                <Badge className="rounded-full bg-orange-500 px-2.5 text-white hover:bg-orange-500">
+                <Badge className="rounded-md bg-indigo-50 text-indigo-700 border-indigo-100 px-2 py-0 text-[10px] hover:bg-indigo-100">
                   Live
                 </Badge>
               </div>
-              <CardDescription className="text-sm text-black/60">
+              <CardDescription className="text-sm text-slate-500">
                 Daily visitors and converted orders across the last 7 days.
               </CardDescription>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:w-auto">
-              <div className="rounded-2xl border border-black/10 bg-black px-4 py-3 text-white">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">
+              <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                   Visitors
                 </p>
-                <p className="mt-1 text-xl font-black">13.2K</p>
+                <p className="mt-1 text-xl font-bold">13.2K</p>
               </div>
-              <div className="rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3 text-black">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-black/45">
+              <div className="rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-indigo-900 shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-600">
                   Orders
                 </p>
-                <p className="mt-1 text-xl font-black">845</p>
+                <p className="mt-1 text-xl font-bold">845</p>
               </div>
             </div>
           </CardHeader>
 
-          <CardContent className="h-90 pt-6">
+          <CardContent className="h-96 pt-6">
             {isMounted ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
@@ -219,13 +219,13 @@ export function DashboardOverview() {
                     >
                       <stop
                         offset="0%"
-                        stopColor="#f97316"
-                        stopOpacity={0.36}
+                        stopColor="#4f46e5"
+                        stopOpacity={0.2}
                       />
                       <stop
                         offset="100%"
-                        stopColor="#f97316"
-                        stopOpacity={0.02}
+                        stopColor="#4f46e5"
+                        stopOpacity={0.0}
                       />
                     </linearGradient>
                     <linearGradient
@@ -237,123 +237,123 @@ export function DashboardOverview() {
                     >
                       <stop
                         offset="0%"
-                        stopColor="#111111"
-                        stopOpacity={0.24}
+                        stopColor="#0f172a"
+                        stopOpacity={0.1}
                       />
                       <stop
                         offset="100%"
-                        stopColor="#111111"
-                        stopOpacity={0.02}
+                        stopColor="#0f172a"
+                        stopOpacity={0.0}
                       />
                     </linearGradient>
                   </defs>
 
                   <CartesianGrid
-                    stroke="#111111"
-                    strokeDasharray="3 3"
+                    stroke="#e2e8f0"
+                    strokeDasharray="4 4"
                     vertical={false}
-                    opacity={0.1}
                   />
                   <XAxis
                     dataKey="day"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 12, fill: "#525252", fontWeight: 600 }}
+                    tick={{ fontSize: 12, fill: "#64748b", fontWeight: 500 }}
+                    dy={10}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 12, fill: "#737373" }}
+                    tick={{ fontSize: 12, fill: "#94a3b8" }}
                     width={42}
                   />
                   <Tooltip
                     cursor={{
-                      stroke: "#f97316",
+                      stroke: "#4f46e5",
                       strokeWidth: 1,
-                      opacity: 0.35,
+                      strokeDasharray: "4 4",
                     }}
                     contentStyle={{
-                      borderRadius: "16px",
-                      border: "1px solid rgba(17,17,17,0.08)",
+                      borderRadius: "12px",
+                      border: "1px solid #e2e8f0",
                       backgroundColor: "#ffffff",
-                      boxShadow: "0 20px 50px -24px rgba(0,0,0,0.35)",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                     }}
                     labelStyle={{
-                      color: "#111111",
-                      fontWeight: 800,
-                      marginBottom: "8px",
+                      color: "#0f172a",
+                      fontWeight: 600,
+                      marginBottom: "4px",
                     }}
                   />
                   <Area
                     type="monotone"
                     dataKey="orders"
-                    stroke="#111111"
+                    stroke="#94a3b8"
                     fill="url(#orders-fill)"
                     strokeWidth={2}
-                    activeDot={{ r: 4, fill: "#111111" }}
+                    activeDot={{ r: 4, fill: "#64748b", stroke: "#fff", strokeWidth: 2 }}
                   />
                   <Area
                     type="monotone"
                     dataKey="visitors"
-                    stroke="#f97316"
+                    stroke="#4f46e5"
                     fill="url(#visitors-fill)"
                     strokeWidth={3}
-                    activeDot={{ r: 5, fill: "#f97316" }}
+                    activeDot={{ r: 5, fill: "#4f46e5", stroke: "#fff", strokeWidth: 2 }}
                   />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full animate-pulse rounded-2xl border border-black/10 bg-gradient-to-br from-orange-50 via-white to-zinc-100" />
+              <div className="h-full animate-pulse rounded-xl border border-slate-100 bg-slate-50" />
             )}
           </CardContent>
         </Card>
 
         <div className="grid gap-6">
-          <Card className="border border-black/10 bg-white shadow-[0_10px_30px_-18px_rgba(0,0,0,0.35)]">
-            <CardHeader className="border-b border-black/10 pb-4">
+          <Card className="border border-slate-200 bg-white shadow-sm">
+            <CardHeader className="border-b border-slate-100 pb-4">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <CardTitle className="text-lg font-black tracking-tight text-black">
+                  <CardTitle className="text-lg font-bold tracking-tight text-slate-900">
                     Recent Activity
                   </CardTitle>
-                  <CardDescription className="mt-1 text-sm text-black/60">
+                  <CardDescription className="mt-1 text-sm text-slate-500">
                     Highlights from today’s admin operations.
                   </CardDescription>
                 </div>
-                <div className="flex size-10 items-center justify-center rounded-2xl bg-black text-white">
-                  <Activity className="size-4.5" />
+                <div className="flex size-10 items-center justify-center rounded-xl bg-slate-50 text-slate-400 border border-slate-100">
+                  <Activity className="size-5" />
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4 pt-5">
+            <CardContent className="space-y-0 pt-0">
               {activities.map((activity, index) => (
                 <div
                   key={activity.title}
                   className={cn(
-                    "flex gap-3",
+                    "flex gap-4 py-4",
                     index !== activities.length - 1 &&
-                      "border-b border-black/8 pb-4",
+                      "border-b border-slate-100",
                   )}
                 >
-                  <div className="mt-1 flex size-9 shrink-0 items-center justify-center rounded-full border border-orange-200 bg-orange-50 text-orange-600">
-                    <Sparkles className="size-4" />
+                  <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+                    <Sparkles className="size-3.5" />
                   </div>
-                  <div className="min-w-0 space-y-1">
+                  <div className="min-w-0 flex-1 space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-semibold text-black">
+                      <p className="text-sm font-semibold text-slate-900">
                         {activity.title}
                       </p>
                       <Badge
                         variant="outline"
-                        className="rounded-full border-black/10 bg-white text-[10px] text-black/65"
+                        className="rounded-md border-slate-200 bg-slate-50 px-1.5 py-0 text-[10px] text-slate-500"
                       >
                         {activity.type}
                       </Badge>
                     </div>
-                    <p className="text-sm leading-6 text-black/60">
+                    <p className="text-sm leading-snug text-slate-600">
                       {activity.detail}
                     </p>
-                    <p className="text-xs font-medium text-black/40">
+                    <p className="text-xs font-medium text-slate-400">
                       {activity.time}
                     </p>
                   </div>
@@ -362,12 +362,12 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card className="border border-black/10 bg-white shadow-[0_10px_30px_-18px_rgba(0,0,0,0.35)]">
-            <CardHeader className="border-b border-black/10 pb-4">
-              <CardTitle className="text-lg font-black tracking-tight text-black">
+          <Card className="border border-slate-200 bg-white shadow-sm">
+            <CardHeader className="border-b border-slate-100 pb-4">
+              <CardTitle className="text-lg font-bold tracking-tight text-slate-900">
                 Top Channels
               </CardTitle>
-              <CardDescription className="text-sm text-black/60">
+              <CardDescription className="text-sm text-slate-500">
                 Main acquisition sources for this week.
               </CardDescription>
             </CardHeader>
@@ -376,24 +376,24 @@ export function DashboardOverview() {
                 <div key={channel.name} className="space-y-2">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="font-semibold text-black">{channel.name}</p>
-                      <p className="text-xs text-black/45">{channel.amount}</p>
+                      <p className="text-sm font-semibold text-slate-900">{channel.name}</p>
+                      <p className="text-xs text-slate-500">{channel.amount}</p>
                     </div>
-                    <p className="text-sm font-black text-black">
+                    <p className="text-sm font-bold text-slate-900">
                       {channel.value}
                     </p>
                   </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-black/8">
+                  <div className="h-2 overflow-hidden rounded-full bg-slate-100">
                     <div
                       className={cn(
                         "h-full rounded-full",
                         index === 0
-                          ? "bg-orange-500"
+                          ? "bg-indigo-600"
                           : index === 1
-                            ? "bg-black"
+                            ? "bg-slate-400"
                             : index === 2
-                              ? "bg-orange-300"
-                              : "bg-black/35",
+                              ? "bg-indigo-300"
+                              : "bg-slate-200",
                       )}
                       style={{ width: channel.value }}
                     />

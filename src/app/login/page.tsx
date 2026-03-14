@@ -94,16 +94,16 @@ export default function LoginPage() {
       highlights.map(({ icon: Icon, title, description }) => (
         <div
           key={title}
-          className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm"
+          className="flex items-start gap-4 rounded-xl border border-slate-800 bg-slate-900/50 p-4"
         >
-          <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-black shadow-[0_10px_30px_-12px_rgba(249,115,22,0.8)]">
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm">
             <Icon className="size-5" />
           </div>
           <div className="space-y-1">
             <h3 className="text-sm font-semibold tracking-tight text-white">
               {title}
             </h3>
-            <p className="text-sm leading-6 text-white/70">{description}</p>
+            <p className="text-sm leading-6 text-slate-400">{description}</p>
           </div>
         </div>
       )),
@@ -115,22 +115,21 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900">
       <div className="grid min-h-screen lg:grid-cols-[1.15fr_0.85fr]">
-        <section className="relative hidden overflow-hidden bg-black lg:flex">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.28),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.18),transparent_28%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.02),transparent_40%,rgba(249,115,22,0.04))]" />
+        <section className="relative hidden overflow-hidden bg-slate-950 lg:flex">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(79,70,229,0.15),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.15),transparent_40%)]" />
 
           <div className="relative z-10 flex w-full flex-col justify-between p-8 xl:p-12">
             <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-white text-black shadow-lg">
-                <ShieldCheck className="size-6" />
+              <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm">
+                <ShieldCheck className="size-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-orange-400">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-400">
                   CommisApp
                 </p>
-                <h1 className="text-lg font-semibold text-white">
+                <h1 className="text-base font-semibold text-white">
                   Admin Panel
                 </h1>
               </div>
@@ -138,17 +137,17 @@ export default function LoginPage() {
 
             <div className="max-w-xl space-y-8">
               <div className="space-y-5">
-                <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-orange-300">
-                  <Sparkles className="size-3.5" />
+                <div className="inline-flex items-center gap-2 rounded-md border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-indigo-300">
+                  <Sparkles className="size-3" />
                   Premium workspace
                 </div>
 
                 <div className="space-y-4">
-                  <h2 className="max-w-lg text-4xl font-semibold leading-tight tracking-tight text-white xl:text-5xl">
+                  <h2 className="max-w-lg text-4xl font-bold leading-tight tracking-tight text-white xl:text-5xl">
                     Kelola operasional admin dengan tampilan yang lebih modern
                     dan powerful.
                   </h2>
-                  <p className="max-w-xl text-base leading-7 text-white/70">
+                  <p className="max-w-xl text-base leading-7 text-slate-400">
                     Satu dashboard untuk memantau aktivitas, mengelola data, dan
                     mengambil keputusan lebih cepat dengan workflow yang rapi
                     dan profesional.
@@ -160,25 +159,25 @@ export default function LoginPage() {
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+              <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                   Access
                 </p>
-                <p className="mt-2 text-2xl font-semibold text-white">24/7</p>
+                <p className="mt-1.5 text-2xl font-bold text-white">24/7</p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+              <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                   Security
                 </p>
-                <p className="mt-2 text-2xl font-semibold text-white">
+                <p className="mt-1.5 text-2xl font-bold text-white">
                   Encrypted
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+              <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
                   Experience
                 </p>
-                <p className="mt-2 text-2xl font-semibold text-white">
+                <p className="mt-1.5 text-2xl font-bold text-white">
                   Premium
                 </p>
               </div>
@@ -186,37 +185,32 @@ export default function LoginPage() {
           </div>
         </section>
 
-        <section className="relative flex items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,rgba(249,115,22,0.12),transparent_30%),linear-gradient(to_bottom,#ffffff,#fff7ed)] px-4 py-10 sm:px-6 lg:px-10">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(0,0,0,0.02),transparent_25%,rgba(249,115,22,0.05))]" />
+        <section className="relative flex items-center justify-center overflow-hidden bg-slate-50 px-4 py-10 sm:px-6 lg:px-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.03),transparent_40%)]" />
 
-          <div className="relative z-10 w-full max-w-md">
-            <div className="mb-6 flex items-center gap-3 lg:hidden">
-              <div className="flex size-11 items-center justify-center rounded-2xl bg-black text-orange-500 shadow-lg">
+          <div className="relative z-10 w-full max-w-[400px]">
+            <div className="mb-8 flex items-center gap-3 lg:hidden">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm">
                 <ShieldCheck className="size-5" />
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-orange-600">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-600">
                   CommisApp
                 </p>
-                <h2 className="text-base font-semibold text-black">
+                <h2 className="text-base font-bold text-slate-900">
                   Admin Panel
                 </h2>
               </div>
             </div>
 
-            <Card className="overflow-hidden rounded-[28px] border border-black/10 bg-white/90 py-0 text-black shadow-[0_30px_80px_-35px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-              <div className="border-b border-black/5 bg-gradient-to-r from-black to-zinc-900 p-6 text-white sm:p-8">
-                <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-orange-300">
-                  <ShieldCheck className="size-3.5" />
-                  Authorized access only
-                </div>
+            <Card className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-200/40">
+              <div className="border-b border-slate-100 bg-white p-6 sm:p-8">
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                  <h2 className="text-2xl font-bold tracking-tight text-slate-900">
                     Welcome back
                   </h2>
-                  <p className="max-w-sm text-sm leading-6 text-white/70">
-                    Masuk ke admin panel untuk mengelola data, memantau
-                    aktivitas, dan mengontrol operasional aplikasi.
+                  <p className="text-sm leading-6 text-slate-500">
+                    Masuk ke admin panel untuk mengelola operasional aplikasi.
                   </p>
                 </div>
               </div>
@@ -229,7 +223,7 @@ export default function LoginPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor="email"
-                      className="text-[11px] font-semibold uppercase tracking-[0.24em] text-black/70"
+                      className="text-[10px] font-bold uppercase tracking-widest text-slate-500"
                     >
                       Email address
                     </Label>
@@ -239,10 +233,10 @@ export default function LoginPage() {
                       placeholder="admin@commis.app"
                       autoComplete="email"
                       {...form.register("email")}
-                      className="h-12 rounded-2xl border-black/10 bg-white px-4 text-sm shadow-none transition focus-visible:border-orange-500 focus-visible:ring-orange-500/20"
+                      className="h-11 rounded-lg border-slate-200 bg-white px-3 text-sm shadow-sm transition-colors focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20"
                     />
                     {form.formState.errors.email ? (
-                      <p className="text-xs font-medium text-orange-600">
+                      <p className="text-xs font-medium text-red-600">
                         {form.formState.errors.email.message}
                       </p>
                     ) : null}
@@ -251,7 +245,7 @@ export default function LoginPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor="password"
-                      className="text-[11px] font-semibold uppercase tracking-[0.24em] text-black/70"
+                      className="text-[10px] font-bold uppercase tracking-widest text-slate-500"
                     >
                       Password
                     </Label>
@@ -262,12 +256,12 @@ export default function LoginPage() {
                         placeholder="Masukkan password"
                         autoComplete="current-password"
                         {...form.register("password")}
-                        className="h-12 rounded-2xl border-black/10 bg-white px-4 pr-12 text-sm shadow-none transition focus-visible:border-orange-500 focus-visible:ring-orange-500/20"
+                        className="h-11 rounded-lg border-slate-200 bg-white px-3 pr-10 text-sm shadow-sm transition-colors focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword((state) => !state)}
-                        className="absolute right-4 top-1/2 inline-flex -translate-y-1/2 items-center justify-center text-black/50 transition hover:text-orange-500 focus:outline-none"
+                        className="absolute right-3 top-1/2 inline-flex -translate-y-1/2 items-center justify-center text-slate-400 transition hover:text-indigo-600 focus:outline-none"
                         aria-label={
                           showPassword
                             ? "Sembunyikan password"
@@ -275,28 +269,23 @@ export default function LoginPage() {
                         }
                       >
                         {showPassword ? (
-                          <EyeOff className="size-4.5" />
+                          <EyeOff className="size-4" />
                         ) : (
-                          <Eye className="size-4.5" />
+                          <Eye className="size-4" />
                         )}
                       </button>
                     </div>
                     {form.formState.errors.password ? (
-                      <p className="text-xs font-medium text-orange-600">
+                      <p className="text-xs font-medium text-red-600">
                         {form.formState.errors.password.message}
                       </p>
                     ) : null}
                   </div>
 
-                  <div className="rounded-2xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-black/70">
-                    Gunakan akun admin yang sudah terdaftar untuk mengakses
-                    dashboard management.
-                  </div>
-
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="h-12 w-full rounded-2xl bg-orange-500 text-sm font-semibold text-black shadow-[0_18px_40px_-18px_rgba(249,115,22,0.9)] transition hover:bg-orange-400 active:scale-[0.99]"
+                    className="h-11 w-full rounded-lg bg-indigo-600 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 active:scale-[0.98]"
                   >
                     {isSubmitting ? (
                       "Authenticating..."
@@ -308,9 +297,8 @@ export default function LoginPage() {
                     )}
                   </Button>
 
-                  <p className="text-center text-xs leading-6 text-black/50">
-                    Dengan login, kamu mengakses area administrasi internal
-                    CommisApp.
+                  <p className="text-center text-xs leading-6 text-slate-500">
+                    Authorized personnel only.
                   </p>
                 </form>
               </CardContent>
