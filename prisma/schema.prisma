@@ -1,0 +1,391 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ======================================
+// ADMIN PANEL - Standalone Admin Models
+// ======================================
+
+model AdminUser {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  sessions     AdminSession[]
+
+  @@map("admin_users")
+}
+
+model AdminSession {
+  id        String    @id @default(cuid())
+  adminId   Int
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([adminId])
+  @@map("admin_sessions")
+}
+
+
+
+model User {
+  id              Int               @id @default(autoincrement())
+  email           String            @unique
+  passwordHash    String
+  name            String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  role            String            @default("user")
+  username        String            @unique
+  subId           String            @unique
+  verified        Boolean           @default(false)
+  verifiedArtists Boolean           @default(false)
+  avatar          String?           @default("avatars/default.jpg")
+  banner          String?           @default("banners/default.jpg")
+  bio             String?
+  country         String?
+  tokens          AuthToken?
+  refreshTokens   RefreshToken[]
+  socials         Socials?
+  otps            otp[]
+  showcases       Showcase?
+  folders         Folder[]
+  workflows       Workflow[]
+  form            RequestForm[]
+  interactions    UserInteraction[]
+  
+  // Relasi Sosial
+  following       Follow[]          @relation("Following") // Daftar user yang di-follow oleh user ini
+  followers       Follow[]          @relation("Followers") // Daftar user yang menjadi follower dari user ini
+  bookmarks       Bookmark[]        // Daftar bookmark yang dibuat oleh user ini
+  settings        Settings?         // Relasi one-to-one ke Settings
+  profileSearches ProfileSearchRecord[] @relation("ProfileSearches")
+
+  @@index([email])
+  @@index([username])
+}
+
+enum LikesPrivacy {
+  PUBLIC
+  PRIVATE
+}
+
+model Settings {
+  id           Int          @id @default(autoincrement())
+  userId       Int          @unique
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likesPrivacy LikesPrivacy @default(PRIVATE)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@map("settings")
+}
+
+model Socials {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  instagram String?
+  twitter   String?
+  facebook  String?
+  tiktok    String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model otp {
+  id          Int      @id @default(autoincrement())
+  otp         String   @unique
+  userId      Int
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  Description String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuthToken {
+  id          Int      @id @default(autoincrement())
+  token       String   @unique
+  userId      Int      @unique
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  blacklisted Boolean  @default(false)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  isRevoked Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// --- OPTIMASI 1: Index untuk PublicViewRecord ---
+model PublicViewRecord {
+  id             Int          @id @default(autoincrement())
+  showcaseItemId String
+  fingerprint    String       // Hash dari IP + User-Agent
+  createdAt      DateTime     @default(now())
+  country        String?      // Simpan kode negara (misal: "ID", "US")
+
+  showcaseItem   ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
+
+  // Index majemuk untuk mempercepat pengecekan cooldown (User X melihat Item Y pada Waktu Z)
+  @@index([showcaseItemId, fingerprint, createdAt])
+}
+
+model FingerprintProfile {
+  id          String   @id @default(cuid())
+  fingerprint String   @unique // Sidik jari dari (IP + User-Agent)
+  trustScore  Int      @default(100) 
+  isBlocked   Boolean  @default(false) 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BehavioralLog {
+  id             String   @id @default(cuid())
+  fingerprint    String   
+  showcaseItemId String   
+  timestamp      DateTime @default(now())
+  userAgent      String
+
+  // Indeks untuk mempercepat query pencarian riwayat perilaku (Velocity check)
+  @@index([fingerprint, timestamp])
+}
+
+model ProfileSearchRecord {
+  id             Int      @id @default(autoincrement())
+  searchedUserId Int
+  searcherUserId Int?     // Bisa null jika pencarian dilakukan oleh guest (tidak login)
+  fingerprint    String   // Hash dari IP + User-Agent untuk anti-bot
+  createdAt      DateTime @default(now())
+
+  searchedUser   User     @relation("ProfileSearches", fields: [searchedUserId], references: [id], onDelete: Cascade)
+  
+  // Index untuk mempercepat agregasi berdasarkan waktu
+  @@index([searchedUserId, createdAt])
+  // Index untuk cooldown check (fingerprint + profile + waktu)
+  @@index([searchedUserId, fingerprint, createdAt])
+}
+
+model AuthAuditLog {
+  id        String   @id @default(cuid())
+  userId    Int?
+  email     String?
+  event     String
+  success   Boolean  @default(true)
+  message   String?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, event, createdAt])
+  @@index([event, createdAt])
+}
+
+model ShowcaseItem {
+  id                         String             @id @default(uuid())
+  title                      String
+  description                Json
+  isDraft                    Boolean            @default(false)
+  isFromVerifiedCommission   Boolean            @default(false)
+  commissionId               String?
+  isAvailableAsService       Boolean            @default(false)
+  linkedServiceId            String?
+  containsMatureContent      Boolean            @default(false)
+  contentWarnings            Json               @default("{}")
+  likeCount                  Int                @default(0)
+  viewCount                  Int                @default(0)
+  boostConfig                Json               @default("{}")
+  hasTaggedCharacterProfiles Boolean            @default(false)
+  taggedCharacterProfiles    Json               @default("[]")
+  createdAt                  DateTime           @default(now())
+  updatedAt                  DateTime           @updatedAt
+  isUsingCombinedQuery       Boolean            @default(true)
+  document_vectors           Unsupported("tsvector")?
+
+  showcaseId                 String
+  showcase                   Showcase           @relation(fields: [showcaseId], references: [id], onDelete: Cascade)
+
+  tags                       Tag[]
+  publicViews                PublicViewRecord[]
+  bookmarkedBy               Bookmark[]
+  showcaseFiles              ShowcaseFile[]
+  interactions               UserInteraction[]
+
+  @@index([likeCount, createdAt]) // Indeks untuk pengurutan populer
+  @@index([document_vectors], type: Gin)
+}
+
+model Showcase {
+  id            String         @id @default(uuid())
+  userId        Int            @unique
+  isVerified    Boolean        @default(false)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  showcaseItems ShowcaseItem[]
+}
+
+model ShowcaseFile {
+  id             String       @id @unique @default(uuid())
+  showcaseItemId String
+  url            String
+  type           String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  showcaseItem   ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
+}
+
+model Tag {
+  id            String         @id @default(uuid())
+  nameTag       String         @unique
+  createdAt     DateTime       @default(now())
+  showcaseItems ShowcaseItem[]
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  userId      Int
+  title       String
+  description Json
+  price       Float
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  folderId    String
+  folder      Folder   @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  policies    Policy[] @relation("ServicePolicy")
+}
+
+model Policy {
+  id        Int       @id @unique @default(autoincrement())
+  uid       Int
+  name      String
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  services  Service[] @relation("ServicePolicy")
+}
+
+model Folder {
+  id        String    @id @default(uuid())
+  name      String
+  userId    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  service   Service[]
+}
+
+enum MainPhaseKey {
+  NEW
+  PENDING
+  READY
+  WIP
+}
+
+model Workflow {
+  id        String     @id @default(uuid())
+  userId    Int
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  subPhases SubPhase[]
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("workflows")
+  @@index([userId])
+}
+
+model SubPhase {
+  id         String       @id @default(uuid())
+  workflow   Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflowId String
+  mainPhase  MainPhaseKey
+  name       String
+  position   Int
+  isDefault  Boolean      @default(false)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@index([workflowId, mainPhase])
+  @@map("sub_phases")
+}
+
+model RequestForm {
+  id                  String   @id @default(uuid()) @map("requestFormID")
+  user                User     @relation(fields: [userID], references: [id], onDelete: Cascade)
+  userID              Int
+  name                String
+  personalNote        String
+  isUserEmailRequired Boolean
+  formCurrency        String
+  form                Json
+  socials             Json
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// --- OPTIMASI 2: Index untuk UserInteraction ---
+model UserInteraction {
+  id              Int          @id @default(autoincrement())
+  userId          Int
+  showcaseItemId  String
+  interactionType String       // "VIEW" atau "LIKE"
+  createdAt       DateTime     @default(now())
+
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  showcaseItem    ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
+
+  // Mencegah duplikasi (misal: satu user hanya bisa like satu item sekali)
+  @@unique([userId, showcaseItemId, interactionType]) 
+  
+  // OPTIMASI QUERY: Mengambil daftar like user, diurutkan dari yang terbaru
+  // Menggantikan index([userId]) biasa
+  @@index([userId, interactionType, createdAt]) 
+}
+
+model Follow {
+  followerId  Int 
+  followingId Int 
+  createdAt   DateTime @default(now())
+
+  follower    User     @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
+  @@index([followerId]) // Untuk mencari "Siapa yang di-follow oleh user X"
+  @@index([followingId]) // Untuk mencari "Siapa follower user Y"
+}
+
+// --- OPTIMASI 3: Index untuk Bookmark ---
+model Bookmark {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  showcaseItemId String
+  createdAt      DateTime     @default(now())
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  showcaseItem   ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, showcaseItemId])
+  
+  // OPTIMASI PAGINATION: Mengambil daftar bookmark user urut waktu
+  @@index([userId, createdAt]) 
+}
