@@ -24,10 +24,10 @@ export function LogoutButton() {
     <Button 
       variant="ghost" 
       onClick={handleLogout} 
-      className="group flex w-full items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-slate-400 transition-all duration-200 hover:bg-red-500/10 hover:text-red-400 h-auto justify-start"
+      className="group h-auto w-full justify-start gap-3 rounded-lg border border-transparent px-3 py-2.5 text-sidebar-foreground/75 transition-all duration-200 hover:bg-red-500/10 hover:text-red-300"
     >
       <div className="flex shrink-0 items-center justify-center">
-        <LogOut className="size-5 text-slate-500 group-hover:text-red-400 transition-colors" />
+        <LogOut className="size-5 text-sidebar-foreground/60 transition-colors group-hover:text-red-300" />
       </div>
       <div className="min-w-0 flex-1 text-left">
         <span className="truncate text-sm font-medium">

@@ -203,7 +203,7 @@ function UserAvatar({
 
   // Generate a deterministic gradient from username
   const colors = [
-    "from-violet-500 to-indigo-600",
+    "from-violet-500 to-orange-600",
     "from-rose-500 to-pink-600",
     "from-amber-500 to-orange-600",
     "from-emerald-500 to-teal-600",
@@ -258,8 +258,8 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
         value: total.toLocaleString("id-ID"),
         detail: "All registered accounts",
         icon: Users,
-        color: "text-indigo-600",
-        bgColor: "bg-indigo-50",
+        color: "text-orange-600",
+        bgColor: "bg-orange-50",
         approximate: false,
       },
       {
@@ -297,10 +297,10 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
       {stats.map(({ label, value, detail, icon: Icon, color, bgColor, approximate }) => (
         <Card
           key={label}
-          className="group relative overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/10"
+          className="group relative overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-500/10"
         >
           {/* subtle gradient overlay on hover */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white via-white to-indigo-50/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white via-white to-orange-50/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
           <CardHeader className="relative flex flex-row items-start justify-between space-y-0 pb-2">
             <div className="space-y-1">
@@ -547,14 +547,14 @@ export default function UsersPage() {
     <div className="space-y-6">
 
       {/* ── Hero Banner ─────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 p-8 text-white shadow-lg">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-orange-950 p-8 text-white shadow-lg">
         {/* decorative blobs */}
-        <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-indigo-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-orange-500/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-10 right-1/3 size-48 rounded-full bg-violet-500/15 blur-2xl" />
 
         <div className="relative flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-500/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-indigo-300">
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-500/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-orange-300">
               <Sparkles className="size-3.5" />
               User Management
             </div>
@@ -619,7 +619,7 @@ export default function UsersPage() {
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   placeholder="Search name, username, email..."
-                  className="h-10 rounded-xl border-zinc-200 bg-zinc-50 pl-9 pr-8 text-sm placeholder:text-zinc-400 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
+                  className="h-10 rounded-xl border-zinc-200 bg-zinc-50 pl-9 pr-8 text-sm placeholder:text-zinc-400 focus-visible:border-orange-400 focus-visible:ring-orange-500/20 focus-visible:bg-white"
                 />
                 {searchInput && (
                   <button
@@ -633,7 +633,7 @@ export default function UsersPage() {
               </div>
               <Button
                 type="submit"
-                className="h-10 rounded-xl bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-700"
+                className="h-10 rounded-xl bg-orange-600 px-4 text-sm font-semibold text-white hover:bg-orange-700"
               >
                 Search
               </Button>
@@ -648,7 +648,7 @@ export default function UsersPage() {
                   setPage(1);
                 }}
               >
-                <SelectTrigger className="h-10 w-[130px] rounded-xl border-zinc-200 bg-zinc-50 text-sm focus:ring-indigo-500/20">
+                <SelectTrigger className="h-10 w-[130px] rounded-xl border-zinc-200 bg-zinc-50 text-sm focus:ring-orange-500/20">
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-zinc-200 bg-white">
@@ -667,7 +667,7 @@ export default function UsersPage() {
                   setPage(1);
                 }}
               >
-                <SelectTrigger className="h-10 w-[140px] rounded-xl border-zinc-200 bg-zinc-50 text-sm focus:ring-indigo-500/20">
+                <SelectTrigger className="h-10 w-[140px] rounded-xl border-zinc-200 bg-zinc-50 text-sm focus:ring-orange-500/20">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-zinc-200 bg-white">
@@ -758,7 +758,7 @@ export default function UsersPage() {
                       return (
                         <TableRow
                           key={user.id}
-                          className="group border-zinc-100 transition-colors hover:bg-indigo-50/30"
+                          className="group border-zinc-100 transition-colors hover:bg-orange-50/30"
                         >
                           {/* User cell */}
                           <TableCell className="px-5 py-3.5">
@@ -981,8 +981,8 @@ export default function UsersPage() {
           showCloseButton={false}
         >
           {/* Header */}
-          <div className="relative shrink-0 overflow-hidden bg-gradient-to-r from-slate-900 to-indigo-950 p-6">
-            <div className="pointer-events-none absolute -right-8 -top-8 size-40 rounded-full bg-indigo-500/15 blur-2xl" />
+          <div className="relative shrink-0 overflow-hidden bg-gradient-to-r from-slate-900 to-orange-950 p-6">
+            <div className="pointer-events-none absolute -right-8 -top-8 size-40 rounded-full bg-orange-500/15 blur-2xl" />
             <DialogHeader className="relative gap-1.5">
               <DialogTitle className="text-xl font-semibold text-white">
                 User Profile
@@ -1107,7 +1107,7 @@ export default function UsersPage() {
               Close
             </Button>
             <Button
-              className="rounded-xl bg-indigo-600 text-sm text-white hover:bg-indigo-500"
+              className="rounded-xl bg-orange-600 text-sm text-white hover:bg-orange-500"
               disabled={!activeDetail}
               onClick={() => {
                 if (activeDetail) handleOpenEdit(activeDetail);
@@ -1134,7 +1134,7 @@ export default function UsersPage() {
           showCloseButton={false}
         >
           {/* Header */}
-          <div className="relative shrink-0 overflow-hidden bg-gradient-to-r from-slate-900 to-indigo-950 p-6">
+          <div className="relative shrink-0 overflow-hidden bg-gradient-to-r from-slate-900 to-orange-950 p-6">
             <div className="pointer-events-none absolute -right-8 -top-8 size-40 rounded-full bg-violet-500/15 blur-2xl" />
             <DialogHeader className="relative gap-1.5">
               <DialogTitle className="text-xl font-semibold text-white">
@@ -1157,8 +1157,8 @@ export default function UsersPage() {
             ) : (
               <>
                 {/* Info banner */}
-                <div className="flex gap-3 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm text-indigo-800">
-                  <Sparkles className="mt-0.5 size-4 shrink-0 text-indigo-500" />
+                <div className="flex gap-3 rounded-2xl border border-orange-100 bg-orange-50 p-4 text-sm text-orange-800">
+                  <Sparkles className="mt-0.5 size-4 shrink-0 text-orange-500" />
                   <p>
                     Avatars and banners are managed via MinIO. To update media,
                     direct uploads to MinIO storage first.
@@ -1176,7 +1176,7 @@ export default function UsersPage() {
                       value={form.name}
                       onChange={(e) => patchForm("name", e.target.value)}
                       placeholder="Full name"
-                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
+                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-orange-400 focus-visible:ring-orange-500/20 focus-visible:bg-white"
                     />
                   </div>
 
@@ -1189,7 +1189,7 @@ export default function UsersPage() {
                       value={form.username}
                       onChange={(e) => patchForm("username", e.target.value)}
                       placeholder="@username"
-                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
+                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-orange-400 focus-visible:ring-orange-500/20 focus-visible:bg-white"
                     />
                   </div>
 
@@ -1203,7 +1203,7 @@ export default function UsersPage() {
                       value={form.email}
                       onChange={(e) => patchForm("email", e.target.value)}
                       placeholder="email@domain.com"
-                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
+                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-orange-400 focus-visible:ring-orange-500/20 focus-visible:bg-white"
                     />
                   </div>
 
@@ -1217,7 +1217,7 @@ export default function UsersPage() {
                     >
                       <SelectTrigger
                         id="edit-role"
-                        className="h-11 w-full rounded-2xl border-zinc-200 bg-zinc-50 text-sm text-zinc-900 focus:ring-indigo-500/20"
+                        className="h-11 w-full rounded-2xl border-zinc-200 bg-zinc-50 text-sm text-zinc-900 focus:ring-orange-500/20"
                       >
                         <SelectValue placeholder="Pilih role" />
                       </SelectTrigger>
@@ -1239,7 +1239,7 @@ export default function UsersPage() {
                       value={form.country}
                       onChange={(e) => patchForm("country", e.target.value)}
                       placeholder="e.g. Indonesia"
-                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-indigo-400 focus-visible:ring-indigo-500/20 focus-visible:bg-white"
+                      className="h-11 rounded-2xl border-zinc-200 bg-zinc-50 focus-visible:border-orange-400 focus-visible:ring-orange-500/20 focus-visible:bg-white"
                     />
                   </div>
 
@@ -1308,7 +1308,7 @@ export default function UsersPage() {
                     onChange={(e) => patchForm("bio", e.target.value)}
                     rows={4}
                     placeholder="Short description about the user..."
-                    className="w-full resize-none rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 transition-all focus:border-indigo-400 focus:bg-white focus:ring-4 focus:ring-indigo-100"
+                    className="w-full resize-none rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 transition-all focus:border-orange-400 focus:bg-white focus:ring-4 focus:ring-orange-100"
                   />
                 </div>
               </>
@@ -1328,7 +1328,7 @@ export default function UsersPage() {
               Cancel
             </Button>
             <Button
-              className="rounded-xl bg-indigo-600 text-sm text-white hover:bg-indigo-500 disabled:opacity-50"
+              className="rounded-xl bg-orange-600 text-sm text-white hover:bg-orange-500 disabled:opacity-50"
               disabled={selectedUserId === null || updateMutation.isPending}
               onClick={() => {
                 if (selectedUserId === null) return;

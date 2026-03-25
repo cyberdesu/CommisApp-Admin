@@ -9,7 +9,6 @@ import {
   Menu,
   Settings,
   ShieldCheck,
-  Sparkles,
   Users,
   Image as ImageIcon,
 } from "lucide-react";
@@ -67,46 +66,35 @@ function getPageTitle(pathname: string) {
   return "Admin Panel";
 }
 
-function SidebarContent({
-  pathname,
-  mobile = false,
-}: {
-  pathname: string;
-  mobile?: boolean;
-}) {
+function SidebarContent({ pathname }: { pathname: string }) {
   return (
-    <div
-      className={cn(
-        "flex h-full flex-col",
-        mobile ? "bg-slate-950 text-slate-100" : "bg-slate-950 text-slate-100",
-      )}
-    >
-      <div className="border-b border-white/5 px-6 py-6">
+    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
+      <div className="border-b border-sidebar-border/60 px-6 py-6">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm shadow-indigo-600/20">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/30">
             <ShieldCheck className="size-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-400">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
               CommisApp
             </p>
-            <h2 className="truncate text-sm font-semibold text-white">
+            <h2 className="truncate text-sm font-semibold text-sidebar-foreground">
               Admin Console
             </h2>
           </div>
         </div>
 
-        <div className="mt-6 rounded-xl border border-white/5 bg-white/5 p-4 backdrop-blur-sm">
+        <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-sidebar-foreground/60">
                 Workspace
               </p>
-              <p className="mt-1 text-sm font-semibold text-white">
+              <p className="mt-1 text-sm font-semibold text-sidebar-foreground">
                 Main Platform
               </p>
             </div>
-            <Badge className="border border-emerald-400/20 bg-emerald-500/10 px-2.5 text-[10px] font-bold uppercase tracking-[0.1em] text-emerald-400 hover:bg-emerald-500/10">
+            <Badge className="border border-primary/30 bg-primary/10 px-2.5 text-[10px] font-bold uppercase tracking-[0.1em] text-primary hover:bg-primary/15">
               Live
             </Badge>
           </div>
@@ -115,13 +103,13 @@ function SidebarContent({
 
       <div className="flex-1 px-4 py-6">
         <div className="mb-4 px-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">
+          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-sidebar-foreground/60">
             Overview
           </p>
         </div>
 
         <nav className="space-y-1">
-          {menus.map(({ href, label, description, icon: Icon }) => {
+          {menus.map(({ href, label, icon: Icon }) => {
             const isActive =
               pathname === href || (href !== "/" && pathname.startsWith(href));
 
@@ -132,12 +120,12 @@ function SidebarContent({
                 className={cn(
                   "group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
                   isActive
-                    ? "bg-indigo-600/10 text-indigo-400"
-                    : "text-slate-400 hover:bg-white/5 hover:text-slate-200",
+                    ? "bg-primary/20 text-primary"
+                    : "text-sidebar-foreground/70 hover:bg-white/5 hover:text-sidebar-foreground",
                 )}
               >
                 <div className="flex shrink-0 items-center justify-center">
-                  <Icon className={cn("size-5", isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300")} />
+                  <Icon className={cn("size-5", isActive ? "text-primary" : "text-sidebar-foreground/60 group-hover:text-sidebar-foreground")} />
                 </div>
 
                 <div className="min-w-0 flex-1">
@@ -145,13 +133,13 @@ function SidebarContent({
                     <span
                       className={cn(
                         "truncate text-sm font-medium",
-                        isActive ? "text-indigo-300" : "text-slate-300",
+                        isActive ? "text-primary" : "text-sidebar-foreground/90",
                       )}
                     >
                       {label}
                     </span>
                     {isActive && (
-                      <ChevronRight className="size-4 shrink-0 text-indigo-400 opacity-70" />
+                      <ChevronRight className="size-4 shrink-0 text-primary opacity-80" />
                     )}
                   </div>
                 </div>
@@ -161,7 +149,7 @@ function SidebarContent({
         </nav>
       </div>
 
-      <div className="border-t border-white/5 p-4">
+      <div className="border-t border-sidebar-border/60 p-4">
         <LogoutButton />
       </div>
     </div>
@@ -173,14 +161,14 @@ export function AdminShell({ children }: AdminShellProps) {
   const pageTitle = getPageTitle(pathname);
 
   return (
-    <div className="min-h-screen bg-[#f6f6f7] text-black">
+    <div className="min-h-screen bg-[var(--app-bg)] text-foreground">
       <div className="flex min-h-screen">
-        <aside className="hidden w-[300px] shrink-0 border-r border-black/10 bg-black lg:flex lg:flex-col">
+        <aside className="hidden w-[300px] shrink-0 border-r border-sidebar-border/60 bg-sidebar lg:flex lg:flex-col">
           <SidebarContent pathname={pathname} />
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-30 border-b border-black/10 bg-white/90 backdrop-blur">
+          <header className="sticky top-0 z-30 border-b border-border/80 bg-background/75 backdrop-blur">
             <div className="flex h-20 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
               <div className="flex min-w-0 items-center gap-3">
                 <Sheet>
@@ -189,7 +177,7 @@ export function AdminShell({ children }: AdminShellProps) {
                       <Button
                         variant="outline"
                         size="icon"
-                        className="rounded-xl border-black/10 bg-white text-black shadow-none lg:hidden"
+                        className="rounded-xl border-border bg-card text-foreground shadow-none lg:hidden"
                       />
                     }
                   >
@@ -199,7 +187,7 @@ export function AdminShell({ children }: AdminShellProps) {
 
                   <SheetContent
                     side="left"
-                    className="w-[88vw] max-w-[320px] border-r-0 bg-black p-0 text-white"
+                    className="w-[88vw] max-w-[320px] border-r-0 bg-sidebar p-0 text-sidebar-foreground"
                     showCloseButton={true}
                   >
                     <SheetHeader className="sr-only">
@@ -208,34 +196,34 @@ export function AdminShell({ children }: AdminShellProps) {
                         Navigate between dashboard sections.
                       </SheetDescription>
                     </SheetHeader>
-                    <SidebarContent pathname={pathname} mobile />
+                    <SidebarContent pathname={pathname} />
                   </SheetContent>
                 </Sheet>
 
                 <div className="min-w-0">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-orange-500">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-primary">
                     Admin Panel
                   </p>
-                  <h1 className="truncate text-xl font-semibold tracking-tight text-black">
+                  <h1 className="truncate text-xl font-semibold tracking-tight text-foreground">
                     {pageTitle}
                   </h1>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <div className="hidden items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-3 py-1.5 sm:flex">
+                <div className="hidden items-center gap-2 rounded-full border border-primary/25 bg-primary/12 px-3 py-1.5 sm:flex">
                   <span className="relative flex size-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75" />
-                    <span className="relative inline-flex size-2 rounded-full bg-orange-500" />
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                    <span className="relative inline-flex size-2 rounded-full bg-primary" />
                   </span>
-                  <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-orange-600">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
                     System Active
                   </span>
                 </div>
 
                 <button
                   type="button"
-                  className="flex size-11 items-center justify-center rounded-2xl border border-black/10 bg-white text-black transition hover:border-orange-500/30 hover:text-orange-500"
+                  className="flex size-11 items-center justify-center rounded-2xl border border-border bg-card text-foreground transition hover:border-primary/35 hover:text-primary"
                 >
                   <Bell className="size-5" />
                   <span className="sr-only">Notifications</span>

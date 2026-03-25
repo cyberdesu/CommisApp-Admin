@@ -5,16 +5,33 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3011](http://localhost:3011) with your browser to see the result.
+
+## Runtime Modes
+
+This project supports two runtime DB targets from `.env`:
+
+- `DATABASE_URL_DEV` / `DIRECT_URL_DEV` -> `artwish_dev`
+- `DATABASE_URL_PROD` / `DIRECT_URL_PROD` -> `artwish`
+
+### Scripts
+
+```bash
+pnpm dev
+# Next dev on port 3011, uses APP_ENV=dev -> artwish_dev
+
+pnpm start:dev
+# build + next start on port 3011, uses APP_ENV=dev -> artwish_dev
+
+pnpm start:prod
+# build + next start on port 3010, uses APP_ENV=prod -> artwish
+
+pnpm start
+# alias to start:prod
+```
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

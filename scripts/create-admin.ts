@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
-import pg from 'pg';
 import bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
+import { requireDatabaseUrl } from '../src/lib/env/database-url';
 
 dotenv.config();
 
@@ -12,12 +12,11 @@ async function main() {
   const name = process.argv[4] || 'Admin';
 
   if (!email || !password) {
-    console.error('Usage: npx tsx scripts/create-admin.ts <email> <password> [name]');
+    console.error('Usage: pnpm create-admin <email> <password> [name]');
     process.exit(1);
   }
 
-  const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-  const adapter = new PrismaPg(pool as any);
+  const adapter = new PrismaPg({ connectionString: requireDatabaseUrl("create-admin script") });
   const prisma = new PrismaClient({ adapter });
 
   try {
@@ -32,15 +31,14 @@ async function main() {
     });
 
     console.log(`Admin created: ${admin.email}`);
-  } catch (error: any) {
-    if (error.code === 'P2002') {
+  } catch (error: unknown) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       console.error('Error: Admin with this email already exists.');
     } else {
       console.error('Error creating admin:', error);
     }
   } finally {
     await prisma.$disconnect();
-    await pool.end();
   }
 }
 

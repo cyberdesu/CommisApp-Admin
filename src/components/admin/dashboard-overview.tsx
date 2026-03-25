@@ -119,7 +119,7 @@ function TrendPill({ trend, value }: { trend: "up" | "down"; value: string }) {
         "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-semibold",
         trend === "up"
           ? "border-emerald-100 bg-emerald-50 text-emerald-700"
-          : "border-slate-200 bg-slate-100 text-slate-600",
+          : "border-border bg-secondary/55 text-muted-foreground",
       )}
     >
       <Icon className="size-3" />
@@ -132,7 +132,13 @@ export function DashboardOverview() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    const timer = window.setTimeout(() => {
+      setIsMounted(true);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
   }, []);
 
   return (
@@ -142,26 +148,26 @@ export function DashboardOverview() {
           ({ title, value, change, trend, description, icon: Icon }) => (
             <Card
               key={title}
-              className="border border-slate-200 bg-white shadow-sm hover:border-slate-300 transition-colors"
+              className="border border-border bg-card shadow-sm hover:border-border transition-colors"
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
-                    <CardDescription className="text-xs font-medium text-slate-500">
+                    <CardDescription className="text-xs font-medium text-muted-foreground">
                       {title}
                     </CardDescription>
-                    <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
+                    <CardTitle className="text-3xl font-bold tracking-tight text-foreground">
                       {value}
                     </CardTitle>
                   </div>
-                  <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-xl border border-slate-100 bg-slate-50 text-slate-500">
+                  <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-xl border border-border/70 bg-secondary/45 text-muted-foreground">
                     <Icon className="size-5" />
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="flex items-center justify-between gap-3 pt-0">
                 <TrendPill trend={trend} value={change} />
-                <p className="text-right text-xs text-slate-500 truncate">
+                <p className="text-right text-xs text-muted-foreground truncate">
                   {description}
                 </p>
               </CardContent>
@@ -171,30 +177,30 @@ export function DashboardOverview() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(320px,0.95fr)]">
-        <Card className="border border-slate-200 bg-white shadow-sm">
-          <CardHeader className="flex flex-col gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
+        <Card className="border border-border bg-card shadow-sm">
+          <CardHeader className="flex flex-col gap-4 border-b border-border/70 pb-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <CardTitle className="text-lg font-bold tracking-tight text-slate-900">
+                <CardTitle className="text-lg font-bold tracking-tight text-foreground">
                   Traffic Overview
                 </CardTitle>
-                <Badge className="rounded-md bg-indigo-50 text-indigo-700 border-indigo-100 px-2 py-0 text-[10px] hover:bg-indigo-100">
+                <Badge className="rounded-md bg-primary/10 text-primary border-primary/20 px-2 py-0 text-[10px] hover:bg-primary/15">
                   Live
                 </Badge>
               </div>
-              <CardDescription className="text-sm text-slate-500">
+              <CardDescription className="text-sm text-muted-foreground">
                 Daily visitors and converted orders across the last 7 days.
               </CardDescription>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:w-auto">
-              <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <div className="rounded-xl border border-border bg-card px-4 py-3 text-foreground shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                   Visitors
                 </p>
                 <p className="mt-1 text-xl font-bold">13.2K</p>
               </div>
-              <div className="rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-indigo-900 shadow-sm">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-600">
+              <div className="rounded-xl border border-primary/20 bg-primary/10 px-4 py-3 text-foreground shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
                   Orders
                 </p>
                 <p className="mt-1 text-xl font-bold">845</p>
@@ -219,12 +225,12 @@ export function DashboardOverview() {
                     >
                       <stop
                         offset="0%"
-                        stopColor="#4f46e5"
+                        stopColor="#f97316"
                         stopOpacity={0.2}
                       />
                       <stop
                         offset="100%"
-                        stopColor="#4f46e5"
+                        stopColor="#f97316"
                         stopOpacity={0.0}
                       />
                     </linearGradient>
@@ -237,19 +243,19 @@ export function DashboardOverview() {
                     >
                       <stop
                         offset="0%"
-                        stopColor="#0f172a"
+                        stopColor="#2e3947"
                         stopOpacity={0.1}
                       />
                       <stop
                         offset="100%"
-                        stopColor="#0f172a"
+                        stopColor="#2e3947"
                         stopOpacity={0.0}
                       />
                     </linearGradient>
                   </defs>
 
                   <CartesianGrid
-                    stroke="#e2e8f0"
+                    stroke="#c8d7dd"
                     strokeDasharray="4 4"
                     vertical={false}
                   />
@@ -257,29 +263,29 @@ export function DashboardOverview() {
                     dataKey="day"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 12, fill: "#64748b", fontWeight: 500 }}
+                    tick={{ fontSize: 12, fill: "#637789", fontWeight: 500 }}
                     dy={10}
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 12, fill: "#94a3b8" }}
+                    tick={{ fontSize: 12, fill: "#8193a3" }}
                     width={42}
                   />
                   <Tooltip
                     cursor={{
-                      stroke: "#4f46e5",
+                      stroke: "#f97316",
                       strokeWidth: 1,
                       strokeDasharray: "4 4",
                     }}
                     contentStyle={{
                       borderRadius: "12px",
-                      border: "1px solid #e2e8f0",
-                      backgroundColor: "#ffffff",
+                      border: "1px solid #c8d7dd",
+                      backgroundColor: "#f8fbfc",
                       boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                     }}
                     labelStyle={{
-                      color: "#0f172a",
+                      color: "#2e3947",
                       fontWeight: 600,
                       marginBottom: "4px",
                     }}
@@ -287,40 +293,40 @@ export function DashboardOverview() {
                   <Area
                     type="monotone"
                     dataKey="orders"
-                    stroke="#94a3b8"
+                    stroke="#7d91a2"
                     fill="url(#orders-fill)"
                     strokeWidth={2}
-                    activeDot={{ r: 4, fill: "#64748b", stroke: "#fff", strokeWidth: 2 }}
+                    activeDot={{ r: 4, fill: "#637789", stroke: "#fff", strokeWidth: 2 }}
                   />
                   <Area
                     type="monotone"
                     dataKey="visitors"
-                    stroke="#4f46e5"
+                    stroke="#f97316"
                     fill="url(#visitors-fill)"
                     strokeWidth={3}
-                    activeDot={{ r: 5, fill: "#4f46e5", stroke: "#fff", strokeWidth: 2 }}
+                    activeDot={{ r: 5, fill: "#f97316", stroke: "#fff", strokeWidth: 2 }}
                   />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full animate-pulse rounded-xl border border-slate-100 bg-slate-50" />
+              <div className="h-full animate-pulse rounded-xl border border-border/70 bg-secondary/45" />
             )}
           </CardContent>
         </Card>
 
         <div className="grid gap-6">
-          <Card className="border border-slate-200 bg-white shadow-sm">
-            <CardHeader className="border-b border-slate-100 pb-4">
+          <Card className="border border-border bg-card shadow-sm">
+            <CardHeader className="border-b border-border/70 pb-4">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <CardTitle className="text-lg font-bold tracking-tight text-slate-900">
+                  <CardTitle className="text-lg font-bold tracking-tight text-foreground">
                     Recent Activity
                   </CardTitle>
-                  <CardDescription className="mt-1 text-sm text-slate-500">
+                  <CardDescription className="mt-1 text-sm text-muted-foreground">
                     Highlights from today’s admin operations.
                   </CardDescription>
                 </div>
-                <div className="flex size-10 items-center justify-center rounded-xl bg-slate-50 text-slate-400 border border-slate-100">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-secondary/45 text-muted-foreground/80 border border-border/70">
                   <Activity className="size-5" />
                 </div>
               </div>
@@ -332,28 +338,28 @@ export function DashboardOverview() {
                   className={cn(
                     "flex gap-4 py-4",
                     index !== activities.length - 1 &&
-                      "border-b border-slate-100",
+                      "border-b border-border/70",
                   )}
                 >
-                  <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+                  <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <Sparkles className="size-3.5" />
                   </div>
                   <div className="min-w-0 flex-1 space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-sm font-semibold text-slate-900">
+                      <p className="text-sm font-semibold text-foreground">
                         {activity.title}
                       </p>
                       <Badge
                         variant="outline"
-                        className="rounded-md border-slate-200 bg-slate-50 px-1.5 py-0 text-[10px] text-slate-500"
+                        className="rounded-md border-border bg-secondary/45 px-1.5 py-0 text-[10px] text-muted-foreground"
                       >
                         {activity.type}
                       </Badge>
                     </div>
-                    <p className="text-sm leading-snug text-slate-600">
+                    <p className="text-sm leading-snug text-muted-foreground">
                       {activity.detail}
                     </p>
-                    <p className="text-xs font-medium text-slate-400">
+                    <p className="text-xs font-medium text-muted-foreground/80">
                       {activity.time}
                     </p>
                   </div>
@@ -362,12 +368,12 @@ export function DashboardOverview() {
             </CardContent>
           </Card>
 
-          <Card className="border border-slate-200 bg-white shadow-sm">
-            <CardHeader className="border-b border-slate-100 pb-4">
-              <CardTitle className="text-lg font-bold tracking-tight text-slate-900">
+          <Card className="border border-border bg-card shadow-sm">
+            <CardHeader className="border-b border-border/70 pb-4">
+              <CardTitle className="text-lg font-bold tracking-tight text-foreground">
                 Top Channels
               </CardTitle>
-              <CardDescription className="text-sm text-slate-500">
+              <CardDescription className="text-sm text-muted-foreground">
                 Main acquisition sources for this week.
               </CardDescription>
             </CardHeader>
@@ -376,24 +382,24 @@ export function DashboardOverview() {
                 <div key={channel.name} className="space-y-2">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">{channel.name}</p>
-                      <p className="text-xs text-slate-500">{channel.amount}</p>
+                      <p className="text-sm font-semibold text-foreground">{channel.name}</p>
+                      <p className="text-xs text-muted-foreground">{channel.amount}</p>
                     </div>
-                    <p className="text-sm font-bold text-slate-900">
+                    <p className="text-sm font-bold text-foreground">
                       {channel.value}
                     </p>
                   </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-2 overflow-hidden rounded-full bg-secondary/55">
                     <div
                       className={cn(
                         "h-full rounded-full",
                         index === 0
-                          ? "bg-indigo-600"
+                          ? "bg-primary"
                           : index === 1
-                            ? "bg-slate-400"
+                            ? "bg-muted-foreground/60"
                             : index === 2
-                              ? "bg-indigo-300"
-                              : "bg-slate-200",
+                              ? "bg-primary/45"
+                              : "bg-muted/70",
                       )}
                       style={{ width: channel.value }}
                     />
