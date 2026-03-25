@@ -95,10 +95,10 @@ type UserItem = {
 type UsersResponse = {
   data: UserItem[];
   meta: {
-    total: number;
-    page: number;
     limit: number;
-    totalPages: number;
+    hasNextPage: boolean;
+    nextCursor: string | null;
+    cursor: string | null;
   };
 };
 
@@ -234,10 +234,7 @@ function UserAvatar({
   );
 }
 
-// ─── Stats Cards (computed from server-side total + current page slice) ───────
-// NOTE: verified/artist/admin counts are from the current page only.
-// For accurate global counts the API would need to return aggregates.
-// We display a "~" prefix when the total exceeds PAGE_SIZE to communicate this.
+// ─── Stats Cards ────────────────────────────────────────────────────────────────
 
 interface StatItem {
   label: string;
@@ -246,12 +243,9 @@ interface StatItem {
   icon: React.ElementType;
   color: string;
   bgColor: string;
-  approximate: boolean;
 }
 
-function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
-  const isPartial = total > users.length;
-
+function StatsCards({ users }: { users: UserItem[] }) {
   const stats: StatItem[] = useMemo(() => {
     const verifiedCount = users.filter((u) => u.verified).length;
     const verifiedArtistCount = users.filter((u) => u.verifiedArtists).length;
@@ -261,47 +255,43 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
 
     return [
       {
-        label: "Total Users",
-        value: total.toLocaleString("id-ID"),
-        detail: "All registered accounts",
+        label: "Loaded Users",
+        value: users.length.toLocaleString("id-ID"),
+        detail: "Current cursor batch",
         icon: Users,
         color: "text-orange-600",
         bgColor: "bg-orange-50",
-        approximate: false,
       },
       {
         label: "Verified",
         value: verifiedCount.toLocaleString("id-ID"),
-        detail: isPartial ? "On this page only" : "Email verified",
+        detail: "From current batch",
         icon: CheckCircle2,
         color: "text-emerald-600",
         bgColor: "bg-emerald-50",
-        approximate: isPartial,
       },
       {
         label: "Verified Artists",
         value: verifiedArtistCount.toLocaleString("id-ID"),
-        detail: isPartial ? "On this page only" : "Verified artists",
+        detail: "From current batch",
         icon: Star,
         color: "text-violet-600",
         bgColor: "bg-violet-50",
-        approximate: isPartial,
       },
       {
         label: "Admin Role",
         value: adminCount.toLocaleString("id-ID"),
-        detail: isPartial ? "On this page only" : "Admin panel access",
+        detail: "From current batch",
         icon: ShieldCheck,
         color: "text-amber-600",
         bgColor: "bg-amber-50",
-        approximate: isPartial,
       },
     ];
-  }, [total, users, isPartial]);
+  }, [users]);
 
   return (
     <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {stats.map(({ label, value, detail, icon: Icon, color, bgColor, approximate }) => (
+      {stats.map(({ label, value, detail, icon: Icon, color, bgColor }) => (
         <Card
           key={label}
           className="group relative overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-500/10"
@@ -314,10 +304,7 @@ function StatsCards({ users, total }: { users: UserItem[]; total: number }) {
               <CardDescription className="text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-400">
                 {label}
               </CardDescription>
-              <CardTitle className="flex items-baseline gap-1 text-3xl font-bold tracking-tight text-slate-900">
-                {approximate && (
-                  <span className="text-base font-semibold text-zinc-400">~</span>
-                )}
+              <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
                 {value}
               </CardTitle>
             </div>
@@ -373,7 +360,8 @@ export default function UsersPage() {
   // Search: debounced via form submit
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [cursorHistory, setCursorHistory] = useState<Array<string | null>>([]);
   const [roleFilter, setRoleFilter] = useState("all");
   const [verifiedFilter, setVerifiedFilter] = useState("all");
 
@@ -397,12 +385,12 @@ export default function UsersPage() {
   // ── Queries ────────────────────────────────────────────────────────────────
 
   const usersQuery = useQuery({
-    queryKey: ["users", { page, search, roleFilter, verifiedFilter }],
+    queryKey: ["users", { cursor, search, roleFilter, verifiedFilter }],
     queryFn: async () => {
       const response = await apiClient.get<UsersResponse>("/users", {
         params: {
-          page,
           limit: PAGE_SIZE,
+          ...(cursor ? { cursor } : {}),
           search,
           ...(roleFilter !== "all" ? { role: roleFilter } : {}),
           ...(verifiedFilter !== "all" ? { verified: verifiedFilter } : {}),
@@ -432,8 +420,7 @@ export default function UsersPage() {
         {
           params: {
             status: "PENDING",
-            page: 1,
-            limit: 1,
+            summary: 1,
           },
         },
       );
@@ -519,8 +506,8 @@ export default function UsersPage() {
 
   const users = usersQuery.data?.data ?? [];
   const meta = usersQuery.data?.meta;
-  const total = meta?.total ?? 0;
-  const totalPages = Math.max(meta?.totalPages ?? 1, 1);
+  const hasNextPage = meta?.hasNextPage ?? false;
+  const nextCursor = meta?.nextCursor ?? null;
   const activeDetail = detailQuery.data;
   const pendingArtistRequests = artistRequestsMetaQuery.data?.meta?.total ?? 0;
 
@@ -531,14 +518,16 @@ export default function UsersPage() {
 
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setPage(1);
+    setCursor(null);
+    setCursorHistory([]);
     setSearch(searchInput.trim());
   }
 
   function handleClearSearch() {
     setSearchInput("");
     setSearch("");
-    setPage(1);
+    setCursor(null);
+    setCursorHistory([]);
   }
 
   function handleOpenEdit(user: UserItem) {
@@ -645,7 +634,7 @@ export default function UsersPage() {
       </section>
 
       {/* ── Stats ──────────────────────────────────────── */}
-      <StatsCards users={users} total={total} />
+      <StatsCards users={users} />
 
       {/* ── Table Card ─────────────────────────────────── */}
       <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
@@ -655,10 +644,10 @@ export default function UsersPage() {
               Daftar Users
             </CardTitle>
             <CardDescription className="text-sm text-zinc-500">
-              {total > 0 ? (
+              {users.length > 0 ? (
                 <>
-                  <span className="font-semibold text-zinc-700">{total.toLocaleString("en-US")}</span>{" "}
-                  registered users
+                  <span className="font-semibold text-zinc-700">{users.length.toLocaleString("en-US")}</span>{" "}
+                  users loaded
                   {hasActiveFilters && " · filters active"}
                 </>
               ) : (
@@ -703,7 +692,8 @@ export default function UsersPage() {
                 value={roleFilter}
                 onValueChange={(val) => {
                   setRoleFilter(val || "all");
-                  setPage(1);
+                  setCursor(null);
+                  setCursorHistory([]);
                 }}
               >
                 <SelectTrigger className="h-10 w-[130px] rounded-xl border-zinc-200 bg-zinc-50 text-sm focus:ring-orange-500/20">
@@ -722,7 +712,8 @@ export default function UsersPage() {
                 value={verifiedFilter}
                 onValueChange={(val) => {
                   setVerifiedFilter(val || "all");
-                  setPage(1);
+                  setCursor(null);
+                  setCursorHistory([]);
                 }}
               >
                 <SelectTrigger className="h-10 w-[140px] rounded-xl border-zinc-200 bg-zinc-50 text-sm focus:ring-orange-500/20">
@@ -744,7 +735,8 @@ export default function UsersPage() {
                     setSearch("");
                     setRoleFilter("all");
                     setVerifiedFilter("all");
-                    setPage(1);
+                    setCursor(null);
+                    setCursorHistory([]);
                   }}
                 >
                   Clear
@@ -779,7 +771,8 @@ export default function UsersPage() {
                     setSearch("");
                     setRoleFilter("all");
                     setVerifiedFilter("all");
-                    setPage(1);
+                    setCursor(null);
+                    setCursorHistory([]);
                   }}
                 >
                   Clear Filters
@@ -975,15 +968,8 @@ export default function UsersPage() {
               {/* Pagination */}
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-zinc-500">
-                  Halaman{" "}
-                  <span className="font-semibold text-zinc-900">{page}</span>{" "}
-                  dari{" "}
-                  <span className="font-semibold text-zinc-900">{totalPages}</span>
-                  {" "}·{" "}
                   <span className="font-semibold text-zinc-900">{users.length}</span>{" "}
-                  dari{" "}
-                  <span className="font-semibold text-zinc-900">{total.toLocaleString("id-ID")}</span>{" "}
-                  user ditampilkan
+                  user ditampilkan di batch ini
                 </p>
 
                 <div className="flex items-center gap-2">
@@ -991,42 +977,34 @@ export default function UsersPage() {
                     variant="outline"
                     size="sm"
                     className="h-9 rounded-xl border-zinc-200 bg-white text-sm disabled:opacity-40"
-                    disabled={page <= 1 || usersQuery.isFetching}
-                    onClick={() => setPage(1)}
-                  >
-                    ««
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-9 rounded-xl border-zinc-200 bg-white text-sm disabled:opacity-40"
-                    disabled={page <= 1 || usersQuery.isFetching}
-                    onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                    disabled={cursorHistory.length === 0 || usersQuery.isFetching}
+                    onClick={() => {
+                      if (cursorHistory.length === 0) return;
+                      const nextHistory = [...cursorHistory];
+                      const previousCursor = nextHistory.pop() ?? null;
+                      setCursorHistory(nextHistory);
+                      setCursor(previousCursor);
+                    }}
                   >
                     <ChevronLeft className="size-4" />
                     Prev
                   </Button>
-                  <div className="min-w-[80px] rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-center text-sm font-semibold text-zinc-800">
-                    {page} / {totalPages}
+                  <div className="min-w-[100px] rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-center text-sm font-semibold text-zinc-800">
+                    Cursor Mode
                   </div>
                   <Button
                     variant="outline"
                     size="sm"
                     className="h-9 rounded-xl border-zinc-200 bg-white text-sm disabled:opacity-40"
-                    disabled={page >= totalPages || usersQuery.isFetching}
-                    onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                    disabled={!hasNextPage || !nextCursor || usersQuery.isFetching}
+                    onClick={() => {
+                      if (!nextCursor) return;
+                      setCursorHistory((current) => [...current, cursor]);
+                      setCursor(nextCursor);
+                    }}
                   >
                     Next
                     <ChevronRight className="size-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-9 rounded-xl border-zinc-200 bg-white text-sm disabled:opacity-40"
-                    disabled={page >= totalPages || usersQuery.isFetching}
-                    onClick={() => setPage(totalPages)}
-                  >
-                    »»
                   </Button>
                 </div>
               </div>

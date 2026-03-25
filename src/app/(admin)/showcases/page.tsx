@@ -65,10 +65,10 @@ type ShowcaseItem = {
 type ShowcasesResponse = {
   data: ShowcaseItem[];
   meta: {
-    total: number;
-    page: number;
     limit: number;
-    totalPages: number;
+    hasNextPage: boolean;
+    nextCursor: string | null;
+    cursor: string | null;
   };
 };
 
@@ -98,15 +98,16 @@ function ShowcasesTableSkeleton() {
 export default function ShowcasesPage() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [cursorHistory, setCursorHistory] = useState<Array<string | null>>([]);
 
   const showcasesQuery = useQuery({
-    queryKey: ["showcases", { page, search }],
+    queryKey: ["showcases", { cursor, search }],
     queryFn: async () => {
       const response = await apiClient.get<ShowcasesResponse>("/showcases", {
         params: {
-          page,
           limit: PAGE_SIZE,
+          ...(cursor ? { cursor } : {}),
           search,
         },
       });
@@ -117,12 +118,13 @@ export default function ShowcasesPage() {
 
   const showcases = showcasesQuery.data?.data ?? [];
   const meta = showcasesQuery.data?.meta;
-  const total = meta?.total ?? 0;
-  const totalPages = Math.max(meta?.totalPages ?? 1, 1);
+  const hasNextPage = meta?.hasNextPage ?? false;
+  const nextCursor = meta?.nextCursor ?? null;
 
   function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setPage(1);
+    setCursor(null);
+    setCursorHistory([]);
     setSearch(searchInput.trim());
   }
 
@@ -150,9 +152,9 @@ export default function ShowcasesPage() {
           <div className="grid w-full gap-3 sm:w-auto sm:grid-cols-2">
             <div className="rounded-xl border border-border/70 bg-secondary/45 p-4">
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Total Works
+                Loaded Works
               </p>
-              <p className="mt-1.5 text-xl font-bold text-foreground">{total}</p>
+              <p className="mt-1.5 text-xl font-bold text-foreground">{showcases.length}</p>
             </div>
             <div className="rounded-xl border border-border/70 bg-secondary/45 p-4">
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
@@ -358,30 +360,37 @@ export default function ShowcasesPage() {
 
           <div className="flex flex-col items-center justify-between gap-4 border-t border-border bg-secondary/50 px-6 py-4 sm:flex-row">
             <p className="text-sm font-medium text-foreground/50">
-              Showing <span className="text-foreground">{showcases.length}</span> of{" "}
-              <span className="text-foreground">{total}</span> items
+              Showing <span className="text-foreground">{showcases.length}</span> items in this batch
             </p>
 
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 className="rounded-xl border-border bg-card shadow-sm hover:border-primary/35"
-                disabled={page <= 1}
-                onClick={() => setPage((current) => Math.max(current - 1, 1))}
+                disabled={cursorHistory.length === 0 || showcasesQuery.isFetching}
+                onClick={() => {
+                  if (cursorHistory.length === 0) return;
+                  const nextHistory = [...cursorHistory];
+                  const previousCursor = nextHistory.pop() ?? null;
+                  setCursorHistory(nextHistory);
+                  setCursor(previousCursor);
+                }}
               >
                 <ChevronLeft className="mr-1 size-4" />
                 Prev
               </Button>
               <div className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground shadow-sm">
-                Page {page} of {totalPages}
+                Cursor Mode
               </div>
               <Button
                 variant="outline"
                 className="rounded-xl border-border bg-card shadow-sm hover:border-primary/35"
-                disabled={page >= totalPages}
-                onClick={() =>
-                  setPage((current) => Math.min(current + 1, totalPages))
-                }
+                disabled={!hasNextPage || !nextCursor || showcasesQuery.isFetching}
+                onClick={() => {
+                  if (!nextCursor) return;
+                  setCursorHistory((current) => [...current, cursor]);
+                  setCursor(nextCursor);
+                }}
               >
                 Next
                 <ChevronRight className="ml-1 size-4" />

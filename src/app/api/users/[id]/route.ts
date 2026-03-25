@@ -86,27 +86,6 @@ export async function GET(req: NextRequest, context: RouteContext) {
         country: true,
         createdAt: true,
         updatedAt: true,
-        socials: {
-          select: {
-            instagram: true,
-            twitter: true,
-            facebook: true,
-            tiktok: true,
-          },
-        },
-        _count: {
-          select: {
-            followers: true,
-            following: true,
-            bookmarks: true,
-            folders: true,
-            workflows: true,
-            form: true,
-            refreshTokens: true,
-            otps: true,
-            interactions: true,
-          },
-        },
       },
     });
 

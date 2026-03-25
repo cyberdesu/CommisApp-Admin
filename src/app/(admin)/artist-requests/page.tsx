@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BadgeCheck, CheckCircle2, Search, XCircle } from "lucide-react";
+import {
+  BadgeCheck,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  XCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { apiClient } from "@/lib/api/client";
@@ -55,10 +62,10 @@ type ArtistRequestItem = {
 type ArtistRequestsResponse = {
   data: ArtistRequestItem[];
   meta: {
-    total: number;
-    page: number;
     limit: number;
-    totalPages: number;
+    hasNextPage: boolean;
+    nextCursor: string | null;
+    cursor: string | null;
   };
   filters: {
     status: "ALL" | "PENDING" | "APPROVED" | "REJECTED";
@@ -82,18 +89,19 @@ function formatDate(value: string | null) {
 export default function ArtistRequestsPage() {
   const queryClient = useQueryClient();
 
-  const [page, setPage] = useState(1);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [cursorHistory, setCursorHistory] = useState<Array<string | null>>([]);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED">("PENDING");
 
   const requestsQuery = useQuery({
-    queryKey: ["artist-requests", { page, search, status }],
+    queryKey: ["artist-requests", { cursor, search, status }],
     queryFn: async () => {
       const response = await apiClient.get<ArtistRequestsResponse>("/artist-requests", {
         params: {
-          page,
           limit: PAGE_SIZE,
+          ...(cursor ? { cursor } : {}),
           search,
           status,
         },
@@ -126,12 +134,13 @@ export default function ArtistRequestsPage() {
 
   const rows = requestsQuery.data?.data ?? [];
   const meta = requestsQuery.data?.meta;
-  const total = meta?.total ?? 0;
-  const totalPages = Math.max(meta?.totalPages ?? 1, 1);
+  const hasNextPage = meta?.hasNextPage ?? false;
+  const nextCursor = meta?.nextCursor ?? null;
 
   function submitSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setPage(1);
+    setCursor(null);
+    setCursorHistory([]);
     setSearch(searchInput.trim());
   }
 
@@ -157,10 +166,10 @@ export default function ArtistRequestsPage() {
 
           <div className="rounded-xl border border-border/70 bg-secondary/45 p-4 w-full sm:w-auto">
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              Total Requests
+              Loaded Requests
             </p>
             <p className="mt-1.5 text-base font-semibold text-foreground">
-              {total.toLocaleString("id-ID")}
+              {rows.length.toLocaleString("id-ID")}
             </p>
           </div>
         </div>
@@ -201,7 +210,8 @@ export default function ArtistRequestsPage() {
               onValueChange={(value) => {
                 if (!value) return;
                 setStatus(value as "ALL" | "PENDING" | "APPROVED" | "REJECTED");
-                setPage(1);
+                setCursor(null);
+                setCursorHistory([]);
               }}
             >
               <SelectTrigger className="h-10 w-full rounded-lg border-border bg-card text-sm sm:w-[180px]">
@@ -316,31 +326,40 @@ export default function ArtistRequestsPage() {
 
           <div className="flex flex-col items-center justify-between gap-4 border-t border-border bg-secondary/50 px-6 py-4 sm:flex-row">
             <p className="text-sm font-medium text-foreground/50">
-              Showing <span className="text-foreground">{rows.length}</span> of{" "}
-              <span className="text-foreground">{total}</span> requests
+              Showing <span className="text-foreground">{rows.length}</span> requests in this batch
             </p>
 
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 className="rounded-xl border-border bg-card shadow-sm hover:border-primary/35"
-                disabled={page <= 1 || requestsQuery.isFetching}
-                onClick={() => setPage((current) => Math.max(current - 1, 1))}
+                disabled={cursorHistory.length === 0 || requestsQuery.isFetching}
+                onClick={() => {
+                  if (cursorHistory.length === 0) return;
+                  const nextHistory = [...cursorHistory];
+                  const previousCursor = nextHistory.pop() ?? null;
+                  setCursorHistory(nextHistory);
+                  setCursor(previousCursor);
+                }}
               >
+                <ChevronLeft className="mr-1 size-4" />
                 Prev
               </Button>
               <div className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground shadow-sm">
-                Page {page} of {totalPages}
+                Cursor Mode
               </div>
               <Button
                 variant="outline"
                 className="rounded-xl border-border bg-card shadow-sm hover:border-primary/35"
-                disabled={page >= totalPages || requestsQuery.isFetching}
-                onClick={() =>
-                  setPage((current) => Math.min(current + 1, totalPages))
-                }
+                disabled={!hasNextPage || !nextCursor || requestsQuery.isFetching}
+                onClick={() => {
+                  if (!nextCursor) return;
+                  setCursorHistory((current) => [...current, cursor]);
+                  setCursor(nextCursor);
+                }}
               >
                 Next
+                <ChevronRight className="ml-1 size-4" />
               </Button>
             </div>
           </div>

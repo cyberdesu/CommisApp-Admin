@@ -198,8 +198,7 @@ export function AdminShell({ children }: AdminShellProps) {
         {
           params: {
             status: "PENDING",
-            page: 1,
-            limit: 1,
+            summary: 1,
           },
         },
       );

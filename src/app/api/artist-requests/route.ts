@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
-import { ArtistRequestStatus, isArtistRequestStatus } from "@/lib/artist-verification";
-import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
+import {
+  ArtistRequestStatus,
+  isArtistRequestStatus,
+} from "@/lib/artist-verification";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/prisma/generated/client";
 
@@ -26,7 +28,6 @@ type ArtistRequestItem = {
   createdAt: Date;
 };
 
-const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 50;
 
@@ -35,17 +36,15 @@ function parsePositiveInt(value: string | null, fallback: number) {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
-async function enrichMedia(row: ArtistRequestItem): Promise<ArtistRequestItem> {
-  const [avatar, banner] = await Promise.all([
-    minio.getFile(row.avatar, MINIO_BUCKET_NAME),
-    minio.getFile(row.banner, MINIO_BUCKET_NAME),
-  ]);
+function parseCursor(value: string | null) {
+  if (!value) return null;
 
-  return {
-    ...row,
-    avatar,
-    banner,
-  };
+  try {
+    const parsed = BigInt(value);
+    return parsed > BigInt(0) ? parsed : null;
+  } catch {
+    return null;
+  }
 }
 
 export async function GET(req: NextRequest) {
@@ -56,13 +55,12 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
-    const page = parsePositiveInt(searchParams.get("page"), DEFAULT_PAGE);
     const requestedLimit = parsePositiveInt(
       searchParams.get("limit"),
       DEFAULT_LIMIT,
     );
     const limit = Math.min(requestedLimit, MAX_LIMIT);
-    const offset = (page - 1) * limit;
+    const cursor = parseCursor(searchParams.get("cursor"));
 
     const statusRaw = (searchParams.get("status") || "PENDING")
       .trim()
@@ -72,6 +70,7 @@ export async function GET(req: NextRequest) {
       : "PENDING";
 
     const search = (searchParams.get("search") || "").trim();
+    const summaryOnly = searchParams.get("summary") === "1";
 
     const statusFilter: ArtistRequestStatus | undefined = status === "ALL"
       ? undefined
@@ -99,33 +98,54 @@ export async function GET(req: NextRequest) {
         : {}),
     };
 
-    const [requests, total] = await Promise.all([
-      prisma.artistVerificationRequest.findMany({
-        where,
-        orderBy: { requestedAt: "desc" },
-        skip: offset,
-        take: limit,
-        include: {
-          user: {
-            select: {
-              username: true,
-              email: true,
-              name: true,
-              role: true,
-              verified: true,
-              verifiedArtists: true,
-              avatar: true,
-              banner: true,
-              country: true,
-              createdAt: true,
-            },
+    if (summaryOnly) {
+      const total = await prisma.artistVerificationRequest.count({ where });
+
+      return NextResponse.json({
+        data: [],
+        meta: {
+          total,
+          page: 1,
+          limit: 0,
+          totalPages: 1,
+        },
+        filters: {
+          status,
+          search,
+        },
+      });
+    }
+
+    const requests = await prisma.artistVerificationRequest.findMany({
+      where,
+      take: limit + 1,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      orderBy: { id: "desc" },
+      include: {
+        user: {
+          select: {
+            username: true,
+            email: true,
+            name: true,
+            role: true,
+            verified: true,
+            verifiedArtists: true,
+            avatar: true,
+            banner: true,
+            country: true,
+            createdAt: true,
           },
         },
-      }),
-      prisma.artistVerificationRequest.count({ where }),
-    ]);
+      },
+    });
 
-    const rows: ArtistRequestItem[] = requests.map((request) => ({
+    const hasNextPage = requests.length > limit;
+    const slice = hasNextPage ? requests.slice(0, limit) : requests;
+    const nextCursor = hasNextPage
+      ? String(slice[slice.length - 1]?.id ?? "")
+      : null;
+
+    const data: ArtistRequestItem[] = slice.map((request) => ({
       id: Number(request.id),
       userId: request.userId,
       status: request.status,
@@ -145,16 +165,13 @@ export async function GET(req: NextRequest) {
       createdAt: request.user.createdAt,
     }));
 
-    const totalPages = Math.max(1, Math.ceil(total / limit));
-    const data = await Promise.all(rows.map((row) => enrichMedia(row)));
-
     return NextResponse.json({
       data,
       meta: {
-        total,
-        page,
         limit,
-        totalPages,
+        hasNextPage,
+        nextCursor,
+        cursor: cursor ? String(cursor) : null,
       },
       filters: {
         status,
