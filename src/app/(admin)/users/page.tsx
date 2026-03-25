@@ -31,6 +31,7 @@ import {
 import { toast } from "sonner";
 
 import { apiClient } from "@/lib/api/client";
+import { sanitizeImageSource } from "@/lib/security/url-safety";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -128,8 +129,7 @@ const PAGE_SIZE = 10;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function resolveMediaUrl(path?: string | null): string | null {
-  if (!path) return null;
-  return path;
+  return sanitizeImageSource(path);
 }
 
 function getRoleConfig(role: string): {

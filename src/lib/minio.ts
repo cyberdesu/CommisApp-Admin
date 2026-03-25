@@ -1,4 +1,5 @@
 import { Client as MinioClient } from "minio"
+import { sanitizeImageSource } from "@/lib/security/url-safety"
 
 const DEFAULT_BUCKET_NAME =
   process.env.MINIO_BUCKET || process.env.RUSTFS_BUCKET || "artwish"
@@ -133,12 +134,15 @@ class MinioHelper {
     objectName: string,
     expiresIn = DEFAULT_EXPIRATION_SECONDS,
   ) {
-    const normalizedObjectName = this.normalizeObjectName(objectName)
-    if (!normalizedObjectName) return null
+    const sanitizedInput = sanitizeImageSource(objectName)
+    if (!sanitizedInput) return null
 
-    if (this.isAbsoluteUrl(normalizedObjectName)) {
-      return normalizedObjectName
+    if (this.isAbsoluteUrl(sanitizedInput)) {
+      return sanitizedInput
     }
+
+    const normalizedObjectName = this.normalizeObjectName(sanitizedInput)
+    if (!normalizedObjectName) return null
 
     const client = this.getClient()
     if (!client) {
@@ -183,18 +187,21 @@ class MinioHelper {
   async getFile(objectName?: string | null, bucket = DEFAULT_BUCKET_NAME) {
     if (!objectName) return objectName ?? null
 
-    const normalizedObjectName = this.normalizeObjectName(objectName)
-    if (!normalizedObjectName) return null
+    const sanitizedInput = sanitizeImageSource(objectName)
+    if (!sanitizedInput) return null
 
-    if (this.isAbsoluteUrl(normalizedObjectName)) {
-      return normalizedObjectName
+    if (this.isAbsoluteUrl(sanitizedInput)) {
+      return sanitizedInput
     }
+
+    const normalizedObjectName = this.normalizeObjectName(sanitizedInput)
+    if (!normalizedObjectName) return null
 
     try {
       const resolved = await this.getPresignedUrl(bucket, normalizedObjectName)
-      return resolved ?? normalizedObjectName
+      return resolved ?? sanitizeImageSource(normalizedObjectName)
     } catch {
-      return normalizedObjectName
+      return sanitizeImageSource(normalizedObjectName)
     }
   }
 

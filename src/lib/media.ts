@@ -1,4 +1,5 @@
 const ABSOLUTE_URL_REGEX = /^https?:\/\//i
+import { sanitizeImageSource } from "@/lib/security/url-safety"
 
 const trimSlashes = (value: string) => value.replace(/^\/+|\/+$/g, "")
 
@@ -28,21 +29,20 @@ const getBaseMediaUrl = () => {
 }
 
 export function resolveMediaUrl(path?: string | null) {
-  if (!path) return null
+  const safePath = sanitizeImageSource(path)
+  if (!safePath) return null
 
-  const normalizedPath = path.trim()
-  if (!normalizedPath) return null
-
-  if (ABSOLUTE_URL_REGEX.test(normalizedPath)) {
-    return normalizedPath
+  if (ABSOLUTE_URL_REGEX.test(safePath)) {
+    return safePath
   }
 
+  const normalizedPath = trimSlashes(safePath)
   const baseUrl = getBaseMediaUrl()
   if (!baseUrl) {
-    return `/${trimSlashes(normalizedPath)}`
+    return `/${normalizedPath}`
   }
 
-  return `${baseUrl}/${trimSlashes(normalizedPath)}`
+  return `${baseUrl}/${normalizedPath}`
 }
 
 export function resolveAvatarUrl(path?: string | null) {

@@ -7,6 +7,7 @@ import {
 } from "@/lib/artist-verification";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/prisma/generated/client";
+import { sanitizeImageSource } from "@/lib/security/url-safety";
 
 type ArtistRequestItem = {
   id: number;
@@ -159,8 +160,8 @@ export async function GET(req: NextRequest) {
       role: request.user.role,
       verified: request.user.verified,
       verifiedArtists: request.user.verifiedArtists,
-      avatar: request.user.avatar,
-      banner: request.user.banner,
+      avatar: sanitizeImageSource(request.user.avatar),
+      banner: sanitizeImageSource(request.user.banner),
       country: request.user.country,
       createdAt: request.user.createdAt,
     }));
