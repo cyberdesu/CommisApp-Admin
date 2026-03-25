@@ -1,3 +1,4 @@
+import "server-only"
 import { Client as MinioClient } from "minio"
 import { sanitizeImageSource } from "@/lib/security/url-safety"
 
