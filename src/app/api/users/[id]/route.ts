@@ -1,29 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Client as MinioClient } from "minio";
 
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { ensureArtistVerificationTable } from "@/lib/artist-verification";
+import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 
 type RouteContext = {
   params: Promise<{
     id: string;
   }>;
 };
-
-const DEFAULT_MEDIA_BUCKET = process.env.MINIO_BUCKET || "artwish";
-const MINIO_URL_EXPIRATION_SECONDS = 60 * 60;
-
-const minioClient =
-  process.env.MINIO_ENDPOINT &&
-  process.env.RUSTFS_ACCESS_KEY &&
-  process.env.RUSTFS_SECRET_KEY
-    ? new MinioClient({
-        endPoint: process.env.MINIO_ENDPOINT,
-        useSSL: process.env.MINIO_USE_SSL !== "false",
-        accessKey: process.env.RUSTFS_ACCESS_KEY,
-        secretKey: process.env.RUSTFS_SECRET_KEY,
-      })
-    : null;
 
 function parseUserId(rawId: string) {
   const id = Number(rawId);
@@ -51,29 +37,8 @@ function normalizeOptionalMediaPath(value: unknown) {
   return trimmed;
 }
 
-function isAbsoluteUrl(value: string) {
-  return /^https?:\/\//i.test(value);
-}
-
 async function resolveMediaUrl(path?: string | null) {
-  if (!path) return path;
-
-  if (isAbsoluteUrl(path) || !minioClient) {
-    return path;
-  }
-
-  try {
-    return await minioClient.presignedGetObject(
-      DEFAULT_MEDIA_BUCKET,
-      path,
-      MINIO_URL_EXPIRATION_SECONDS,
-      {
-        "response-cache-control": "no-cache",
-      },
-    );
-  } catch {
-    return path;
-  }
+  return minio.getFile(path, MINIO_BUCKET_NAME)
 }
 
 async function enrichUserMedia<
@@ -98,6 +63,8 @@ export async function GET(req: NextRequest, context: RouteContext) {
     if (!admin) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    await ensureArtistVerificationTable();
 
     const { id: rawId } = await context.params;
     const id = parseUserId(rawId);
@@ -194,7 +161,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
     const existingUser = await prisma.user.findUnique({
       where: { id },
-      select: { id: true, email: true, username: true },
+      select: { id: true, email: true, username: true, verifiedArtists: true },
     });
 
     if (!existingUser) {
@@ -270,41 +237,87 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       }
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { id },
-      data: {
-        ...(email ? { email } : {}),
-        ...(username ? { username } : {}),
-        ...(name !== undefined ? { name } : {}),
-        ...(role ? { role } : {}),
-        ...(bio !== undefined ? { bio } : {}),
-        ...(country !== undefined ? { country } : {}),
-        ...(avatar !== undefined ? { avatar } : {}),
-        ...(banner !== undefined ? { banner } : {}),
-        ...(verified !== undefined ? { verified } : {}),
-        ...(verifiedArtists !== undefined ? { verifiedArtists } : {}),
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        username: true,
-        role: true,
-        verified: true,
-        verifiedArtists: true,
-        avatar: true,
-        banner: true,
-        bio: true,
-        country: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+    const shouldApproveArtist =
+      verifiedArtists === true && existingUser.verifiedArtists === false;
+
+    if (shouldApproveArtist) {
+      await ensureArtistVerificationTable();
+    }
+
+    const updatedUser = await prisma.$transaction(async (tx) => {
+      if (shouldApproveArtist) {
+        await tx.authToken.deleteMany({
+          where: { userId: id },
+        });
+        await tx.refreshToken.deleteMany({
+          where: { userId: id },
+        });
+      }
+
+      const existingShowcase = shouldApproveArtist
+        ? await tx.showcase.findUnique({
+            where: { userId: id },
+            select: { id: true },
+          })
+        : null;
+
+      const updated = await tx.user.update({
+        where: { id },
+        data: {
+          ...(email ? { email } : {}),
+          ...(username ? { username } : {}),
+          ...(name !== undefined ? { name } : {}),
+          ...(role ? { role } : {}),
+          ...(bio !== undefined ? { bio } : {}),
+          ...(country !== undefined ? { country } : {}),
+          ...(avatar !== undefined ? { avatar } : {}),
+          ...(banner !== undefined ? { banner } : {}),
+          ...(verified !== undefined ? { verified } : {}),
+          ...(verifiedArtists !== undefined ? { verifiedArtists } : {}),
+          ...(shouldApproveArtist ? { role: "artist", verifiedArtists: true } : {}),
+          ...(shouldApproveArtist && !existingShowcase
+            ? { showcases: { create: {} } }
+            : {}),
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          username: true,
+          role: true,
+          verified: true,
+          verifiedArtists: true,
+          avatar: true,
+          banner: true,
+          bio: true,
+          country: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+
+      if (shouldApproveArtist) {
+        await tx.$executeRaw`
+          UPDATE "artist_verification_requests"
+          SET
+            "status" = 'APPROVED'::"VerificationStatus",
+            "reviewedAt" = NOW(),
+            "reviewedByAdminId" = ${admin.id},
+            "updatedAt" = NOW()
+          WHERE "userId" = ${id}
+            AND "status" = 'PENDING'::"VerificationStatus"
+        `;
+      }
+
+      return updated;
     });
 
     const enrichedUser = await enrichUserMedia(updatedUser);
 
     return NextResponse.json({
-      message: "User updated successfully",
+      message: shouldApproveArtist
+        ? "Artist approved successfully"
+        : "User updated successfully",
       data: enrichedUser,
     });
   } catch (error) {

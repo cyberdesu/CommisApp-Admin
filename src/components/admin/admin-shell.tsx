@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import {
   Bell,
   ChevronRight,
   LayoutDashboard,
+  BadgeCheck,
   Menu,
   Settings,
   ShieldCheck,
@@ -24,6 +26,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { apiClient } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 
 type AdminShellProps = {
@@ -50,6 +53,12 @@ const menus = [
     icon: ImageIcon,
   },
   {
+    href: "/artist-requests",
+    label: "Artist Requests",
+    description: "Review artist verification",
+    icon: BadgeCheck,
+  },
+  {
     href: "/settings",
     label: "Settings",
     description: "Control preferences",
@@ -61,12 +70,25 @@ function getPageTitle(pathname: string) {
   if (pathname.startsWith("/dashboard")) return "Dashboard Overview";
   if (pathname.startsWith("/users")) return "Users Management";
   if (pathname.startsWith("/showcases")) return "Showcases Management";
+  if (pathname.startsWith("/artist-requests")) return "Artist Verification";
   if (pathname.startsWith("/settings")) return "System Settings";
 
   return "Admin Panel";
 }
 
-function SidebarContent({ pathname }: { pathname: string }) {
+type ArtistRequestsMetaResponse = {
+  meta?: {
+    total?: number;
+  };
+};
+
+function SidebarContent({
+  pathname,
+  pendingArtistRequests,
+}: {
+  pathname: string;
+  pendingArtistRequests: number;
+}) {
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div className="border-b border-sidebar-border/60 px-6 py-6">
@@ -112,6 +134,8 @@ function SidebarContent({ pathname }: { pathname: string }) {
           {menus.map(({ href, label, icon: Icon }) => {
             const isActive =
               pathname === href || (href !== "/" && pathname.startsWith(href));
+            const showPendingBadge =
+              href === "/artist-requests" && pendingArtistRequests > 0;
 
             return (
               <Link
@@ -138,9 +162,16 @@ function SidebarContent({ pathname }: { pathname: string }) {
                     >
                       {label}
                     </span>
-                    {isActive && (
-                      <ChevronRight className="size-4 shrink-0 text-primary opacity-80" />
-                    )}
+                    <div className="flex items-center gap-2">
+                      {showPendingBadge && (
+                        <span className="rounded-full border border-primary/30 bg-primary/15 px-2 py-0.5 text-[10px] font-bold text-primary">
+                          {pendingArtistRequests}
+                        </span>
+                      )}
+                      {isActive && (
+                        <ChevronRight className="size-4 shrink-0 text-primary opacity-80" />
+                      )}
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -159,12 +190,35 @@ function SidebarContent({ pathname }: { pathname: string }) {
 export function AdminShell({ children }: AdminShellProps) {
   const pathname = usePathname();
   const pageTitle = getPageTitle(pathname);
+  const artistRequestsMetaQuery = useQuery({
+    queryKey: ["artist-requests-pending-meta"],
+    queryFn: async () => {
+      const response = await apiClient.get<ArtistRequestsMetaResponse>(
+        "/artist-requests",
+        {
+          params: {
+            status: "PENDING",
+            page: 1,
+            limit: 1,
+          },
+        },
+      );
+      return response.data;
+    },
+    refetchInterval: 30_000,
+  });
+
+  const pendingArtistRequests =
+    artistRequestsMetaQuery.data?.meta?.total ?? 0;
 
   return (
     <div className="min-h-screen bg-[var(--app-bg)] text-foreground">
       <div className="flex min-h-screen">
         <aside className="hidden w-[300px] shrink-0 border-r border-sidebar-border/60 bg-sidebar lg:flex lg:flex-col">
-          <SidebarContent pathname={pathname} />
+          <SidebarContent
+            pathname={pathname}
+            pendingArtistRequests={pendingArtistRequests}
+          />
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
@@ -196,7 +250,10 @@ export function AdminShell({ children }: AdminShellProps) {
                         Navigate between dashboard sections.
                       </SheetDescription>
                     </SheetHeader>
-                    <SidebarContent pathname={pathname} />
+                    <SidebarContent
+                      pathname={pathname}
+                      pendingArtistRequests={pendingArtistRequests}
+                    />
                   </SheetContent>
                 </Sheet>
 

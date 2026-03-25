@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
@@ -103,6 +104,12 @@ type UsersResponse = {
 
 type UserDetailResponse = {
   data: UserItem;
+};
+
+type ArtistRequestsMetaResponse = {
+  meta?: {
+    total?: number;
+  };
 };
 
 type UpdateUserPayload = {
@@ -417,6 +424,23 @@ export default function UsersPage() {
     enabled: selectedUserId !== null && (editOpen || viewOpen),
   });
 
+  const artistRequestsMetaQuery = useQuery({
+    queryKey: ["artist-requests-pending-meta"],
+    queryFn: async () => {
+      const response = await apiClient.get<ArtistRequestsMetaResponse>(
+        "/artist-requests",
+        {
+          params: {
+            status: "PENDING",
+            page: 1,
+            limit: 1,
+          },
+        },
+      );
+      return response.data;
+    },
+  });
+
   // ── Mutations ──────────────────────────────────────────────────────────────
 
   const updateMutation = useMutation({
@@ -474,6 +498,23 @@ export default function UsersPage() {
     },
   });
 
+  const approveArtistMutation = useMutation({
+    mutationFn: async (userId: number) => {
+      const response = await apiClient.patch(`/users/${userId}`, {
+        verifiedArtists: true,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Artist approved successfully");
+      void queryClient.invalidateQueries({ queryKey: ["users"] });
+      void queryClient.invalidateQueries({ queryKey: ["user-detail"] });
+    },
+    onError: () => {
+      toast.error("Failed to approve artist");
+    },
+  });
+
   // ── Derived state ──────────────────────────────────────────────────────────
 
   const users = usersQuery.data?.data ?? [];
@@ -481,6 +522,7 @@ export default function UsersPage() {
   const total = meta?.total ?? 0;
   const totalPages = Math.max(meta?.totalPages ?? 1, 1);
   const activeDetail = detailQuery.data;
+  const pendingArtistRequests = artistRequestsMetaQuery.data?.meta?.total ?? 0;
 
   const hasActiveFilters =
     search !== "" || roleFilter !== "all" || verifiedFilter !== "all";
@@ -558,6 +600,12 @@ export default function UsersPage() {
               <Sparkles className="size-3.5" />
               User Management
             </div>
+            {pendingArtistRequests > 0 && (
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/90">
+                <BadgeCheck className="size-3.5 text-orange-300" />
+                {pendingArtistRequests} Artist Request Pending
+              </div>
+            )}
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
               Manage Users
             </h1>
@@ -583,6 +631,16 @@ export default function UsersPage() {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="relative mt-6 flex justify-end">
+          <Link
+            href="/artist-requests"
+            className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
+          >
+            <BadgeCheck className="size-4 text-orange-300" />
+            Open Artist Requests
+          </Link>
         </div>
       </section>
 
@@ -887,6 +945,15 @@ export default function UsersPage() {
                                   )}
                                   {user.verified ? "Revoke verification" : "Set verified"}
                                 </DropdownMenuItem>
+                                {!user.verifiedArtists && (
+                                  <DropdownMenuItem
+                                    className="rounded-xl gap-2 text-sm"
+                                    onClick={() => approveArtistMutation.mutate(user.id)}
+                                  >
+                                    <BadgeCheck className="size-4 text-zinc-500" />
+                                    Approve artist
+                                  </DropdownMenuItem>
+                                )}
                                 <DropdownMenuSeparator className="my-1" />
                                 <DropdownMenuItem
                                   className="rounded-xl gap-2 text-sm text-red-600 focus:bg-red-50 focus:text-red-600"

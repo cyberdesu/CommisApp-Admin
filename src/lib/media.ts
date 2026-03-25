@@ -8,9 +8,16 @@ const getBaseMediaUrl = () => {
     return explicitBaseUrl.replace(/\/+$/, "")
   }
 
-  const endpoint = process.env.NEXT_PUBLIC_MINIO_ENDPOINT?.trim()
-  const bucket = process.env.NEXT_PUBLIC_MINIO_BUCKET?.trim()
-  const useSsl = process.env.NEXT_PUBLIC_MINIO_USE_SSL?.trim()
+  const endpoint =
+    process.env.NEXT_PUBLIC_MINIO_ENDPOINT?.trim() ||
+    process.env.NEXT_PUBLIC_RUSTFS_MINIO_ENDPOINT?.trim() ||
+    process.env.NEXT_PUBLIC_RUSTFS_ENDPOINT?.trim()
+  const bucket =
+    process.env.NEXT_PUBLIC_MINIO_BUCKET?.trim() ||
+    process.env.NEXT_PUBLIC_RUSTFS_BUCKET?.trim()
+  const useSsl =
+    process.env.NEXT_PUBLIC_MINIO_USE_SSL?.trim() ||
+    process.env.NEXT_PUBLIC_RUSTFS_USE_SSL?.trim()
 
   if (!endpoint || !bucket) {
     return ""

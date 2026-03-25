@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Client as MinioClient } from "minio";
 
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
@@ -11,34 +11,8 @@ const MAX_LIMIT = 100;
 type SortField = "createdAt" | "updatedAt" | "name" | "email" | "username";
 type SortOrder = "asc" | "desc";
 
-const MINIO_BUCKET = process.env.MINIO_BUCKET || "artwish";
-
-const minioClient =
-  process.env.MINIO_ENDPOINT &&
-  process.env.RUSTFS_ACCESS_KEY &&
-  process.env.RUSTFS_SECRET_KEY
-    ? new MinioClient({
-        endPoint: process.env.MINIO_ENDPOINT,
-        useSSL: process.env.MINIO_USE_SSL !== "false",
-        accessKey: process.env.RUSTFS_ACCESS_KEY,
-        secretKey: process.env.RUSTFS_SECRET_KEY,
-      })
-    : null;
-
 async function resolveMinioObjectUrl(path?: string | null) {
-  if (!path) return path;
-  if (/^https?:\/\//i.test(path)) return path;
-  if (!minioClient) return path;
-
-  try {
-    return await minioClient.presignedGetObject(MINIO_BUCKET, path, 60 * 60, {
-      "response-content-type": "image/webp",
-      "content-disposition": "inline",
-      "response-cache-control": "no-cache",
-    });
-  } catch {
-    return path;
-  }
+  return minio.getFile(path, MINIO_BUCKET_NAME);
 }
 
 async function enrichUserMedia<

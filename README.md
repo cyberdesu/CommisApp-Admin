@@ -31,6 +31,15 @@ pnpm start:prod
 
 pnpm start
 # alias to start:prod
+
+pnpm create-admin:dev -- admin@mail.com password123 "Admin Dev"
+# create admin ke DB artwish_dev
+
+pnpm create-admin:prod -- admin@mail.com password123 "Admin Prod"
+# create admin ke DB artwish
+
+pnpm create-admin -- admin@mail.com password123 "Admin Prod"
+# alias to create-admin:prod
 ```
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.

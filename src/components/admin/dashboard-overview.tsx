@@ -176,8 +176,8 @@ export function DashboardOverview() {
         )}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(320px,0.95fr)]">
-        <Card className="border border-border bg-card shadow-sm">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.65fr)_minmax(0,0.95fr)]">
+        <Card className="min-w-0 border border-border bg-card shadow-sm">
           <CardHeader className="flex flex-col gap-4 border-b border-border/70 pb-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
@@ -208,13 +208,20 @@ export function DashboardOverview() {
             </div>
           </CardHeader>
 
-          <CardContent className="h-96 pt-6">
+          <CardContent className="h-96 min-h-[320px] pt-6">
             {isMounted ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                  data={trafficData}
-                  margin={{ top: 8, right: 8, left: -16, bottom: 0 }}
+              <div className="h-full min-h-[320px] w-full min-w-0">
+                <ResponsiveContainer
+                  width="100%"
+                  height="100%"
+                  minWidth={0}
+                  minHeight={320}
+                  debounce={50}
                 >
+                  <AreaChart
+                    data={trafficData}
+                    margin={{ top: 8, right: 8, left: -16, bottom: 0 }}
+                  >
                   <defs>
                     <linearGradient
                       id="visitors-fill"
@@ -306,8 +313,9 @@ export function DashboardOverview() {
                     strokeWidth={3}
                     activeDot={{ r: 5, fill: "#f97316", stroke: "#fff", strokeWidth: 2 }}
                   />
-                </AreaChart>
-              </ResponsiveContainer>
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
             ) : (
               <div className="h-full animate-pulse rounded-xl border border-border/70 bg-secondary/45" />
             )}

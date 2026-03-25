@@ -1,6 +1,7 @@
 import { Client as MinioClient } from "minio"
 
-const DEFAULT_BUCKET_NAME = process.env.MINIO_BUCKET || "artwish"
+const DEFAULT_BUCKET_NAME =
+  process.env.MINIO_BUCKET || process.env.RUSTFS_BUCKET || "artwish"
 const DEFAULT_EXPIRATION_SECONDS = 60 * 60
 const URL_CACHE_MAX_TTL_MS = 50 * 60 * 1000
 
@@ -9,30 +10,98 @@ type CachedUrlEntry = {
   expiresAt: number
 }
 
+type ParsedEndpoint = {
+  endPoint: string
+  port?: number
+  useSSLFromScheme?: boolean
+}
+
 const ABSOLUTE_URL_REGEX = /^https?:\/\//i
 
 class MinioHelper {
   private client: MinioClient | null = null
   private readonly urlCache = new Map<string, CachedUrlEntry>()
 
+  private parseEndpoint(rawValue: string): ParsedEndpoint | null {
+    const trimmed = rawValue.trim()
+    if (!trimmed) return null
+
+    let withoutPath = trimmed.replace(/\/+$/, "")
+    let useSSLFromScheme: boolean | undefined
+    let explicitPort: number | undefined
+
+    if (ABSOLUTE_URL_REGEX.test(withoutPath)) {
+      const parsedUrl = new URL(withoutPath)
+      withoutPath = parsedUrl.host
+      useSSLFromScheme = parsedUrl.protocol === "https:"
+      if (parsedUrl.port) {
+        const parsedPort = Number(parsedUrl.port)
+        if (Number.isFinite(parsedPort) && parsedPort > 0) {
+          explicitPort = parsedPort
+        }
+      }
+    } else {
+      withoutPath = withoutPath.replace(/^\/+/, "").split("/")[0] || ""
+    }
+
+    if (!withoutPath) return null
+
+    if (withoutPath.includes(":")) {
+      const [host, portText] = withoutPath.split(":")
+      const parsedPort = Number(portText)
+
+      if (host) {
+        withoutPath = host
+      }
+
+      if (Number.isFinite(parsedPort) && parsedPort > 0) {
+        explicitPort = parsedPort
+      }
+    }
+
+    if (!withoutPath) return null
+
+    return {
+      endPoint: withoutPath,
+      ...(explicitPort ? { port: explicitPort } : {}),
+      ...(useSSLFromScheme !== undefined ? { useSSLFromScheme } : {}),
+    }
+  }
+
   private getClient() {
     if (this.client) return this.client
 
-    const endPoint = process.env.MINIO_ENDPOINT
+    const endpointFromEnv =
+      process.env.MINIO_ENDPOINT ||
+      process.env.RUSTFS_MINIO_ENDPOINT ||
+      process.env.RUSTFS_ENDPOINT
     const accessKey = process.env.RUSTFS_ACCESS_KEY || process.env.MINIO_ACCESS_KEY
     const secretKey =
       process.env.RUSTFS_SECRET_KEY || process.env.MINIO_SECRET_KEY
 
-    if (!endPoint || !accessKey || !secretKey) {
+    if (!endpointFromEnv || !accessKey || !secretKey) {
       return null
     }
 
-    const useSSL = process.env.MINIO_USE_SSL !== "false"
+    const parsedEndpoint = this.parseEndpoint(endpointFromEnv)
+    if (!parsedEndpoint) {
+      return null
+    }
+
+    const useSSL =
+      process.env.MINIO_USE_SSL !== undefined
+        ? process.env.MINIO_USE_SSL !== "false"
+        : parsedEndpoint.useSSLFromScheme ?? true
+
     const portValue = process.env.MINIO_PORT
-    const port = portValue ? Number(portValue) : undefined
+    const parsedPort = portValue ? Number(portValue) : undefined
+    const port =
+      parsedPort && Number.isFinite(parsedPort) && parsedPort > 0
+        ? parsedPort
+        : parsedEndpoint.port
 
     this.client = new MinioClient({
-      endPoint: endPoint.replace(/^https?:\/\//i, "").replace(/\/+$/, ""),
+      endPoint: parsedEndpoint.endPoint,
       useSSL,
       ...(port ? { port } : {}),
       accessKey,
