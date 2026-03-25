@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import '@/lib/auth/passport';
 import passport from 'passport';
+import { z } from 'zod';
 import { createSession, setSessionCookie } from '@/lib/auth/session';
 import prisma from '@/lib/prisma';
 
 type AdminUser = NonNullable<Awaited<ReturnType<typeof prisma.adminUser.findUnique>>>;
+
+const loginSchema = z.object({
+  email: z.string().email().max(255),
+  password: z.string().min(1).max(255),
+});
 
 // Passport authenticate helper wrapped for Next.js App Router
 function runPassportLocal(
@@ -30,17 +36,16 @@ function runPassportLocal(
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { email, password } = body;
-
-    if (!email || !password) {
+    const parsed = loginSchema.safeParse(await req.json());
+    if (!parsed.success) {
       return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
     }
+    const { email, password } = parsed.data;
 
-    const { user, info } = await runPassportLocal({ email, password });
+    const { user } = await runPassportLocal({ email, password });
 
     if (!user) {
-      return NextResponse.json({ message: info?.message ?? 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
     }
 
     const sessionId = await createSession(user);

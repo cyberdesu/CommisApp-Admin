@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { isAllowedOrigin } from "@/lib/auth/origin";
 import { getSessionAdmin } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
 
@@ -26,6 +27,10 @@ function parseRequestId(rawId: string) {
 
 export async function PATCH(req: NextRequest, context: RouteContext) {
   try {
+    if (!isAllowedOrigin(req)) {
+      return NextResponse.json({ message: "Forbidden origin" }, { status: 403 });
+    }
+
     const admin = await getSessionAdmin(req);
     if (!admin) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

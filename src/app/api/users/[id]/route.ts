@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { isAllowedOrigin } from "@/lib/auth/origin";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 
 type RouteContext = {
@@ -122,6 +123,10 @@ const updateUserSchema = z.object({
 
 export async function PATCH(req: NextRequest, context: RouteContext) {
   try {
+    if (!isAllowedOrigin(req)) {
+      return NextResponse.json({ message: "Forbidden origin" }, { status: 403 });
+    }
+
     const admin = await getSessionAdmin(req);
 
     if (!admin) {
@@ -304,6 +309,10 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
 export async function DELETE(req: NextRequest, context: RouteContext) {
   try {
+    if (!isAllowedOrigin(req)) {
+      return NextResponse.json({ message: "Forbidden origin" }, { status: 403 });
+    }
+
     const admin = await getSessionAdmin(req);
 
     if (!admin) {
