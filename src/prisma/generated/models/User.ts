@@ -50,6 +50,9 @@ export type UserMinAggregateOutputType = {
   banner: string | null
   bio: string | null
   country: string | null
+  isBanned: boolean | null
+  suspendedUntil: Date | null
+  banReason: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -68,6 +71,9 @@ export type UserMaxAggregateOutputType = {
   banner: string | null
   bio: string | null
   country: string | null
+  isBanned: boolean | null
+  suspendedUntil: Date | null
+  banReason: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -86,6 +92,9 @@ export type UserCountAggregateOutputType = {
   banner: number
   bio: number
   country: number
+  isBanned: number
+  suspendedUntil: number
+  banReason: number
   _all: number
 }
 
@@ -114,6 +123,9 @@ export type UserMinAggregateInputType = {
   banner?: true
   bio?: true
   country?: true
+  isBanned?: true
+  suspendedUntil?: true
+  banReason?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -132,6 +144,9 @@ export type UserMaxAggregateInputType = {
   banner?: true
   bio?: true
   country?: true
+  isBanned?: true
+  suspendedUntil?: true
+  banReason?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -150,6 +165,9 @@ export type UserCountAggregateInputType = {
   banner?: true
   bio?: true
   country?: true
+  isBanned?: true
+  suspendedUntil?: true
+  banReason?: true
   _all?: true
 }
 
@@ -255,6 +273,9 @@ export type UserGroupByOutputType = {
   banner: string | null
   bio: string | null
   country: string | null
+  isBanned: boolean
+  suspendedUntil: Date | null
+  banReason: string | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -296,6 +317,9 @@ export type UserWhereInput = {
   banner?: Prisma.StringNullableFilter<"User"> | string | null
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   country?: Prisma.StringNullableFilter<"User"> | string | null
+  isBanned?: Prisma.BoolFilter<"User"> | boolean
+  suspendedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  banReason?: Prisma.StringNullableFilter<"User"> | string | null
   tokens?: Prisma.XOR<Prisma.AuthTokenNullableScalarRelationFilter, Prisma.AuthTokenWhereInput> | null
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
   socials?: Prisma.XOR<Prisma.SocialsNullableScalarRelationFilter, Prisma.SocialsWhereInput> | null
@@ -311,6 +335,7 @@ export type UserWhereInput = {
   settings?: Prisma.XOR<Prisma.SettingsNullableScalarRelationFilter, Prisma.SettingsWhereInput> | null
   profileSearches?: Prisma.ProfileSearchRecordListRelationFilter
   artistVerification?: Prisma.XOR<Prisma.ArtistVerificationRequestNullableScalarRelationFilter, Prisma.ArtistVerificationRequestWhereInput> | null
+  moderations?: Prisma.UserModerationListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -329,6 +354,9 @@ export type UserOrderByWithRelationInput = {
   banner?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  banReason?: Prisma.SortOrderInput | Prisma.SortOrder
   tokens?: Prisma.AuthTokenOrderByWithRelationInput
   refreshTokens?: Prisma.RefreshTokenOrderByRelationAggregateInput
   socials?: Prisma.SocialsOrderByWithRelationInput
@@ -344,6 +372,7 @@ export type UserOrderByWithRelationInput = {
   settings?: Prisma.SettingsOrderByWithRelationInput
   profileSearches?: Prisma.ProfileSearchRecordOrderByRelationAggregateInput
   artistVerification?: Prisma.ArtistVerificationRequestOrderByWithRelationInput
+  moderations?: Prisma.UserModerationOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -366,6 +395,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   banner?: Prisma.StringNullableFilter<"User"> | string | null
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   country?: Prisma.StringNullableFilter<"User"> | string | null
+  isBanned?: Prisma.BoolFilter<"User"> | boolean
+  suspendedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  banReason?: Prisma.StringNullableFilter<"User"> | string | null
   tokens?: Prisma.XOR<Prisma.AuthTokenNullableScalarRelationFilter, Prisma.AuthTokenWhereInput> | null
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
   socials?: Prisma.XOR<Prisma.SocialsNullableScalarRelationFilter, Prisma.SocialsWhereInput> | null
@@ -381,6 +413,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   settings?: Prisma.XOR<Prisma.SettingsNullableScalarRelationFilter, Prisma.SettingsWhereInput> | null
   profileSearches?: Prisma.ProfileSearchRecordListRelationFilter
   artistVerification?: Prisma.XOR<Prisma.ArtistVerificationRequestNullableScalarRelationFilter, Prisma.ArtistVerificationRequestWhereInput> | null
+  moderations?: Prisma.UserModerationListRelationFilter
 }, "id" | "email" | "username" | "subId">
 
 export type UserOrderByWithAggregationInput = {
@@ -399,6 +432,9 @@ export type UserOrderByWithAggregationInput = {
   banner?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  banReason?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -425,6 +461,9 @@ export type UserScalarWhereWithAggregatesInput = {
   banner?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   bio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   country?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  isBanned?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  suspendedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  banReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
@@ -442,6 +481,9 @@ export type UserCreateInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -457,6 +499,7 @@ export type UserCreateInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -475,6 +518,9 @@ export type UserUncheckedCreateInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -490,6 +536,7 @@ export type UserUncheckedCreateInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -507,6 +554,9 @@ export type UserUpdateInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -522,6 +572,7 @@ export type UserUpdateInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -540,6 +591,9 @@ export type UserUncheckedUpdateInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -555,6 +609,7 @@ export type UserUncheckedUpdateInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -573,6 +628,9 @@ export type UserCreateManyInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -590,6 +648,9 @@ export type UserUpdateManyMutationInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -608,6 +669,9 @@ export type UserUncheckedUpdateManyInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserOrderByRelevanceInput = {
@@ -632,6 +696,9 @@ export type UserCountOrderByAggregateInput = {
   banner?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrder
+  banReason?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -654,6 +721,9 @@ export type UserMaxOrderByAggregateInput = {
   banner?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrder
+  banReason?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -672,6 +742,9 @@ export type UserMinOrderByAggregateInput = {
   banner?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
+  suspendedUntil?: Prisma.SortOrder
+  banReason?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -689,6 +762,24 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type UserCreateNestedOneWithoutModerationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutModerationsInput, Prisma.UserUncheckedCreateWithoutModerationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutModerationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutModerationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutModerationsInput, Prisma.UserUncheckedCreateWithoutModerationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutModerationsInput
+  upsert?: Prisma.UserUpsertWithoutModerationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutModerationsInput, Prisma.UserUpdateWithoutModerationsInput>, Prisma.UserUncheckedUpdateWithoutModerationsInput>
 }
 
 export type UserCreateNestedOneWithoutArtistVerificationInput = {
@@ -901,6 +992,164 @@ export type UserUpdateOneRequiredWithoutBookmarksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBookmarksInput, Prisma.UserUpdateWithoutBookmarksInput>, Prisma.UserUncheckedUpdateWithoutBookmarksInput>
 }
 
+export type UserCreateWithoutModerationsInput = {
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
+  tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
+  folders?: Prisma.FolderCreateNestedManyWithoutUserInput
+  workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
+  form?: Prisma.RequestFormCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutModerationsInput = {
+  id?: number
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutUserInput
+  workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
+  form?: Prisma.RequestFormUncheckedCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutModerationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutModerationsInput, Prisma.UserUncheckedCreateWithoutModerationsInput>
+}
+
+export type UserUpsertWithoutModerationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutModerationsInput, Prisma.UserUncheckedUpdateWithoutModerationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutModerationsInput, Prisma.UserUncheckedCreateWithoutModerationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutModerationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutModerationsInput, Prisma.UserUncheckedUpdateWithoutModerationsInput>
+}
+
+export type UserUpdateWithoutModerationsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
+  form?: Prisma.RequestFormUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutModerationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
+  form?: Prisma.RequestFormUncheckedUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+}
+
 export type UserCreateWithoutArtistVerificationInput = {
   email: string
   passwordHash: string
@@ -916,6 +1165,9 @@ export type UserCreateWithoutArtistVerificationInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -930,6 +1182,7 @@ export type UserCreateWithoutArtistVerificationInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutArtistVerificationInput = {
@@ -948,6 +1201,9 @@ export type UserUncheckedCreateWithoutArtistVerificationInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -962,6 +1218,7 @@ export type UserUncheckedCreateWithoutArtistVerificationInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutArtistVerificationInput = {
@@ -995,6 +1252,9 @@ export type UserUpdateWithoutArtistVerificationInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -1009,6 +1269,7 @@ export type UserUpdateWithoutArtistVerificationInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutArtistVerificationInput = {
@@ -1027,6 +1288,9 @@ export type UserUncheckedUpdateWithoutArtistVerificationInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -1041,6 +1305,7 @@ export type UserUncheckedUpdateWithoutArtistVerificationInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSettingsInput = {
@@ -1058,6 +1323,9 @@ export type UserCreateWithoutSettingsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -1072,6 +1340,7 @@ export type UserCreateWithoutSettingsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSettingsInput = {
@@ -1090,6 +1359,9 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -1104,6 +1376,7 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSettingsInput = {
@@ -1137,6 +1410,9 @@ export type UserUpdateWithoutSettingsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -1151,6 +1427,7 @@ export type UserUpdateWithoutSettingsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
@@ -1169,6 +1446,9 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -1183,6 +1463,7 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSocialsInput = {
@@ -1200,6 +1481,9 @@ export type UserCreateWithoutSocialsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
@@ -1214,6 +1498,7 @@ export type UserCreateWithoutSocialsInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSocialsInput = {
@@ -1232,6 +1517,9 @@ export type UserUncheckedCreateWithoutSocialsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
@@ -1246,6 +1534,7 @@ export type UserUncheckedCreateWithoutSocialsInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSocialsInput = {
@@ -1279,6 +1568,9 @@ export type UserUpdateWithoutSocialsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
@@ -1293,6 +1585,7 @@ export type UserUpdateWithoutSocialsInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSocialsInput = {
@@ -1311,6 +1604,9 @@ export type UserUncheckedUpdateWithoutSocialsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
@@ -1325,6 +1621,7 @@ export type UserUncheckedUpdateWithoutSocialsInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOtpsInput = {
@@ -1342,6 +1639,9 @@ export type UserCreateWithoutOtpsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -1356,6 +1656,7 @@ export type UserCreateWithoutOtpsInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOtpsInput = {
@@ -1374,6 +1675,9 @@ export type UserUncheckedCreateWithoutOtpsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -1388,6 +1692,7 @@ export type UserUncheckedCreateWithoutOtpsInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOtpsInput = {
@@ -1421,6 +1726,9 @@ export type UserUpdateWithoutOtpsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -1435,6 +1743,7 @@ export type UserUpdateWithoutOtpsInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOtpsInput = {
@@ -1453,6 +1762,9 @@ export type UserUncheckedUpdateWithoutOtpsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -1467,6 +1779,7 @@ export type UserUncheckedUpdateWithoutOtpsInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTokensInput = {
@@ -1484,6 +1797,9 @@ export type UserCreateWithoutTokensInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
@@ -1498,6 +1814,7 @@ export type UserCreateWithoutTokensInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTokensInput = {
@@ -1516,6 +1833,9 @@ export type UserUncheckedCreateWithoutTokensInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
@@ -1530,6 +1850,7 @@ export type UserUncheckedCreateWithoutTokensInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTokensInput = {
@@ -1563,6 +1884,9 @@ export type UserUpdateWithoutTokensInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
@@ -1577,6 +1901,7 @@ export type UserUpdateWithoutTokensInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTokensInput = {
@@ -1595,6 +1920,9 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
@@ -1609,6 +1937,7 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRefreshTokensInput = {
@@ -1626,6 +1955,9 @@ export type UserCreateWithoutRefreshTokensInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
@@ -1640,6 +1972,7 @@ export type UserCreateWithoutRefreshTokensInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRefreshTokensInput = {
@@ -1658,6 +1991,9 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
@@ -1672,6 +2008,7 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -1705,6 +2042,9 @@ export type UserUpdateWithoutRefreshTokensInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
@@ -1719,6 +2059,7 @@ export type UserUpdateWithoutRefreshTokensInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefreshTokensInput = {
@@ -1737,6 +2078,9 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
@@ -1751,6 +2095,7 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProfileSearchesInput = {
@@ -1768,6 +2113,9 @@ export type UserCreateWithoutProfileSearchesInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -1782,6 +2130,7 @@ export type UserCreateWithoutProfileSearchesInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileSearchesInput = {
@@ -1800,6 +2149,9 @@ export type UserUncheckedCreateWithoutProfileSearchesInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -1814,6 +2166,7 @@ export type UserUncheckedCreateWithoutProfileSearchesInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileSearchesInput = {
@@ -1847,6 +2200,9 @@ export type UserUpdateWithoutProfileSearchesInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -1861,6 +2217,7 @@ export type UserUpdateWithoutProfileSearchesInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileSearchesInput = {
@@ -1879,6 +2236,9 @@ export type UserUncheckedUpdateWithoutProfileSearchesInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -1893,6 +2253,7 @@ export type UserUncheckedUpdateWithoutProfileSearchesInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutShowcasesInput = {
@@ -1910,6 +2271,9 @@ export type UserCreateWithoutShowcasesInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -1924,6 +2288,7 @@ export type UserCreateWithoutShowcasesInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutShowcasesInput = {
@@ -1942,6 +2307,9 @@ export type UserUncheckedCreateWithoutShowcasesInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -1956,6 +2324,7 @@ export type UserUncheckedCreateWithoutShowcasesInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutShowcasesInput = {
@@ -1989,6 +2358,9 @@ export type UserUpdateWithoutShowcasesInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -2003,6 +2375,7 @@ export type UserUpdateWithoutShowcasesInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutShowcasesInput = {
@@ -2021,6 +2394,9 @@ export type UserUncheckedUpdateWithoutShowcasesInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -2035,6 +2411,7 @@ export type UserUncheckedUpdateWithoutShowcasesInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFoldersInput = {
@@ -2052,6 +2429,9 @@ export type UserCreateWithoutFoldersInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -2066,6 +2446,7 @@ export type UserCreateWithoutFoldersInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFoldersInput = {
@@ -2084,6 +2465,9 @@ export type UserUncheckedCreateWithoutFoldersInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -2098,6 +2482,7 @@ export type UserUncheckedCreateWithoutFoldersInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFoldersInput = {
@@ -2131,6 +2516,9 @@ export type UserUpdateWithoutFoldersInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -2145,6 +2533,7 @@ export type UserUpdateWithoutFoldersInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFoldersInput = {
@@ -2163,6 +2552,9 @@ export type UserUncheckedUpdateWithoutFoldersInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -2177,6 +2569,7 @@ export type UserUncheckedUpdateWithoutFoldersInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWorkflowsInput = {
@@ -2194,6 +2587,9 @@ export type UserCreateWithoutWorkflowsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -2208,6 +2604,7 @@ export type UserCreateWithoutWorkflowsInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkflowsInput = {
@@ -2226,6 +2623,9 @@ export type UserUncheckedCreateWithoutWorkflowsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -2240,6 +2640,7 @@ export type UserUncheckedCreateWithoutWorkflowsInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWorkflowsInput = {
@@ -2273,6 +2674,9 @@ export type UserUpdateWithoutWorkflowsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -2287,6 +2691,7 @@ export type UserUpdateWithoutWorkflowsInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkflowsInput = {
@@ -2305,6 +2710,9 @@ export type UserUncheckedUpdateWithoutWorkflowsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -2319,6 +2727,7 @@ export type UserUncheckedUpdateWithoutWorkflowsInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFormInput = {
@@ -2336,6 +2745,9 @@ export type UserCreateWithoutFormInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -2350,6 +2762,7 @@ export type UserCreateWithoutFormInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFormInput = {
@@ -2368,6 +2781,9 @@ export type UserUncheckedCreateWithoutFormInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -2382,6 +2798,7 @@ export type UserUncheckedCreateWithoutFormInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFormInput = {
@@ -2415,6 +2832,9 @@ export type UserUpdateWithoutFormInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -2429,6 +2849,7 @@ export type UserUpdateWithoutFormInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFormInput = {
@@ -2447,6 +2868,9 @@ export type UserUncheckedUpdateWithoutFormInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -2461,6 +2885,7 @@ export type UserUncheckedUpdateWithoutFormInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInteractionsInput = {
@@ -2478,6 +2903,9 @@ export type UserCreateWithoutInteractionsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -2492,6 +2920,7 @@ export type UserCreateWithoutInteractionsInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -2510,6 +2939,9 @@ export type UserUncheckedCreateWithoutInteractionsInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -2524,6 +2956,7 @@ export type UserUncheckedCreateWithoutInteractionsInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -2557,6 +2990,9 @@ export type UserUpdateWithoutInteractionsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -2571,6 +3007,7 @@ export type UserUpdateWithoutInteractionsInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -2589,6 +3026,9 @@ export type UserUncheckedUpdateWithoutInteractionsInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -2603,6 +3043,7 @@ export type UserUncheckedUpdateWithoutInteractionsInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFollowingInput = {
@@ -2620,6 +3061,9 @@ export type UserCreateWithoutFollowingInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -2634,6 +3078,7 @@ export type UserCreateWithoutFollowingInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowingInput = {
@@ -2652,6 +3097,9 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -2666,6 +3114,7 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowingInput = {
@@ -2688,6 +3137,9 @@ export type UserCreateWithoutFollowersInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -2702,6 +3154,7 @@ export type UserCreateWithoutFollowersInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowersInput = {
@@ -2720,6 +3173,9 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -2734,6 +3190,7 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowersInput = {
@@ -2767,6 +3224,9 @@ export type UserUpdateWithoutFollowingInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -2781,6 +3241,7 @@ export type UserUpdateWithoutFollowingInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowingInput = {
@@ -2799,6 +3260,9 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -2813,6 +3277,7 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutFollowersInput = {
@@ -2841,6 +3306,9 @@ export type UserUpdateWithoutFollowersInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -2855,6 +3323,7 @@ export type UserUpdateWithoutFollowersInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowersInput = {
@@ -2873,6 +3342,9 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -2887,6 +3359,7 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBookmarksInput = {
@@ -2904,6 +3377,9 @@ export type UserCreateWithoutBookmarksInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
@@ -2918,6 +3394,7 @@ export type UserCreateWithoutBookmarksInput = {
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBookmarksInput = {
@@ -2936,6 +3413,9 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   banner?: string | null
   bio?: string | null
   country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
@@ -2950,6 +3430,7 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBookmarksInput = {
@@ -2983,6 +3464,9 @@ export type UserUpdateWithoutBookmarksInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
@@ -2997,6 +3481,7 @@ export type UserUpdateWithoutBookmarksInput = {
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBookmarksInput = {
@@ -3015,6 +3500,9 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
@@ -3029,6 +3517,7 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -3047,6 +3536,7 @@ export type UserCountOutputType = {
   followers: number
   bookmarks: number
   profileSearches: number
+  moderations: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3060,6 +3550,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   followers?: boolean | UserCountOutputTypeCountFollowersArgs
   bookmarks?: boolean | UserCountOutputTypeCountBookmarksArgs
   profileSearches?: boolean | UserCountOutputTypeCountProfileSearchesArgs
+  moderations?: boolean | UserCountOutputTypeCountModerationsArgs
 }
 
 /**
@@ -3142,6 +3633,13 @@ export type UserCountOutputTypeCountProfileSearchesArgs<ExtArgs extends runtime.
   where?: Prisma.ProfileSearchRecordWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountModerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserModerationWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3159,6 +3657,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   banner?: boolean
   bio?: boolean
   country?: boolean
+  isBanned?: boolean
+  suspendedUntil?: boolean
+  banReason?: boolean
   tokens?: boolean | Prisma.User$tokensArgs<ExtArgs>
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   socials?: boolean | Prisma.User$socialsArgs<ExtArgs>
@@ -3174,6 +3675,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   profileSearches?: boolean | Prisma.User$profileSearchesArgs<ExtArgs>
   artistVerification?: boolean | Prisma.User$artistVerificationArgs<ExtArgs>
+  moderations?: boolean | Prisma.User$moderationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3193,6 +3695,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   banner?: boolean
   bio?: boolean
   country?: boolean
+  isBanned?: boolean
+  suspendedUntil?: boolean
+  banReason?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -3211,6 +3716,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   banner?: boolean
   bio?: boolean
   country?: boolean
+  isBanned?: boolean
+  suspendedUntil?: boolean
+  banReason?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -3229,9 +3737,12 @@ export type UserSelectScalar = {
   banner?: boolean
   bio?: boolean
   country?: boolean
+  isBanned?: boolean
+  suspendedUntil?: boolean
+  banReason?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "createdAt" | "updatedAt" | "role" | "username" | "subId" | "verified" | "verifiedArtists" | "avatar" | "banner" | "bio" | "country", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "createdAt" | "updatedAt" | "role" | "username" | "subId" | "verified" | "verifiedArtists" | "avatar" | "banner" | "bio" | "country" | "isBanned" | "suspendedUntil" | "banReason", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tokens?: boolean | Prisma.User$tokensArgs<ExtArgs>
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
@@ -3248,6 +3759,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   profileSearches?: boolean | Prisma.User$profileSearchesArgs<ExtArgs>
   artistVerification?: boolean | Prisma.User$artistVerificationArgs<ExtArgs>
+  moderations?: boolean | Prisma.User$moderationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3271,6 +3783,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     settings: Prisma.$SettingsPayload<ExtArgs> | null
     profileSearches: Prisma.$ProfileSearchRecordPayload<ExtArgs>[]
     artistVerification: Prisma.$ArtistVerificationRequestPayload<ExtArgs> | null
+    moderations: Prisma.$UserModerationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -3288,6 +3801,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     banner: string | null
     bio: string | null
     country: string | null
+    isBanned: boolean
+    suspendedUntil: Date | null
+    banReason: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -3697,6 +4213,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__SettingsClient<runtime.Types.Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   profileSearches<T extends Prisma.User$profileSearchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileSearchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileSearchRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   artistVerification<T extends Prisma.User$artistVerificationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$artistVerificationArgs<ExtArgs>>): Prisma.Prisma__ArtistVerificationRequestClient<runtime.Types.Result.GetResult<Prisma.$ArtistVerificationRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  moderations<T extends Prisma.User$moderationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$moderationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserModerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3741,6 +4258,9 @@ export interface UserFieldRefs {
   readonly banner: Prisma.FieldRef<"User", 'String'>
   readonly bio: Prisma.FieldRef<"User", 'String'>
   readonly country: Prisma.FieldRef<"User", 'String'>
+  readonly isBanned: Prisma.FieldRef<"User", 'Boolean'>
+  readonly suspendedUntil: Prisma.FieldRef<"User", 'DateTime'>
+  readonly banReason: Prisma.FieldRef<"User", 'String'>
 }
     
 
@@ -4466,6 +4986,30 @@ export type User$artistVerificationArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.ArtistVerificationRequestInclude<ExtArgs> | null
   where?: Prisma.ArtistVerificationRequestWhereInput
+}
+
+/**
+ * User.moderations
+ */
+export type User$moderationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserModeration
+   */
+  select?: Prisma.UserModerationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserModeration
+   */
+  omit?: Prisma.UserModerationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserModerationInclude<ExtArgs> | null
+  where?: Prisma.UserModerationWhereInput
+  orderBy?: Prisma.UserModerationOrderByWithRelationInput | Prisma.UserModerationOrderByWithRelationInput[]
+  cursor?: Prisma.UserModerationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserModerationScalarFieldEnum | Prisma.UserModerationScalarFieldEnum[]
 }
 
 /**

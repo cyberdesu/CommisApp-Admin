@@ -225,6 +225,7 @@ export type AdminUserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   sessions?: Prisma.AdminSessionListRelationFilter
+  moderations?: Prisma.UserModerationListRelationFilter
 }
 
 export type AdminUserOrderByWithRelationInput = {
@@ -235,6 +236,7 @@ export type AdminUserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.AdminSessionOrderByRelationAggregateInput
+  moderations?: Prisma.UserModerationOrderByRelationAggregateInput
   _relevance?: Prisma.AdminUserOrderByRelevanceInput
 }
 
@@ -249,6 +251,7 @@ export type AdminUserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   sessions?: Prisma.AdminSessionListRelationFilter
+  moderations?: Prisma.UserModerationListRelationFilter
 }, "id" | "email">
 
 export type AdminUserOrderByWithAggregationInput = {
@@ -284,6 +287,7 @@ export type AdminUserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUserUncheckedCreateInput = {
@@ -294,6 +298,7 @@ export type AdminUserUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUserUpdateInput = {
@@ -303,6 +308,7 @@ export type AdminUserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminUserUncheckedUpdateInput = {
@@ -313,6 +319,7 @@ export type AdminUserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminUserCreateManyInput = {
@@ -417,12 +424,27 @@ export type AdminUserUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUserUpdateToOneWithWhereWithoutSessionsInput, Prisma.AdminUserUpdateWithoutSessionsInput>, Prisma.AdminUserUncheckedUpdateWithoutSessionsInput>
 }
 
+export type AdminUserCreateNestedOneWithoutModerationsInput = {
+  create?: Prisma.XOR<Prisma.AdminUserCreateWithoutModerationsInput, Prisma.AdminUserUncheckedCreateWithoutModerationsInput>
+  connectOrCreate?: Prisma.AdminUserCreateOrConnectWithoutModerationsInput
+  connect?: Prisma.AdminUserWhereUniqueInput
+}
+
+export type AdminUserUpdateOneRequiredWithoutModerationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminUserCreateWithoutModerationsInput, Prisma.AdminUserUncheckedCreateWithoutModerationsInput>
+  connectOrCreate?: Prisma.AdminUserCreateOrConnectWithoutModerationsInput
+  upsert?: Prisma.AdminUserUpsertWithoutModerationsInput
+  connect?: Prisma.AdminUserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUserUpdateToOneWithWhereWithoutModerationsInput, Prisma.AdminUserUpdateWithoutModerationsInput>, Prisma.AdminUserUncheckedUpdateWithoutModerationsInput>
+}
+
 export type AdminUserCreateWithoutSessionsInput = {
   email: string
   passwordHash: string
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUserUncheckedCreateWithoutSessionsInput = {
@@ -432,6 +454,7 @@ export type AdminUserUncheckedCreateWithoutSessionsInput = {
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUserCreateOrConnectWithoutSessionsInput = {
@@ -456,6 +479,7 @@ export type AdminUserUpdateWithoutSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  moderations?: Prisma.UserModerationUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminUserUncheckedUpdateWithoutSessionsInput = {
@@ -465,6 +489,61 @@ export type AdminUserUncheckedUpdateWithoutSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutAdminNestedInput
+}
+
+export type AdminUserCreateWithoutModerationsInput = {
+  email: string
+  passwordHash: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+}
+
+export type AdminUserUncheckedCreateWithoutModerationsInput = {
+  id?: number
+  email: string
+  passwordHash: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+}
+
+export type AdminUserCreateOrConnectWithoutModerationsInput = {
+  where: Prisma.AdminUserWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminUserCreateWithoutModerationsInput, Prisma.AdminUserUncheckedCreateWithoutModerationsInput>
+}
+
+export type AdminUserUpsertWithoutModerationsInput = {
+  update: Prisma.XOR<Prisma.AdminUserUpdateWithoutModerationsInput, Prisma.AdminUserUncheckedUpdateWithoutModerationsInput>
+  create: Prisma.XOR<Prisma.AdminUserCreateWithoutModerationsInput, Prisma.AdminUserUncheckedCreateWithoutModerationsInput>
+  where?: Prisma.AdminUserWhereInput
+}
+
+export type AdminUserUpdateToOneWithWhereWithoutModerationsInput = {
+  where?: Prisma.AdminUserWhereInput
+  data: Prisma.XOR<Prisma.AdminUserUpdateWithoutModerationsInput, Prisma.AdminUserUncheckedUpdateWithoutModerationsInput>
+}
+
+export type AdminUserUpdateWithoutModerationsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+}
+
+export type AdminUserUncheckedUpdateWithoutModerationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 
@@ -474,10 +553,12 @@ export type AdminUserUncheckedUpdateWithoutSessionsInput = {
 
 export type AdminUserCountOutputType = {
   sessions: number
+  moderations: number
 }
 
 export type AdminUserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | AdminUserCountOutputTypeCountSessionsArgs
+  moderations?: boolean | AdminUserCountOutputTypeCountModerationsArgs
 }
 
 /**
@@ -497,6 +578,13 @@ export type AdminUserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.AdminSessionWhereInput
 }
 
+/**
+ * AdminUserCountOutputType without action
+ */
+export type AdminUserCountOutputTypeCountModerationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserModerationWhereInput
+}
+
 
 export type AdminUserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -506,6 +594,7 @@ export type AdminUserSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   createdAt?: boolean
   updatedAt?: boolean
   sessions?: boolean | Prisma.AdminUser$sessionsArgs<ExtArgs>
+  moderations?: boolean | Prisma.AdminUser$moderationsArgs<ExtArgs>
   _count?: boolean | Prisma.AdminUserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["adminUser"]>
 
@@ -539,6 +628,7 @@ export type AdminUserSelectScalar = {
 export type AdminUserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["adminUser"]>
 export type AdminUserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.AdminUser$sessionsArgs<ExtArgs>
+  moderations?: boolean | Prisma.AdminUser$moderationsArgs<ExtArgs>
   _count?: boolean | Prisma.AdminUserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AdminUserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -548,6 +638,7 @@ export type $AdminUserPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "AdminUser"
   objects: {
     sessions: Prisma.$AdminSessionPayload<ExtArgs>[]
+    moderations: Prisma.$UserModerationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -951,6 +1042,7 @@ readonly fields: AdminUserFieldRefs;
 export interface Prisma__AdminUserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sessions<T extends Prisma.AdminUser$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdminUser$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  moderations<T extends Prisma.AdminUser$moderationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdminUser$moderationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserModerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1400,6 +1492,30 @@ export type AdminUser$sessionsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.AdminSessionScalarFieldEnum | Prisma.AdminSessionScalarFieldEnum[]
+}
+
+/**
+ * AdminUser.moderations
+ */
+export type AdminUser$moderationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserModeration
+   */
+  select?: Prisma.UserModerationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserModeration
+   */
+  omit?: Prisma.UserModerationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserModerationInclude<ExtArgs> | null
+  where?: Prisma.UserModerationWhereInput
+  orderBy?: Prisma.UserModerationOrderByWithRelationInput | Prisma.UserModerationOrderByWithRelationInput[]
+  cursor?: Prisma.UserModerationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserModerationScalarFieldEnum | Prisma.UserModerationScalarFieldEnum[]
 }
 
 /**

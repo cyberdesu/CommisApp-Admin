@@ -387,6 +387,7 @@ export const ModelName = {
   AdminUser: 'AdminUser',
   AdminSession: 'AdminSession',
   User: 'User',
+  UserModeration: 'UserModeration',
   ArtistVerificationRequest: 'ArtistVerificationRequest',
   Settings: 'Settings',
   Socials: 'Socials',
@@ -426,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "adminUser" | "adminSession" | "user" | "artistVerificationRequest" | "settings" | "socials" | "otp" | "authToken" | "refreshToken" | "publicViewRecord" | "fingerprintProfile" | "behavioralLog" | "profileSearchRecord" | "authAuditLog" | "showcaseItem" | "showcase" | "showcaseFile" | "tag" | "service" | "policy" | "folder" | "workflow" | "subPhase" | "requestForm" | "userInteraction" | "follow" | "bookmark"
+    modelProps: "adminUser" | "adminSession" | "user" | "userModeration" | "artistVerificationRequest" | "settings" | "socials" | "otp" | "authToken" | "refreshToken" | "publicViewRecord" | "fingerprintProfile" | "behavioralLog" | "profileSearchRecord" | "authAuditLog" | "showcaseItem" | "showcase" | "showcaseFile" | "tag" | "service" | "policy" | "folder" | "workflow" | "subPhase" | "requestForm" | "userInteraction" | "follow" | "bookmark"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -649,6 +650,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserModeration: {
+      payload: Prisma.$UserModerationPayload<ExtArgs>
+      fields: Prisma.UserModerationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserModerationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserModerationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload>
+        }
+        findFirst: {
+          args: Prisma.UserModerationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserModerationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload>
+        }
+        findMany: {
+          args: Prisma.UserModerationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload>[]
+        }
+        create: {
+          args: Prisma.UserModerationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload>
+        }
+        createMany: {
+          args: Prisma.UserModerationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserModerationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload>[]
+        }
+        delete: {
+          args: Prisma.UserModerationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload>
+        }
+        update: {
+          args: Prisma.UserModerationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserModerationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserModerationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserModerationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserModerationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserModerationPayload>
+        }
+        aggregate: {
+          args: Prisma.UserModerationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserModeration>
+        }
+        groupBy: {
+          args: Prisma.UserModerationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserModerationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserModerationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserModerationCountAggregateOutputType> | number
         }
       }
     }
@@ -2504,10 +2579,27 @@ export const UserScalarFieldEnum = {
   avatar: 'avatar',
   banner: 'banner',
   bio: 'bio',
-  country: 'country'
+  country: 'country',
+  isBanned: 'isBanned',
+  suspendedUntil: 'suspendedUntil',
+  banReason: 'banReason'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserModerationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  reason: 'reason',
+  duration: 'duration',
+  expiresAt: 'expiresAt',
+  adminId: 'adminId',
+  createdAt: 'createdAt'
+} as const
+
+export type UserModerationScalarFieldEnum = (typeof UserModerationScalarFieldEnum)[keyof typeof UserModerationScalarFieldEnum]
 
 
 export const ArtistVerificationRequestScalarFieldEnum = {
@@ -2867,10 +2959,19 @@ export const UserOrderByRelevanceFieldEnum = {
   avatar: 'avatar',
   banner: 'banner',
   bio: 'bio',
-  country: 'country'
+  country: 'country',
+  banReason: 'banReason'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const UserModerationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reason: 'reason'
+} as const
+
+export type UserModerationOrderByRelevanceFieldEnum = (typeof UserModerationOrderByRelevanceFieldEnum)[keyof typeof UserModerationOrderByRelevanceFieldEnum]
 
 
 export const ArtistVerificationRequestOrderByRelevanceFieldEnum = {
@@ -3127,6 +3228,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'ModerationAction'
+ */
+export type EnumModerationActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ModerationAction'>
+    
+
+
+/**
+ * Reference to a field of type 'ModerationAction[]'
+ */
+export type ListEnumModerationActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ModerationAction[]'>
+    
+
+
+/**
  * Reference to a field of type 'BigInt'
  */
 export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
@@ -3307,6 +3422,7 @@ export type GlobalOmitConfig = {
   adminUser?: Prisma.AdminUserOmit
   adminSession?: Prisma.AdminSessionOmit
   user?: Prisma.UserOmit
+  userModeration?: Prisma.UserModerationOmit
   artistVerificationRequest?: Prisma.ArtistVerificationRequestOmit
   settings?: Prisma.SettingsOmit
   socials?: Prisma.SocialsOmit

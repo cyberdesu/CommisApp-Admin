@@ -9,6 +9,16 @@
 * 🟢 You can import this file directly.
 */
 
+export const ModerationAction = {
+  BAN: 'BAN',
+  UNBAN: 'UNBAN',
+  SUSPEND: 'SUSPEND',
+  UNSUSPEND: 'UNSUSPEND'
+} as const
+
+export type ModerationAction = (typeof ModerationAction)[keyof typeof ModerationAction]
+
+
 export const VerificationStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

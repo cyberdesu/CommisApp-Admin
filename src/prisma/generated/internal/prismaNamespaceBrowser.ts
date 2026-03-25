@@ -54,6 +54,7 @@ export const ModelName = {
   AdminUser: 'AdminUser',
   AdminSession: 'AdminSession',
   User: 'User',
+  UserModeration: 'UserModeration',
   ArtistVerificationRequest: 'ArtistVerificationRequest',
   Settings: 'Settings',
   Socials: 'Socials',
@@ -133,10 +134,27 @@ export const UserScalarFieldEnum = {
   avatar: 'avatar',
   banner: 'banner',
   bio: 'bio',
-  country: 'country'
+  country: 'country',
+  isBanned: 'isBanned',
+  suspendedUntil: 'suspendedUntil',
+  banReason: 'banReason'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const UserModerationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  reason: 'reason',
+  duration: 'duration',
+  expiresAt: 'expiresAt',
+  adminId: 'adminId',
+  createdAt: 'createdAt'
+} as const
+
+export type UserModerationScalarFieldEnum = (typeof UserModerationScalarFieldEnum)[keyof typeof UserModerationScalarFieldEnum]
 
 
 export const ArtistVerificationRequestScalarFieldEnum = {
@@ -496,10 +514,19 @@ export const UserOrderByRelevanceFieldEnum = {
   avatar: 'avatar',
   banner: 'banner',
   bio: 'bio',
-  country: 'country'
+  country: 'country',
+  banReason: 'banReason'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const UserModerationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reason: 'reason'
+} as const
+
+export type UserModerationOrderByRelevanceFieldEnum = (typeof UserModerationOrderByRelevanceFieldEnum)[keyof typeof UserModerationOrderByRelevanceFieldEnum]
 
 
 export const ArtistVerificationRequestOrderByRelevanceFieldEnum = {

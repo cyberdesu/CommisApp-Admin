@@ -55,6 +55,11 @@ export type AdminSession = Prisma.AdminSessionModel
  */
 export type User = Prisma.UserModel
 /**
+ * Model UserModeration
+ * 
+ */
+export type UserModeration = Prisma.UserModerationModel
+/**
  * Model ArtistVerificationRequest
  * 
  */

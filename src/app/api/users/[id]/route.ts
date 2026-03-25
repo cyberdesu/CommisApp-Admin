@@ -81,12 +81,34 @@ export async function GET(req: NextRequest, context: RouteContext) {
         role: true,
         verified: true,
         verifiedArtists: true,
+        isBanned: true,
+        suspendedUntil: true,
+        banReason: true,
         avatar: true,
         banner: true,
         bio: true,
         country: true,
         createdAt: true,
         updatedAt: true,
+        moderations: {
+          take: 10,
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            action: true,
+            reason: true,
+            duration: true,
+            expiresAt: true,
+            createdAt: true,
+            admin: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -142,7 +164,12 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
     const existingUser = await prisma.user.findUnique({
       where: { id },
-      select: { id: true, email: true, username: true, verifiedArtists: true },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        verifiedArtists: true,
+      },
     });
 
     if (!existingUser) {
@@ -264,6 +291,9 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
           role: true,
           verified: true,
           verifiedArtists: true,
+          isBanned: true,
+          suspendedUntil: true,
+          banReason: true,
           avatar: true,
           banner: true,
           bio: true,

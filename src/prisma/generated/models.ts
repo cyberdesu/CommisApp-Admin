@@ -11,6 +11,7 @@
 export type * from './models/AdminUser'
 export type * from './models/AdminSession'
 export type * from './models/User'
+export type * from './models/UserModeration'
 export type * from './models/ArtistVerificationRequest'
 export type * from './models/Settings'
 export type * from './models/Socials'

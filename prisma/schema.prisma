@@ -6,6 +6,8 @@
 
 generator client {
   provider     = "prisma-client"
+  output       = "../src/prisma/generated"
+  moduleFormat = "cjs"
   previewFeatures = ["fullTextSearchPostgres"]
 }
 
@@ -25,6 +27,7 @@ model AdminUser {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   sessions     AdminSession[]
+  moderations  UserModeration[]
 
   @@map("admin_users")
 }
@@ -75,8 +78,39 @@ model User {
   profileSearches ProfileSearchRecord[] @relation("ProfileSearches")
   artistVerification ArtistVerificationRequest?
 
+  // Moderation
+  isBanned        Boolean           @default(false)
+  suspendedUntil  DateTime?
+  banReason       String?
+  moderations     UserModeration[]
+
   @@index([email])
   @@index([username])
+}
+
+enum ModerationAction {
+  BAN
+  UNBAN
+  SUSPEND
+  UNSUSPEND
+}
+
+model UserModeration {
+  id        String           @id @default(cuid())
+  userId    Int
+  action    ModerationAction
+  reason    String?
+  duration  Int?             // durasi suspend dalam jam, null untuk permanent ban
+  expiresAt DateTime?        // kapan suspend berakhir
+  adminId   Int
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  admin     AdminUser        @relation(fields: [adminId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([adminId])
+  @@map("user_moderations")
 }
 
 enum VerificationStatus {

@@ -5,6 +5,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   BadgeCheck,
+  Clock3,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
@@ -86,11 +87,31 @@ type UserItem = {
   role: string;
   verified: boolean;
   verifiedArtists: boolean;
+  isBanned: boolean;
+  suspendedUntil: string | null;
+  banReason: string | null;
   createdAt: string;
   avatar?: string | null;
   banner?: string | null;
   bio?: string | null;
   country?: string | null;
+  moderations?: UserModerationItem[];
+};
+
+type ModerationAction = "BAN" | "UNBAN" | "SUSPEND" | "UNSUSPEND";
+
+type UserModerationItem = {
+  id: string;
+  action: ModerationAction;
+  reason: string | null;
+  duration: number | null;
+  expiresAt: string | null;
+  createdAt: string;
+  admin: {
+    id: number;
+    name: string;
+    email: string;
+  };
 };
 
 type UsersResponse = {
@@ -122,6 +143,23 @@ type UpdateUserPayload = {
   verifiedArtists: boolean;
   country: string;
   bio: string;
+};
+
+type ModerateUserPayload = {
+  id: number;
+  action: ModerationAction;
+  reason?: string;
+  durationHours?: number;
+};
+
+type ModerateUserResponse = {
+  message: string;
+  data: {
+    id: number;
+    isBanned: boolean;
+    suspendedUntil: string | null;
+    banReason: string | null;
+  };
 };
 
 const PAGE_SIZE = 10;
@@ -168,6 +206,11 @@ function formatDate(dateStr: string, withTime = false) {
     year: "numeric",
     ...(withTime ? { hour: "2-digit", minute: "2-digit" } : {}),
   });
+}
+
+function isUserSuspended(user: Pick<UserItem, "suspendedUntil">) {
+  if (!user.suspendedUntil) return false;
+  return new Date(user.suspendedUntil) > new Date();
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -370,6 +413,10 @@ export default function UsersPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<UserItem | null>(null);
+  const [moderationTarget, setModerationTarget] = useState<UserItem | null>(null);
+  const [moderationAction, setModerationAction] = useState<ModerationAction>("BAN");
+  const [moderationReason, setModerationReason] = useState("");
+  const [moderationDurationHours, setModerationDurationHours] = useState("24");
 
   const [form, setForm] = useState<UpdateUserPayload>({
     name: "",
@@ -502,6 +549,40 @@ export default function UsersPage() {
     },
   });
 
+  const moderationMutation = useMutation({
+    mutationFn: async (payload: ModerateUserPayload) => {
+      const response = await apiClient.post<ModerateUserResponse>(
+        `/users/${payload.id}/moderation`,
+        {
+          action: payload.action,
+          ...(payload.reason ? { reason: payload.reason } : {}),
+          ...(payload.durationHours ? { durationHours: payload.durationHours } : {}),
+        },
+      );
+      return response.data;
+    },
+    onSuccess: (response) => {
+      toast.success(response.message);
+      setModerationTarget(null);
+      setModerationReason("");
+      setModerationDurationHours("24");
+      void queryClient.invalidateQueries({ queryKey: ["users"] });
+      void queryClient.invalidateQueries({ queryKey: ["user-detail"] });
+    },
+    onError: (error: unknown) => {
+      const message = typeof error === "object" &&
+          error !== null &&
+          "response" in error &&
+          typeof (error as { response?: { data?: { message?: string } } }).response
+            ?.data?.message === "string"
+        ? (error as { response?: { data?: { message?: string } } }).response
+            ?.data?.message
+        : "Failed to moderate user";
+
+      toast.error(message);
+    },
+  });
+
   // ── Derived state ──────────────────────────────────────────────────────────
 
   const users = usersQuery.data?.data ?? [];
@@ -550,6 +631,13 @@ export default function UsersPage() {
     setViewOpen(true);
   }
 
+  function handleOpenModerationDialog(user: UserItem, action: ModerationAction) {
+    setModerationTarget(user);
+    setModerationAction(action);
+    setModerationReason("");
+    setModerationDurationHours("24");
+  }
+
   function handleDetailSync() {
     const user = detailQuery.data;
     if (!user) return;
@@ -570,6 +658,29 @@ export default function UsersPage() {
     value: UpdateUserPayload[K],
   ) {
     setForm((cur) => ({ ...cur, [key]: value }));
+  }
+
+  function submitModeration() {
+    if (!moderationTarget) return;
+
+    const reason = moderationReason.trim();
+    const durationHours = Number.parseInt(moderationDurationHours, 10);
+
+    if (moderationAction === "SUSPEND") {
+      if (!Number.isFinite(durationHours) || durationHours <= 0) {
+        toast.error("Suspend duration must be greater than 0 hour");
+        return;
+      }
+    }
+
+    moderationMutation.mutate({
+      id: moderationTarget.id,
+      action: moderationAction,
+      ...(reason ? { reason } : {}),
+      ...(moderationAction === "SUSPEND" && Number.isFinite(durationHours)
+        ? { durationHours }
+        : {}),
+    });
   }
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -806,6 +917,7 @@ export default function UsersPage() {
                   <TableBody>
                     {users.map((user) => {
                       const roleConfig = getRoleConfig(user.role);
+                      const suspended = isUserSuspended(user);
                       return (
                         <TableRow
                           key={user.id}
@@ -886,6 +998,18 @@ export default function UsersPage() {
                                   Verified artist
                                 </span>
                               )}
+                              {user.isBanned && (
+                                <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-700">
+                                  <AlertTriangle className="size-3" />
+                                  Banned
+                                </span>
+                              )}
+                              {suspended && (
+                                <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                                  <Clock3 className="size-3" />
+                                  Suspended
+                                </span>
+                              )}
                             </div>
                           </TableCell>
 
@@ -946,6 +1070,57 @@ export default function UsersPage() {
                                     <BadgeCheck className="size-4 text-zinc-500" />
                                     Approve artist
                                   </DropdownMenuItem>
+                                )}
+                                <DropdownMenuSeparator className="my-1" />
+                                {user.isBanned ? (
+                                  <DropdownMenuItem
+                                    className="rounded-xl gap-2 text-sm"
+                                    onClick={() =>
+                                      handleOpenModerationDialog(user, "UNBAN")
+                                    }
+                                  >
+                                    <CheckCircle2 className="size-4 text-zinc-500" />
+                                    Unban user
+                                  </DropdownMenuItem>
+                                ) : (
+                                  <>
+                                    <DropdownMenuItem
+                                      className="rounded-xl gap-2 text-sm"
+                                      onClick={() =>
+                                        handleOpenModerationDialog(user, "BAN")
+                                      }
+                                    >
+                                      <AlertTriangle className="size-4 text-zinc-500" />
+                                      Ban user
+                                    </DropdownMenuItem>
+                                    {suspended ? (
+                                      <DropdownMenuItem
+                                        className="rounded-xl gap-2 text-sm"
+                                        onClick={() =>
+                                          handleOpenModerationDialog(
+                                            user,
+                                            "UNSUSPEND",
+                                          )
+                                        }
+                                      >
+                                        <CheckCircle2 className="size-4 text-zinc-500" />
+                                        Unsuspend user
+                                      </DropdownMenuItem>
+                                    ) : (
+                                      <DropdownMenuItem
+                                        className="rounded-xl gap-2 text-sm"
+                                        onClick={() =>
+                                          handleOpenModerationDialog(
+                                            user,
+                                            "SUSPEND",
+                                          )
+                                        }
+                                      >
+                                        <Clock3 className="size-4 text-zinc-500" />
+                                        Suspend user
+                                      </DropdownMenuItem>
+                                    )}
+                                  </>
                                 )}
                                 <DropdownMenuSeparator className="my-1" />
                                 <DropdownMenuItem
@@ -1085,6 +1260,18 @@ export default function UsersPage() {
                           Artist
                         </span>
                       )}
+                      {activeDetail.isBanned && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-1 text-[11px] font-semibold text-white">
+                          <AlertTriangle className="size-3" />
+                          Banned
+                        </span>
+                      )}
+                      {isUserSuspended(activeDetail) && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2.5 py-1 text-[11px] font-semibold text-white">
+                          <Clock3 className="size-3" />
+                          Suspended
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1104,6 +1291,15 @@ export default function UsersPage() {
                       value: activeDetail.verifiedArtists
                         ? "Verified Artist ✓"
                         : "Regular User",
+                      full: false,
+                    },
+                    {
+                      label: "Moderation",
+                      value: activeDetail.isBanned
+                        ? "Banned"
+                        : isUserSuspended(activeDetail)
+                          ? `Suspended until ${formatDate(activeDetail.suspendedUntil ?? "", true)}`
+                          : "No active sanction",
                       full: false,
                     },
                   ].map(({ label, value }) => (
@@ -1131,6 +1327,40 @@ export default function UsersPage() {
                       <span className="italic text-zinc-400">No bio yet.</span>
                     )}
                   </p>
+                </div>
+
+                {/* Moderation history */}
+                <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                    Moderation History
+                  </p>
+                  {activeDetail.moderations && activeDetail.moderations.length > 0 ? (
+                    <div className="mt-3 space-y-2">
+                      {activeDetail.moderations.slice(0, 5).map((log) => (
+                        <div
+                          key={log.id}
+                          className="rounded-xl border border-zinc-100 bg-zinc-50 px-3 py-2"
+                        >
+                          <p className="text-xs font-semibold text-zinc-800">
+                            {log.action}
+                            <span className="ml-2 font-normal text-zinc-500">
+                              by {log.admin.name}
+                            </span>
+                          </p>
+                          <p className="mt-0.5 text-xs text-zinc-500">
+                            {formatDate(log.createdAt, true)}
+                          </p>
+                          {log.reason ? (
+                            <p className="mt-1 text-xs text-zinc-600">{log.reason}</p>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm italic text-zinc-400">
+                      No moderation records yet.
+                    </p>
+                  )}
                 </div>
               </div>
             ) : (
@@ -1387,6 +1617,112 @@ export default function UsersPage() {
                 </>
               ) : (
                 "Save Changes"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Moderation Dialog ───────────────────────── */}
+      <Dialog
+        open={Boolean(moderationTarget)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setModerationTarget(null);
+            setModerationReason("");
+            setModerationDurationHours("24");
+          }
+        }}
+      >
+        <DialogContent className="w-full max-w-[calc(100%-2rem)] rounded-[28px] border border-zinc-200 bg-white p-0 sm:max-w-md">
+          <div className="p-6">
+            <DialogHeader className="gap-4">
+              <div className="flex size-14 items-center justify-center rounded-3xl bg-amber-50 text-amber-600">
+                {moderationAction === "BAN" ? (
+                  <AlertTriangle className="size-7" />
+                ) : moderationAction === "SUSPEND" ? (
+                  <Clock3 className="size-7" />
+                ) : (
+                  <CheckCircle2 className="size-7" />
+                )}
+              </div>
+              <div className="space-y-1">
+                <DialogTitle className="text-xl font-bold text-zinc-900">
+                  {moderationAction === "BAN"
+                    ? "Ban User"
+                    : moderationAction === "UNBAN"
+                      ? "Unban User"
+                      : moderationAction === "SUSPEND"
+                        ? "Suspend User"
+                        : "Unsuspend User"}
+                </DialogTitle>
+                <DialogDescription className="text-sm leading-relaxed text-zinc-500">
+                  {moderationTarget
+                    ? `Apply moderation action for ${moderationTarget.name || moderationTarget.username}.`
+                    : "Apply moderation action."}
+                </DialogDescription>
+              </div>
+            </DialogHeader>
+
+            <div className="mt-5 space-y-4">
+              {moderationAction === "SUSPEND" ? (
+                <div className="space-y-2">
+                  <Label htmlFor="moderation-duration" className="text-sm font-medium text-zinc-700">
+                    Duration (hours)
+                  </Label>
+                  <Input
+                    id="moderation-duration"
+                    type="number"
+                    min={1}
+                    max={24 * 365}
+                    value={moderationDurationHours}
+                    onChange={(event) => setModerationDurationHours(event.target.value)}
+                    className="h-11 rounded-2xl border-zinc-200 bg-zinc-50"
+                  />
+                </div>
+              ) : null}
+
+              <div className="space-y-2">
+                <Label htmlFor="moderation-reason" className="text-sm font-medium text-zinc-700">
+                  Reason (optional)
+                </Label>
+                <textarea
+                  id="moderation-reason"
+                  value={moderationReason}
+                  onChange={(event) => setModerationReason(event.target.value)}
+                  rows={3}
+                  maxLength={300}
+                  placeholder="Add moderation note..."
+                  className="w-full resize-none rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 transition-all focus:border-orange-400 focus:bg-white focus:ring-4 focus:ring-orange-100"
+                />
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="rounded-b-[28px] border-t border-zinc-100 bg-zinc-50/80 px-6 py-4">
+            <Button
+              variant="outline"
+              className="rounded-xl border-zinc-200 bg-white text-sm"
+              onClick={() => {
+                setModerationTarget(null);
+                setModerationReason("");
+                setModerationDurationHours("24");
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="rounded-xl bg-orange-600 text-sm text-white hover:bg-orange-500 disabled:opacity-50"
+              disabled={!moderationTarget || moderationMutation.isPending}
+              onClick={submitModeration}
+            >
+              {moderationMutation.isPending ? (
+                <>
+                  <span className="mr-2 size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  Applying...
+                </>
+              ) : (
+                "Apply Action"
               )}
             </Button>
           </DialogFooter>
