@@ -9,6 +9,15 @@
 * 🟢 You can import this file directly.
 */
 
+export const VerificationStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type VerificationStatus = (typeof VerificationStatus)[keyof typeof VerificationStatus]
+
+
 export const LikesPrivacy = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE'

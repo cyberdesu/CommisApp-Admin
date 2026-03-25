@@ -51,7 +51,10 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  AdminUser: 'AdminUser',
+  AdminSession: 'AdminSession',
   User: 'User',
+  ArtistVerificationRequest: 'ArtistVerificationRequest',
   Settings: 'Settings',
   Socials: 'Socials',
   otp: 'otp',
@@ -93,6 +96,28 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const AdminUserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdminUserScalarFieldEnum = (typeof AdminUserScalarFieldEnum)[keyof typeof AdminUserScalarFieldEnum]
+
+
+export const AdminSessionScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type AdminSessionScalarFieldEnum = (typeof AdminSessionScalarFieldEnum)[keyof typeof AdminSessionScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -112,6 +137,21 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const ArtistVerificationRequestScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  requestedAt: 'requestedAt',
+  reviewedAt: 'reviewedAt',
+  reviewReason: 'reviewReason',
+  reviewedByAdminId: 'reviewedByAdminId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ArtistVerificationRequestScalarFieldEnum = (typeof ArtistVerificationRequestScalarFieldEnum)[keyof typeof ArtistVerificationRequestScalarFieldEnum]
 
 
 export const SettingsScalarFieldEnum = {
@@ -238,6 +278,7 @@ export const ShowcaseItemScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
+  imageCount: 'imageCount',
   isDraft: 'isDraft',
   isFromVerifiedCommission: 'isFromVerifiedCommission',
   commissionId: 'commissionId',
@@ -421,6 +462,22 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const AdminUserOrderByRelevanceFieldEnum = {
+  email: 'email',
+  passwordHash: 'passwordHash',
+  name: 'name'
+} as const
+
+export type AdminUserOrderByRelevanceFieldEnum = (typeof AdminUserOrderByRelevanceFieldEnum)[keyof typeof AdminUserOrderByRelevanceFieldEnum]
+
+
+export const AdminSessionOrderByRelevanceFieldEnum = {
+  id: 'id'
+} as const
+
+export type AdminSessionOrderByRelevanceFieldEnum = (typeof AdminSessionOrderByRelevanceFieldEnum)[keyof typeof AdminSessionOrderByRelevanceFieldEnum]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
@@ -443,6 +500,13 @@ export const UserOrderByRelevanceFieldEnum = {
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const ArtistVerificationRequestOrderByRelevanceFieldEnum = {
+  reviewReason: 'reviewReason'
+} as const
+
+export type ArtistVerificationRequestOrderByRelevanceFieldEnum = (typeof ArtistVerificationRequestOrderByRelevanceFieldEnum)[keyof typeof ArtistVerificationRequestOrderByRelevanceFieldEnum]
 
 
 export const SocialsOrderByRelevanceFieldEnum = {

@@ -27,11 +27,13 @@ export type AggregateShowcaseItem = {
 }
 
 export type ShowcaseItemAvgAggregateOutputType = {
+  imageCount: number | null
   likeCount: number | null
   viewCount: number | null
 }
 
 export type ShowcaseItemSumAggregateOutputType = {
+  imageCount: number | null
   likeCount: number | null
   viewCount: number | null
 }
@@ -39,6 +41,7 @@ export type ShowcaseItemSumAggregateOutputType = {
 export type ShowcaseItemMinAggregateOutputType = {
   id: string | null
   title: string | null
+  imageCount: number | null
   isDraft: boolean | null
   isFromVerifiedCommission: boolean | null
   commissionId: string | null
@@ -57,6 +60,7 @@ export type ShowcaseItemMinAggregateOutputType = {
 export type ShowcaseItemMaxAggregateOutputType = {
   id: string | null
   title: string | null
+  imageCount: number | null
   isDraft: boolean | null
   isFromVerifiedCommission: boolean | null
   commissionId: string | null
@@ -76,6 +80,7 @@ export type ShowcaseItemCountAggregateOutputType = {
   id: number
   title: number
   description: number
+  imageCount: number
   isDraft: number
   isFromVerifiedCommission: number
   commissionId: number
@@ -97,11 +102,13 @@ export type ShowcaseItemCountAggregateOutputType = {
 
 
 export type ShowcaseItemAvgAggregateInputType = {
+  imageCount?: true
   likeCount?: true
   viewCount?: true
 }
 
 export type ShowcaseItemSumAggregateInputType = {
+  imageCount?: true
   likeCount?: true
   viewCount?: true
 }
@@ -109,6 +116,7 @@ export type ShowcaseItemSumAggregateInputType = {
 export type ShowcaseItemMinAggregateInputType = {
   id?: true
   title?: true
+  imageCount?: true
   isDraft?: true
   isFromVerifiedCommission?: true
   commissionId?: true
@@ -127,6 +135,7 @@ export type ShowcaseItemMinAggregateInputType = {
 export type ShowcaseItemMaxAggregateInputType = {
   id?: true
   title?: true
+  imageCount?: true
   isDraft?: true
   isFromVerifiedCommission?: true
   commissionId?: true
@@ -146,6 +155,7 @@ export type ShowcaseItemCountAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  imageCount?: true
   isDraft?: true
   isFromVerifiedCommission?: true
   commissionId?: true
@@ -255,6 +265,7 @@ export type ShowcaseItemGroupByOutputType = {
   id: string
   title: string
   description: runtime.JsonValue
+  imageCount: number
   isDraft: boolean
   isFromVerifiedCommission: boolean
   commissionId: string | null
@@ -300,6 +311,7 @@ export type ShowcaseItemWhereInput = {
   id?: Prisma.StringFilter<"ShowcaseItem"> | string
   title?: Prisma.StringFilter<"ShowcaseItem"> | string
   description?: Prisma.JsonFilter<"ShowcaseItem">
+  imageCount?: Prisma.IntFilter<"ShowcaseItem"> | number
   isDraft?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   isFromVerifiedCommission?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   commissionId?: Prisma.StringNullableFilter<"ShowcaseItem"> | string | null
@@ -328,6 +340,7 @@ export type ShowcaseItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  imageCount?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -360,6 +373,7 @@ export type ShowcaseItemWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ShowcaseItemWhereInput | Prisma.ShowcaseItemWhereInput[]
   title?: Prisma.StringFilter<"ShowcaseItem"> | string
   description?: Prisma.JsonFilter<"ShowcaseItem">
+  imageCount?: Prisma.IntFilter<"ShowcaseItem"> | number
   isDraft?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   isFromVerifiedCommission?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   commissionId?: Prisma.StringNullableFilter<"ShowcaseItem"> | string | null
@@ -388,6 +402,7 @@ export type ShowcaseItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  imageCount?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -418,6 +433,7 @@ export type ShowcaseItemScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"ShowcaseItem"> | string
   title?: Prisma.StringWithAggregatesFilter<"ShowcaseItem"> | string
   description?: Prisma.JsonWithAggregatesFilter<"ShowcaseItem">
+  imageCount?: Prisma.IntWithAggregatesFilter<"ShowcaseItem"> | number
   isDraft?: Prisma.BoolWithAggregatesFilter<"ShowcaseItem"> | boolean
   isFromVerifiedCommission?: Prisma.BoolWithAggregatesFilter<"ShowcaseItem"> | boolean
   commissionId?: Prisma.StringNullableWithAggregatesFilter<"ShowcaseItem"> | string | null
@@ -440,6 +456,7 @@ export type ShowcaseItemCreateInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -467,6 +484,7 @@ export type ShowcaseItemUncheckedCreateInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -494,6 +512,7 @@ export type ShowcaseItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -521,6 +540,7 @@ export type ShowcaseItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -548,6 +568,7 @@ export type ShowcaseItemCreateManyInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -570,6 +591,7 @@ export type ShowcaseItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -591,6 +613,7 @@ export type ShowcaseItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -624,6 +647,7 @@ export type ShowcaseItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  imageCount?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrder
@@ -643,6 +667,7 @@ export type ShowcaseItemCountOrderByAggregateInput = {
 }
 
 export type ShowcaseItemAvgOrderByAggregateInput = {
+  imageCount?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   viewCount?: Prisma.SortOrder
 }
@@ -650,6 +675,7 @@ export type ShowcaseItemAvgOrderByAggregateInput = {
 export type ShowcaseItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  imageCount?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrder
@@ -668,6 +694,7 @@ export type ShowcaseItemMaxOrderByAggregateInput = {
 export type ShowcaseItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  imageCount?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrder
@@ -684,6 +711,7 @@ export type ShowcaseItemMinOrderByAggregateInput = {
 }
 
 export type ShowcaseItemSumOrderByAggregateInput = {
+  imageCount?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   viewCount?: Prisma.SortOrder
 }
@@ -838,6 +866,7 @@ export type ShowcaseItemCreateWithoutPublicViewsInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -864,6 +893,7 @@ export type ShowcaseItemUncheckedCreateWithoutPublicViewsInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -906,6 +936,7 @@ export type ShowcaseItemUpdateWithoutPublicViewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -932,6 +963,7 @@ export type ShowcaseItemUncheckedUpdateWithoutPublicViewsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -958,6 +990,7 @@ export type ShowcaseItemCreateWithoutShowcaseInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -984,6 +1017,7 @@ export type ShowcaseItemUncheckedCreateWithoutShowcaseInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1039,6 +1073,7 @@ export type ShowcaseItemScalarWhereInput = {
   id?: Prisma.StringFilter<"ShowcaseItem"> | string
   title?: Prisma.StringFilter<"ShowcaseItem"> | string
   description?: Prisma.JsonFilter<"ShowcaseItem">
+  imageCount?: Prisma.IntFilter<"ShowcaseItem"> | number
   isDraft?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   isFromVerifiedCommission?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   commissionId?: Prisma.StringNullableFilter<"ShowcaseItem"> | string | null
@@ -1061,6 +1096,7 @@ export type ShowcaseItemCreateWithoutShowcaseFilesInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1087,6 +1123,7 @@ export type ShowcaseItemUncheckedCreateWithoutShowcaseFilesInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1129,6 +1166,7 @@ export type ShowcaseItemUpdateWithoutShowcaseFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1155,6 +1193,7 @@ export type ShowcaseItemUncheckedUpdateWithoutShowcaseFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1181,6 +1220,7 @@ export type ShowcaseItemCreateWithoutTagsInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1207,6 +1247,7 @@ export type ShowcaseItemUncheckedCreateWithoutTagsInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1254,6 +1295,7 @@ export type ShowcaseItemCreateWithoutInteractionsInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1280,6 +1322,7 @@ export type ShowcaseItemUncheckedCreateWithoutInteractionsInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1322,6 +1365,7 @@ export type ShowcaseItemUpdateWithoutInteractionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1348,6 +1392,7 @@ export type ShowcaseItemUncheckedUpdateWithoutInteractionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1374,6 +1419,7 @@ export type ShowcaseItemCreateWithoutBookmarkedByInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1400,6 +1446,7 @@ export type ShowcaseItemUncheckedCreateWithoutBookmarkedByInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1442,6 +1489,7 @@ export type ShowcaseItemUpdateWithoutBookmarkedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1468,6 +1516,7 @@ export type ShowcaseItemUncheckedUpdateWithoutBookmarkedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1494,6 +1543,7 @@ export type ShowcaseItemCreateManyShowcaseInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
@@ -1515,6 +1565,7 @@ export type ShowcaseItemUpdateWithoutShowcaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1541,6 +1592,7 @@ export type ShowcaseItemUncheckedUpdateWithoutShowcaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1567,6 +1619,7 @@ export type ShowcaseItemUncheckedUpdateManyWithoutShowcaseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1588,6 +1641,7 @@ export type ShowcaseItemUpdateWithoutTagsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1614,6 +1668,7 @@ export type ShowcaseItemUncheckedUpdateWithoutTagsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1640,6 +1695,7 @@ export type ShowcaseItemUncheckedUpdateManyWithoutTagsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1729,6 +1785,7 @@ export type ShowcaseItemSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   title?: boolean
   description?: boolean
+  imageCount?: boolean
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: boolean
@@ -1758,6 +1815,7 @@ export type ShowcaseItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   title?: boolean
   description?: boolean
+  imageCount?: boolean
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: boolean
@@ -1781,6 +1839,7 @@ export type ShowcaseItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   title?: boolean
   description?: boolean
+  imageCount?: boolean
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: boolean
@@ -1804,6 +1863,7 @@ export type ShowcaseItemSelectScalar = {
   id?: boolean
   title?: boolean
   description?: boolean
+  imageCount?: boolean
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: boolean
@@ -1822,7 +1882,7 @@ export type ShowcaseItemSelectScalar = {
   showcaseId?: boolean
 }
 
-export type ShowcaseItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "isDraft" | "isFromVerifiedCommission" | "commissionId" | "isAvailableAsService" | "linkedServiceId" | "containsMatureContent" | "contentWarnings" | "likeCount" | "viewCount" | "boostConfig" | "hasTaggedCharacterProfiles" | "taggedCharacterProfiles" | "createdAt" | "updatedAt" | "isUsingCombinedQuery" | "showcaseId", ExtArgs["result"]["showcaseItem"]>
+export type ShowcaseItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "imageCount" | "isDraft" | "isFromVerifiedCommission" | "commissionId" | "isAvailableAsService" | "linkedServiceId" | "containsMatureContent" | "contentWarnings" | "likeCount" | "viewCount" | "boostConfig" | "hasTaggedCharacterProfiles" | "taggedCharacterProfiles" | "createdAt" | "updatedAt" | "isUsingCombinedQuery" | "showcaseId", ExtArgs["result"]["showcaseItem"]>
 export type ShowcaseItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   showcase?: boolean | Prisma.ShowcaseDefaultArgs<ExtArgs>
   tags?: boolean | Prisma.ShowcaseItem$tagsArgs<ExtArgs>
@@ -1853,6 +1913,7 @@ export type $ShowcaseItemPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     title: string
     description: runtime.JsonValue
+    imageCount: number
     isDraft: boolean
     isFromVerifiedCommission: boolean
     commissionId: string | null
@@ -2301,6 +2362,7 @@ export interface ShowcaseItemFieldRefs {
   readonly id: Prisma.FieldRef<"ShowcaseItem", 'String'>
   readonly title: Prisma.FieldRef<"ShowcaseItem", 'String'>
   readonly description: Prisma.FieldRef<"ShowcaseItem", 'Json'>
+  readonly imageCount: Prisma.FieldRef<"ShowcaseItem", 'Int'>
   readonly isDraft: Prisma.FieldRef<"ShowcaseItem", 'Boolean'>
   readonly isFromVerifiedCommission: Prisma.FieldRef<"ShowcaseItem", 'Boolean'>
   readonly commissionId: Prisma.FieldRef<"ShowcaseItem", 'String'>

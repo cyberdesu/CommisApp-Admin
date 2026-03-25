@@ -310,6 +310,7 @@ export type UserWhereInput = {
   bookmarks?: Prisma.BookmarkListRelationFilter
   settings?: Prisma.XOR<Prisma.SettingsNullableScalarRelationFilter, Prisma.SettingsWhereInput> | null
   profileSearches?: Prisma.ProfileSearchRecordListRelationFilter
+  artistVerification?: Prisma.XOR<Prisma.ArtistVerificationRequestNullableScalarRelationFilter, Prisma.ArtistVerificationRequestWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -342,6 +343,7 @@ export type UserOrderByWithRelationInput = {
   bookmarks?: Prisma.BookmarkOrderByRelationAggregateInput
   settings?: Prisma.SettingsOrderByWithRelationInput
   profileSearches?: Prisma.ProfileSearchRecordOrderByRelationAggregateInput
+  artistVerification?: Prisma.ArtistVerificationRequestOrderByWithRelationInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -378,6 +380,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   bookmarks?: Prisma.BookmarkListRelationFilter
   settings?: Prisma.XOR<Prisma.SettingsNullableScalarRelationFilter, Prisma.SettingsWhereInput> | null
   profileSearches?: Prisma.ProfileSearchRecordListRelationFilter
+  artistVerification?: Prisma.XOR<Prisma.ArtistVerificationRequestNullableScalarRelationFilter, Prisma.ArtistVerificationRequestWhereInput> | null
 }, "id" | "email" | "username" | "subId">
 
 export type UserOrderByWithAggregationInput = {
@@ -453,6 +456,7 @@ export type UserCreateInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -485,6 +489,7 @@ export type UserUncheckedCreateInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -516,6 +521,7 @@ export type UserUpdateInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -548,6 +554,7 @@ export type UserUncheckedUpdateInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -676,28 +683,26 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type UserCreateNestedOneWithoutArtistVerificationInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutArtistVerificationInput, Prisma.UserUncheckedCreateWithoutArtistVerificationInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArtistVerificationInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutArtistVerificationNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutArtistVerificationInput, Prisma.UserUncheckedCreateWithoutArtistVerificationInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArtistVerificationInput
+  upsert?: Prisma.UserUpsertWithoutArtistVerificationInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutArtistVerificationInput, Prisma.UserUpdateWithoutArtistVerificationInput>, Prisma.UserUncheckedUpdateWithoutArtistVerificationInput>
 }
 
 export type UserCreateNestedOneWithoutSettingsInput = {
@@ -896,6 +901,148 @@ export type UserUpdateOneRequiredWithoutBookmarksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBookmarksInput, Prisma.UserUpdateWithoutBookmarksInput>, Prisma.UserUncheckedUpdateWithoutBookmarksInput>
 }
 
+export type UserCreateWithoutArtistVerificationInput = {
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
+  folders?: Prisma.FolderCreateNestedManyWithoutUserInput
+  workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
+  form?: Prisma.RequestFormCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+}
+
+export type UserUncheckedCreateWithoutArtistVerificationInput = {
+  id?: number
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
+  folders?: Prisma.FolderUncheckedCreateNestedManyWithoutUserInput
+  workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
+  form?: Prisma.RequestFormUncheckedCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+}
+
+export type UserCreateOrConnectWithoutArtistVerificationInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutArtistVerificationInput, Prisma.UserUncheckedCreateWithoutArtistVerificationInput>
+}
+
+export type UserUpsertWithoutArtistVerificationInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutArtistVerificationInput, Prisma.UserUncheckedUpdateWithoutArtistVerificationInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutArtistVerificationInput, Prisma.UserUncheckedCreateWithoutArtistVerificationInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutArtistVerificationInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutArtistVerificationInput, Prisma.UserUncheckedUpdateWithoutArtistVerificationInput>
+}
+
+export type UserUpdateWithoutArtistVerificationInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
+  folders?: Prisma.FolderUpdateManyWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
+  form?: Prisma.RequestFormUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutArtistVerificationInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
+  folders?: Prisma.FolderUncheckedUpdateManyWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
+  form?: Prisma.RequestFormUncheckedUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+}
+
 export type UserCreateWithoutSettingsInput = {
   email: string
   passwordHash: string
@@ -924,6 +1071,7 @@ export type UserCreateWithoutSettingsInput = {
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSettingsInput = {
@@ -955,6 +1103,7 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSettingsInput = {
@@ -1001,6 +1150,7 @@ export type UserUpdateWithoutSettingsInput = {
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
@@ -1032,6 +1182,7 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSocialsInput = {
@@ -1062,6 +1213,7 @@ export type UserCreateWithoutSocialsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSocialsInput = {
@@ -1093,6 +1245,7 @@ export type UserUncheckedCreateWithoutSocialsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSocialsInput = {
@@ -1139,6 +1292,7 @@ export type UserUpdateWithoutSocialsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSocialsInput = {
@@ -1170,6 +1324,7 @@ export type UserUncheckedUpdateWithoutSocialsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOtpsInput = {
@@ -1200,6 +1355,7 @@ export type UserCreateWithoutOtpsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOtpsInput = {
@@ -1231,6 +1387,7 @@ export type UserUncheckedCreateWithoutOtpsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOtpsInput = {
@@ -1277,6 +1434,7 @@ export type UserUpdateWithoutOtpsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOtpsInput = {
@@ -1308,6 +1466,7 @@ export type UserUncheckedUpdateWithoutOtpsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTokensInput = {
@@ -1338,6 +1497,7 @@ export type UserCreateWithoutTokensInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTokensInput = {
@@ -1369,6 +1529,7 @@ export type UserUncheckedCreateWithoutTokensInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTokensInput = {
@@ -1415,6 +1576,7 @@ export type UserUpdateWithoutTokensInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTokensInput = {
@@ -1446,6 +1608,7 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRefreshTokensInput = {
@@ -1476,6 +1639,7 @@ export type UserCreateWithoutRefreshTokensInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRefreshTokensInput = {
@@ -1507,6 +1671,7 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -1553,6 +1718,7 @@ export type UserUpdateWithoutRefreshTokensInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefreshTokensInput = {
@@ -1584,6 +1750,7 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProfileSearchesInput = {
@@ -1614,6 +1781,7 @@ export type UserCreateWithoutProfileSearchesInput = {
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileSearchesInput = {
@@ -1645,6 +1813,7 @@ export type UserUncheckedCreateWithoutProfileSearchesInput = {
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileSearchesInput = {
@@ -1691,6 +1860,7 @@ export type UserUpdateWithoutProfileSearchesInput = {
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileSearchesInput = {
@@ -1722,6 +1892,7 @@ export type UserUncheckedUpdateWithoutProfileSearchesInput = {
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutShowcasesInput = {
@@ -1752,6 +1923,7 @@ export type UserCreateWithoutShowcasesInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutShowcasesInput = {
@@ -1783,6 +1955,7 @@ export type UserUncheckedCreateWithoutShowcasesInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutShowcasesInput = {
@@ -1829,6 +2002,7 @@ export type UserUpdateWithoutShowcasesInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutShowcasesInput = {
@@ -1860,6 +2034,7 @@ export type UserUncheckedUpdateWithoutShowcasesInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFoldersInput = {
@@ -1890,6 +2065,7 @@ export type UserCreateWithoutFoldersInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFoldersInput = {
@@ -1921,6 +2097,7 @@ export type UserUncheckedCreateWithoutFoldersInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFoldersInput = {
@@ -1967,6 +2144,7 @@ export type UserUpdateWithoutFoldersInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFoldersInput = {
@@ -1998,6 +2176,7 @@ export type UserUncheckedUpdateWithoutFoldersInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWorkflowsInput = {
@@ -2028,6 +2207,7 @@ export type UserCreateWithoutWorkflowsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkflowsInput = {
@@ -2059,6 +2239,7 @@ export type UserUncheckedCreateWithoutWorkflowsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWorkflowsInput = {
@@ -2105,6 +2286,7 @@ export type UserUpdateWithoutWorkflowsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkflowsInput = {
@@ -2136,6 +2318,7 @@ export type UserUncheckedUpdateWithoutWorkflowsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFormInput = {
@@ -2166,6 +2349,7 @@ export type UserCreateWithoutFormInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFormInput = {
@@ -2197,6 +2381,7 @@ export type UserUncheckedCreateWithoutFormInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFormInput = {
@@ -2243,6 +2428,7 @@ export type UserUpdateWithoutFormInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFormInput = {
@@ -2274,6 +2460,7 @@ export type UserUncheckedUpdateWithoutFormInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInteractionsInput = {
@@ -2304,6 +2491,7 @@ export type UserCreateWithoutInteractionsInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -2335,6 +2523,7 @@ export type UserUncheckedCreateWithoutInteractionsInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -2381,6 +2570,7 @@ export type UserUpdateWithoutInteractionsInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -2412,6 +2602,7 @@ export type UserUncheckedUpdateWithoutInteractionsInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFollowingInput = {
@@ -2442,6 +2633,7 @@ export type UserCreateWithoutFollowingInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowingInput = {
@@ -2473,6 +2665,7 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowingInput = {
@@ -2508,6 +2701,7 @@ export type UserCreateWithoutFollowersInput = {
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowersInput = {
@@ -2539,6 +2733,7 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowersInput = {
@@ -2585,6 +2780,7 @@ export type UserUpdateWithoutFollowingInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowingInput = {
@@ -2616,6 +2812,7 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutFollowersInput = {
@@ -2657,6 +2854,7 @@ export type UserUpdateWithoutFollowersInput = {
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowersInput = {
@@ -2688,6 +2886,7 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBookmarksInput = {
@@ -2718,6 +2917,7 @@ export type UserCreateWithoutBookmarksInput = {
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBookmarksInput = {
@@ -2749,6 +2949,7 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBookmarksInput = {
@@ -2795,6 +2996,7 @@ export type UserUpdateWithoutBookmarksInput = {
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBookmarksInput = {
@@ -2826,6 +3028,7 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -2970,6 +3173,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   profileSearches?: boolean | Prisma.User$profileSearchesArgs<ExtArgs>
+  artistVerification?: boolean | Prisma.User$artistVerificationArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3043,6 +3247,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   bookmarks?: boolean | Prisma.User$bookmarksArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   profileSearches?: boolean | Prisma.User$profileSearchesArgs<ExtArgs>
+  artistVerification?: boolean | Prisma.User$artistVerificationArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3065,6 +3270,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     bookmarks: Prisma.$BookmarkPayload<ExtArgs>[]
     settings: Prisma.$SettingsPayload<ExtArgs> | null
     profileSearches: Prisma.$ProfileSearchRecordPayload<ExtArgs>[]
+    artistVerification: Prisma.$ArtistVerificationRequestPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -3490,6 +3696,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   bookmarks<T extends Prisma.User$bookmarksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bookmarksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__SettingsClient<runtime.Types.Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   profileSearches<T extends Prisma.User$profileSearchesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileSearchesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProfileSearchRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  artistVerification<T extends Prisma.User$artistVerificationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$artistVerificationArgs<ExtArgs>>): Prisma.Prisma__ArtistVerificationRequestClient<runtime.Types.Result.GetResult<Prisma.$ArtistVerificationRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4240,6 +4447,25 @@ export type User$profileSearchesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.ProfileSearchRecordScalarFieldEnum | Prisma.ProfileSearchRecordScalarFieldEnum[]
+}
+
+/**
+ * User.artistVerification
+ */
+export type User$artistVerificationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ArtistVerificationRequest
+   */
+  select?: Prisma.ArtistVerificationRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ArtistVerificationRequest
+   */
+  omit?: Prisma.ArtistVerificationRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ArtistVerificationRequestInclude<ExtArgs> | null
+  where?: Prisma.ArtistVerificationRequestWhereInput
 }
 
 /**

@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider     = "prisma-client-js"
+  provider     = "prisma-client"
   previewFeatures = ["fullTextSearchPostgres"]
 }
 
@@ -41,7 +41,6 @@ model AdminSession {
 }
 
 
-
 model User {
   id              Int               @id @default(autoincrement())
   email           String            @unique
@@ -67,16 +66,40 @@ model User {
   workflows       Workflow[]
   form            RequestForm[]
   interactions    UserInteraction[]
-  
+
   // Relasi Sosial
-  following       Follow[]          @relation("Following") // Daftar user yang di-follow oleh user ini
-  followers       Follow[]          @relation("Followers") // Daftar user yang menjadi follower dari user ini
-  bookmarks       Bookmark[]        // Daftar bookmark yang dibuat oleh user ini
-  settings        Settings?         // Relasi one-to-one ke Settings
+  following       Follow[]          @relation("Following")
+  followers       Follow[]          @relation("Followers")
+  bookmarks       Bookmark[]
+  settings        Settings?
   profileSearches ProfileSearchRecord[] @relation("ProfileSearches")
+  artistVerification ArtistVerificationRequest?
 
   @@index([email])
   @@index([username])
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model ArtistVerificationRequest {
+  id            BigInt             @id @default(autoincrement())
+  userId        Int                @unique
+  status        VerificationStatus @default(PENDING)
+  requestedAt   DateTime           @default(now())
+  reviewedAt    DateTime?
+  reviewReason  String?
+  reviewedByAdminId Int?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, requestedAt])
+  @@map("artist_verification_requests")
 }
 
 enum LikesPrivacy {
@@ -204,6 +227,7 @@ model ShowcaseItem {
   id                         String             @id @default(uuid())
   title                      String
   description                Json
+  imageCount                 Int                @default(0)
   isDraft                    Boolean            @default(false)
   isFromVerifiedCommission   Boolean            @default(false)
   commissionId               String?

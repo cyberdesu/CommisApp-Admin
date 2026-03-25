@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
-import { ensureArtistVerificationTable } from "@/lib/artist-verification";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 
 type RouteContext = {
@@ -63,8 +62,6 @@ export async function GET(req: NextRequest, context: RouteContext) {
     if (!admin) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-
-    await ensureArtistVerificationTable();
 
     const { id: rawId } = await context.params;
     const id = parseUserId(rawId);
@@ -240,10 +237,6 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     const shouldApproveArtist =
       verifiedArtists === true && existingUser.verifiedArtists === false;
 
-    if (shouldApproveArtist) {
-      await ensureArtistVerificationTable();
-    }
-
     const updatedUser = await prisma.$transaction(async (tx) => {
       if (shouldApproveArtist) {
         await tx.authToken.deleteMany({
@@ -297,16 +290,17 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       });
 
       if (shouldApproveArtist) {
-        await tx.$executeRaw`
-          UPDATE "artist_verification_requests"
-          SET
-            "status" = 'APPROVED'::"VerificationStatus",
-            "reviewedAt" = NOW(),
-            "reviewedByAdminId" = ${admin.id},
-            "updatedAt" = NOW()
-          WHERE "userId" = ${id}
-            AND "status" = 'PENDING'::"VerificationStatus"
-        `;
+        await tx.artistVerificationRequest.updateMany({
+          where: {
+            userId: id,
+            status: "PENDING",
+          },
+          data: {
+            status: "APPROVED",
+            reviewedAt: new Date(),
+            reviewedByAdminId: admin.id,
+          },
+        });
       }
 
       return updated;

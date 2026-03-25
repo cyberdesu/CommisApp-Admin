@@ -419,14 +419,6 @@ export type ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
   deleteMany?: Prisma.ProfileSearchRecordScalarWhereInput | Prisma.ProfileSearchRecordScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ProfileSearchRecordCreateWithoutSearchedUserInput = {
   searcherUserId?: number | null
   fingerprint: string

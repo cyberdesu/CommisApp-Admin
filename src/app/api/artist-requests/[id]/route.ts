@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getSessionAdmin } from "@/lib/auth/session";
-import { ensureArtistVerificationTable } from "@/lib/artist-verification";
 import prisma from "@/lib/prisma";
 
 const updateArtistRequestSchema = z.object({
@@ -17,15 +16,13 @@ type RouteContext = {
 };
 
 function parseRequestId(rawId: string) {
-  const id = Number.parseInt(rawId, 10);
-  return Number.isFinite(id) && id > 0 ? id : null;
+  try {
+    const id = BigInt(rawId);
+    return id > BigInt(0) ? id : null;
+  } catch {
+    return null;
+  }
 }
-
-type RequestRow = {
-  id: number;
-  userId: number;
-  status: "PENDING" | "APPROVED" | "REJECTED";
-};
 
 export async function PATCH(req: NextRequest, context: RouteContext) {
   try {
@@ -33,8 +30,6 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     if (!admin) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-
-    await ensureArtistVerificationTable();
 
     const { id: rawId } = await context.params;
     const requestId = parseRequestId(rawId);
@@ -56,14 +51,15 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       );
     }
 
-    const requestRows = await prisma.$queryRaw<RequestRow[]>`
-      SELECT id, "userId" AS "userId", "status" AS "status"
-      FROM "artist_verification_requests"
-      WHERE id = ${requestId}
-      LIMIT 1
-    `;
+    const requestItem = await prisma.artistVerificationRequest.findUnique({
+      where: { id: requestId },
+      select: {
+        id: true,
+        userId: true,
+        status: true,
+      },
+    });
 
-    const requestItem = requestRows[0];
     if (!requestItem) {
       return NextResponse.json(
         { message: "Request not found" },
@@ -81,16 +77,15 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     const reason = payload.data.reason?.trim() || null;
 
     if (payload.data.action === "reject") {
-      await prisma.$executeRaw`
-        UPDATE "artist_verification_requests"
-        SET
-          "status" = 'REJECTED'::"VerificationStatus",
-          "reviewedAt" = NOW(),
-          "reviewReason" = ${reason},
-          "reviewedByAdminId" = ${admin.id},
-          "updatedAt" = NOW()
-        WHERE id = ${requestId}
-      `;
+      await prisma.artistVerificationRequest.update({
+        where: { id: requestId },
+        data: {
+          status: "REJECTED",
+          reviewedAt: new Date(),
+          reviewReason: reason,
+          reviewedByAdminId: admin.id,
+        },
+      });
 
       return NextResponse.json({
         message: "Artist request rejected",
@@ -120,16 +115,15 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
         },
       });
 
-      await tx.$executeRaw`
-        UPDATE "artist_verification_requests"
-        SET
-          "status" = 'APPROVED'::"VerificationStatus",
-          "reviewedAt" = NOW(),
-          "reviewReason" = ${reason},
-          "reviewedByAdminId" = ${admin.id},
-          "updatedAt" = NOW()
-        WHERE id = ${requestId}
-      `;
+      await tx.artistVerificationRequest.update({
+        where: { id: requestId },
+        data: {
+          status: "APPROVED",
+          reviewedAt: new Date(),
+          reviewReason: reason,
+          reviewedByAdminId: admin.id,
+        },
+      });
     });
 
     return NextResponse.json({

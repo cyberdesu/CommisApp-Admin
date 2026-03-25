@@ -8,7 +8,10 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/AdminUser'
+export type * from './models/AdminSession'
 export type * from './models/User'
+export type * from './models/ArtistVerificationRequest'
 export type * from './models/Settings'
 export type * from './models/Socials'
 export type * from './models/otp'

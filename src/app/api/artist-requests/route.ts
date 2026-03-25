@@ -1,16 +1,12 @@
-import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
-import {
-  ArtistRequestStatus,
-  ensureArtistVerificationTable,
-  isArtistRequestStatus,
-} from "@/lib/artist-verification";
-import prisma from "@/lib/prisma";
+import { ArtistRequestStatus, isArtistRequestStatus } from "@/lib/artist-verification";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
+import prisma from "@/lib/prisma";
+import { Prisma } from "@/prisma/generated/client";
 
-type ArtistRequestRow = {
+type ArtistRequestItem = {
   id: number;
   userId: number;
   status: ArtistRequestStatus;
@@ -39,7 +35,7 @@ function parsePositiveInt(value: string | null, fallback: number) {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
-async function enrichMedia(row: ArtistRequestRow): Promise<ArtistRequestRow> {
+async function enrichMedia(row: ArtistRequestItem): Promise<ArtistRequestItem> {
   const [avatar, banner] = await Promise.all([
     minio.getFile(row.avatar, MINIO_BUCKET_NAME),
     minio.getFile(row.banner, MINIO_BUCKET_NAME),
@@ -52,36 +48,12 @@ async function enrichMedia(row: ArtistRequestRow): Promise<ArtistRequestRow> {
   };
 }
 
-function buildWhereClause(status: string, search: string) {
-  const filters: Prisma.Sql[] = [];
-
-  if (status !== "ALL") {
-    filters.push(Prisma.sql`r."status" = ${status}::"VerificationStatus"`);
-  }
-
-  if (search) {
-    const term = `%${search}%`;
-    filters.push(
-      Prisma.sql`(
-        u.username ILIKE ${term}
-        OR u.email ILIKE ${term}
-        OR COALESCE(u.name, '') ILIKE ${term}
-      )`,
-    );
-  }
-
-  if (filters.length === 0) return Prisma.empty;
-  return Prisma.sql`WHERE ${Prisma.join(filters, " AND ")}`;
-}
-
 export async function GET(req: NextRequest) {
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
-
-    await ensureArtistVerificationTable();
 
     const { searchParams } = new URL(req.url);
     const page = parsePositiveInt(searchParams.get("page"), DEFAULT_PAGE);
@@ -100,44 +72,79 @@ export async function GET(req: NextRequest) {
       : "PENDING";
 
     const search = (searchParams.get("search") || "").trim();
-    const whereClause = buildWhereClause(status, search);
 
-    const [rows, countRows] = await Promise.all([
-      prisma.$queryRaw<ArtistRequestRow[]>(Prisma.sql`
-        SELECT
-          r.id,
-          r."userId" AS "userId",
-          r."status" AS "status",
-          r."requestedAt" AS "requestedAt",
-          r."reviewedAt" AS "reviewedAt",
-          r."reviewReason" AS "reviewReason",
-          r."reviewedByAdminId" AS "reviewedByAdminId",
-          u.username,
-          u.email,
-          u.name,
-          u.role,
-          u.verified,
-          u."verifiedArtists",
-          u.avatar,
-          u.banner,
-          u.country,
-          u."createdAt"
-        FROM "artist_verification_requests" r
-        INNER JOIN "User" u ON u.id = r."userId"
-        ${whereClause}
-        ORDER BY r."requestedAt" DESC
-        LIMIT ${limit}
-        OFFSET ${offset}
-      `),
-      prisma.$queryRaw<Array<{ total: bigint }>>(Prisma.sql`
-        SELECT COUNT(*)::BIGINT AS total
-        FROM "artist_verification_requests" r
-        INNER JOIN "User" u ON u.id = r."userId"
-        ${whereClause}
-      `),
+    const statusFilter: ArtistRequestStatus | undefined = status === "ALL"
+      ? undefined
+      : status;
+    const userSearchFilters: Prisma.UserWhereInput[] = search
+      ? [
+          { username: { contains: search, mode: "insensitive" } },
+          { email: { contains: search, mode: "insensitive" } },
+          { name: { contains: search, mode: "insensitive" } },
+        ]
+      : [];
+
+    const where: Prisma.ArtistVerificationRequestWhereInput = {
+      ...(statusFilter
+        ? { status: statusFilter }
+        : {}),
+      ...(search
+        ? {
+            user: {
+              is: {
+                OR: userSearchFilters,
+              },
+            },
+          }
+        : {}),
+    };
+
+    const [requests, total] = await Promise.all([
+      prisma.artistVerificationRequest.findMany({
+        where,
+        orderBy: { requestedAt: "desc" },
+        skip: offset,
+        take: limit,
+        include: {
+          user: {
+            select: {
+              username: true,
+              email: true,
+              name: true,
+              role: true,
+              verified: true,
+              verifiedArtists: true,
+              avatar: true,
+              banner: true,
+              country: true,
+              createdAt: true,
+            },
+          },
+        },
+      }),
+      prisma.artistVerificationRequest.count({ where }),
     ]);
 
-    const total = Number(countRows[0]?.total ?? 0);
+    const rows: ArtistRequestItem[] = requests.map((request) => ({
+      id: Number(request.id),
+      userId: request.userId,
+      status: request.status,
+      requestedAt: request.requestedAt,
+      reviewedAt: request.reviewedAt,
+      reviewReason: request.reviewReason,
+      reviewedByAdminId: request.reviewedByAdminId,
+      username: request.user.username,
+      email: request.user.email,
+      name: request.user.name,
+      role: request.user.role,
+      verified: request.user.verified,
+      verifiedArtists: request.user.verifiedArtists,
+      avatar: request.user.avatar,
+      banner: request.user.banner,
+      country: request.user.country,
+      createdAt: request.user.createdAt,
+    }));
+
     const totalPages = Math.max(1, Math.ceil(total / limit));
     const data = await Promise.all(rows.map((row) => enrichMedia(row)));
 
