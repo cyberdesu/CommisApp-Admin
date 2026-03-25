@@ -1,5 +1,5 @@
-const ABSOLUTE_URL_REGEX = /^https?:\/\//i
 import { sanitizeImageSource } from "@/lib/security/url-safety"
+const ABSOLUTE_URL_REGEX = /^https?:\/\//i
 
 const trimSlashes = (value: string) => value.replace(/^\/+|\/+$/g, "")
 
