@@ -2,15 +2,12 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 const SESSION_COOKIE_NAME = "admin_session";
-const API_PROTECTED_PREFIXES = [
-  "/api/users",
-  "/api/showcases",
-  "/api/artist-requests",
-  "/api/auth/refresh",
-] as const;
+const PUBLIC_API_PREFIXES = ["/api/auth/login", "/api/auth/logout"] as const;
 
-function isProtectedApiPath(pathname: string) {
-  return API_PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+function isPublicApiPath(pathname: string) {
+  return PUBLIC_API_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
 }
 
 function applySecurityHeaders(response: NextResponse) {
@@ -32,13 +29,17 @@ export function proxy(req: NextRequest) {
     );
   }
 
-  if (!hasSessionCookie) {
-    if (isApiRequest && isProtectedApiPath(pathname)) {
+  if (isApiRequest) {
+    if (!hasSessionCookie && !isPublicApiPath(pathname)) {
       return applySecurityHeaders(
         NextResponse.json({ message: "Unauthorized" }, { status: 401 }),
       );
     }
 
+    return applySecurityHeaders(NextResponse.next());
+  }
+
+  if (!hasSessionCookie) {
     const loginUrl = new URL("/login", req.url);
     loginUrl.searchParams.set("next", req.nextUrl.pathname);
     return applySecurityHeaders(NextResponse.redirect(loginUrl));
@@ -55,10 +56,6 @@ export const config = {
     "/showcases/:path*",
     "/artist-requests/:path*",
     "/settings/:path*",
-    "/api/users/:path*",
-    "/api/showcases/:path*",
-    "/api/artist-requests/:path*",
-    "/api/auth/refresh/:path*",
+    "/api/:path*",
   ],
 };
-
