@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   BadgeCheck,
   Menu,
+  MessageSquare,
   Settings,
   ShieldCheck,
   Users,
@@ -53,6 +54,12 @@ const menus = [
     icon: ImageIcon,
   },
   {
+    href: "/chats",
+    label: "Chats",
+    description: "Monitor user conversations",
+    icon: MessageSquare,
+  },
+  {
     href: "/artist-requests",
     label: "Artist Requests",
     description: "Review artist verification",
@@ -70,6 +77,7 @@ function getPageTitle(pathname: string) {
   if (pathname.startsWith("/dashboard")) return "Dashboard Overview";
   if (pathname.startsWith("/users")) return "Users Management";
   if (pathname.startsWith("/showcases")) return "Showcases Management";
+  if (pathname.startsWith("/chats")) return "Chat Monitoring";
   if (pathname.startsWith("/artist-requests")) return "Artist Verification";
   if (pathname.startsWith("/settings")) return "System Settings";
 

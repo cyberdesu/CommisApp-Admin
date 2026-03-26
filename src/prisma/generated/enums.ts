@@ -44,3 +44,31 @@ export const MainPhaseKey = {
 } as const
 
 export type MainPhaseKey = (typeof MainPhaseKey)[keyof typeof MainPhaseKey]
+
+
+export const ConversationType = {
+  DIRECT: 'DIRECT',
+  GROUP: 'GROUP'
+} as const
+
+export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType]
+
+
+export const MessageType = {
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE',
+  SYSTEM: 'SYSTEM'
+} as const
+
+export type MessageType = (typeof MessageType)[keyof typeof MessageType]
+
+
+export const NotificationType = {
+  NEW_MESSAGE: 'NEW_MESSAGE',
+  NEW_FOLLOWER: 'NEW_FOLLOWER',
+  SHOWCASE_LIKE: 'SHOWCASE_LIKE',
+  COMMISSION_UPDATE: 'COMMISSION_UPDATE',
+  SYSTEM_ANNOUNCEMENT: 'SYSTEM_ANNOUNCEMENT'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

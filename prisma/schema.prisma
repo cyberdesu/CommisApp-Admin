@@ -84,6 +84,11 @@ model User {
   banReason       String?
   moderations     UserModeration[]
 
+  // Chat & Notifications
+  conversations   ConversationParticipant[]
+  sentMessages    Message[]
+  notifications   Notification[]
+
   @@index([email])
   @@index([username])
 }
@@ -290,6 +295,9 @@ model ShowcaseItem {
 
   @@index([likeCount, createdAt]) // Indeks untuk pengurutan populer
   @@index([document_vectors], type: Gin)
+  @@index([showcaseId])           // JOIN dengan Showcase di semua query
+  @@index([createdAt(sort: Desc)]) // FYP candidate fetch + general feed ordering
+  @@index([isDraft, createdAt(sort: Desc)]) // Filtered queries (isDraft=false + orderBy createdAt)
 }
 
 model Showcase {
@@ -308,6 +316,8 @@ model ShowcaseFile {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   showcaseItem   ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
+
+  @@index([showcaseItemId, createdAt]) // Category thumbnail subquery + relation lookup
 }
 
 model Tag {
@@ -443,7 +453,114 @@ model Bookmark {
   showcaseItem   ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, showcaseItemId])
-  
+
   // OPTIMASI PAGINATION: Mengambil daftar bookmark user urut waktu
-  @@index([userId, createdAt]) 
+  @@index([userId, createdAt])
+}
+
+// ======================================
+// CHAT SYSTEM
+// ======================================
+
+enum ConversationType {
+  DIRECT
+  GROUP
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  SYSTEM
+}
+
+model Conversation {
+  id        String           @id @default(cuid())
+  type      ConversationType @default(DIRECT)
+  name      String?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([updatedAt(sort: Desc), id(sort: Desc)]) // Conversation list cursor pagination
+  @@index([type, updatedAt(sort: Desc)])            // Filtered by type + ordering
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id               String    @id @default(cuid())
+  conversationId   String
+  userId           Int
+  joinedAt         DateTime  @default(now())
+  leftAt           DateTime?
+
+  unreadCount      Int       @default(0)
+  lastMessageAt    DateTime?
+  lastMessageText  String?
+  lastReadAt       DateTime?
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId, lastMessageAt(sort: Desc)])
+  @@index([conversationId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String      @id @default(cuid())
+  conversationId String
+  senderId       Int?
+  type           MessageType @default(TEXT)
+  content        String?
+  fileUrl        String?
+  fileName       String?
+  isDeleted      Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User?        @relation(fields: [senderId], references: [id], onDelete: SetNull)
+
+  notifications Notification[]
+
+  @@index([conversationId, createdAt(sort: Desc)])
+  @@index([senderId, createdAt(sort: Desc)])
+  @@map("messages")
+}
+
+// ======================================
+// NOTIFICATIONS
+// ======================================
+
+enum NotificationType {
+  NEW_MESSAGE
+  NEW_FOLLOWER
+  SHOWCASE_LIKE
+  COMMISSION_UPDATE
+  SYSTEM_ANNOUNCEMENT
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    Int
+  type      NotificationType
+  title     String?
+  body      String?
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  messageId      String?
+  followerId     Int?
+  showcaseItemId String?
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, isRead, createdAt(sort: Desc)])
+  @@map("notifications")
 }
