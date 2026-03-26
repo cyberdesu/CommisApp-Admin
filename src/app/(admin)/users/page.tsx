@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import {
   AlertTriangle,
   BadgeCheck,
@@ -17,7 +17,6 @@ import {
   Sparkles,
   Star,
   Trash2,
-  TrendingUp,
   UserRound,
   Users,
   X,
@@ -279,58 +278,63 @@ function UserAvatar({
 
 // ─── Stats Cards ────────────────────────────────────────────────────────────────
 
-interface StatItem {
-  label: string;
-  value: string;
-  detail: string;
-  icon: React.ElementType;
-  color: string;
-  bgColor: string;
-}
+type UserStatsData = {
+  totalUsers: number;
+  verifiedCount: number;
+  verifiedArtistCount: number;
+  adminCount: number;
+  bannedCount: number;
+};
 
-function StatsCards({ users }: { users: UserItem[] }) {
-  const stats: StatItem[] = useMemo(() => {
-    const verifiedCount = users.filter((u) => u.verified).length;
-    const verifiedArtistCount = users.filter((u) => u.verifiedArtists).length;
-    const adminCount = users.filter((u) =>
-      u.role.toLowerCase().includes("admin"),
-    ).length;
+type UserStatsResponse = {
+  data: UserStatsData;
+};
 
-    return [
-      {
-        label: "Loaded Users",
-        value: users.length.toLocaleString("id-ID"),
-        detail: "Current cursor batch",
-        icon: Users,
-        color: "text-orange-600",
-        bgColor: "bg-orange-50",
-      },
-      {
-        label: "Verified",
-        value: verifiedCount.toLocaleString("id-ID"),
-        detail: "From current batch",
-        icon: CheckCircle2,
-        color: "text-emerald-600",
-        bgColor: "bg-emerald-50",
-      },
-      {
-        label: "Verified Artists",
-        value: verifiedArtistCount.toLocaleString("id-ID"),
-        detail: "From current batch",
-        icon: Star,
-        color: "text-violet-600",
-        bgColor: "bg-violet-50",
-      },
-      {
-        label: "Admin Role",
-        value: adminCount.toLocaleString("id-ID"),
-        detail: "From current batch",
-        icon: ShieldCheck,
-        color: "text-amber-600",
-        bgColor: "bg-amber-50",
-      },
-    ];
-  }, [users]);
+function StatsCards() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["users-stats"],
+    queryFn: async () => {
+      const res = await apiClient.get<UserStatsResponse>("/users/stats");
+      return res.data.data;
+    },
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+  });
+
+  const stats = [
+    {
+      label: "Total Users",
+      value: data?.totalUsers ?? 0,
+      detail: "All registered accounts",
+      icon: Users,
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
+    },
+    {
+      label: "Verified",
+      value: data?.verifiedCount ?? 0,
+      detail: "Email verified users",
+      icon: CheckCircle2,
+      color: "text-emerald-600",
+      bgColor: "bg-emerald-50",
+    },
+    {
+      label: "Verified Artists",
+      value: data?.verifiedArtistCount ?? 0,
+      detail: "Approved artist accounts",
+      icon: Star,
+      color: "text-violet-600",
+      bgColor: "bg-violet-50",
+    },
+    {
+      label: "Admin Role",
+      value: data?.adminCount ?? 0,
+      detail: "Platform administrators",
+      icon: ShieldCheck,
+      color: "text-amber-600",
+      bgColor: "bg-amber-50",
+    },
+  ];
 
   return (
     <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -339,7 +343,6 @@ function StatsCards({ users }: { users: UserItem[] }) {
           key={label}
           className="group relative overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-500/10"
         >
-          {/* subtle gradient overlay on hover */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white via-white to-orange-50/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
           <CardHeader className="relative flex flex-row items-start justify-between space-y-0 pb-2">
@@ -347,9 +350,13 @@ function StatsCards({ users }: { users: UserItem[] }) {
               <CardDescription className="text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-400">
                 {label}
               </CardDescription>
-              <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
-                {value}
-              </CardTitle>
+              {isLoading ? (
+                <Skeleton className="h-9 w-16 rounded-xl" />
+              ) : (
+                <CardTitle className="text-3xl font-bold tracking-tight text-slate-900">
+                  {value.toLocaleString("id-ID")}
+                </CardTitle>
+              )}
             </div>
             <div
               className={cn(
@@ -745,7 +752,7 @@ export default function UsersPage() {
       </section>
 
       {/* ── Stats ──────────────────────────────────────── */}
-      <StatsCards users={users} />
+      <StatsCards />
 
       {/* ── Table Card ─────────────────────────────────── */}
       <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
