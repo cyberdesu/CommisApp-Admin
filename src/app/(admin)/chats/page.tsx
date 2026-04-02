@@ -18,9 +18,11 @@ import {
   keepPreviousData,
   useInfiniteQuery,
   useQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
 
 import { apiClient } from "@/lib/api/client";
+import { useAdminRealtime } from "@/hooks/use-admin-realtime";
 import { sanitizeImageSource } from "@/lib/security/url-safety";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -266,7 +268,6 @@ function ChatStats() {
       const res = await apiClient.get<StatsResponse>("/chats/stats");
       return res.data.data;
     },
-    refetchInterval: 30_000,
     staleTime: 15_000,
   });
 
@@ -353,7 +354,6 @@ function ConversationList({
     getNextPageParam: (lastPage) => lastPage.meta.nextCursor,
     placeholderData: keepPreviousData,
     staleTime: 10_000,
-    refetchInterval: 15_000,
   });
 
   const conversations = useMemo(
@@ -859,6 +859,7 @@ function MessageView({
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
 export default function ChatsPage() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const searchParams = useSearchParams();
   const deepLinkedConversationId = useMemo(() => {
@@ -901,6 +902,20 @@ export default function ChatsPage() {
     setSelectedConversation(null);
     syncConversationQuery(null);
   }, [syncConversationQuery]);
+
+  useAdminRealtime({
+    topics: ["chats"],
+    onEvent: () => {
+      void queryClient.invalidateQueries({ queryKey: ["chat-stats"] });
+      void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+
+      if (selectedConversation) {
+        void queryClient.invalidateQueries({
+          queryKey: ["messages", selectedConversation],
+        });
+      }
+    },
+  });
 
   return (
     <div className="space-y-6">

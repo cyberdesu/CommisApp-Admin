@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { getSessionAdmin } from "@/lib/auth/session";
 import { isAllowedOrigin } from "@/lib/auth/origin";
+import { broadcastAdminRealtimeTopics } from "@/lib/admin-realtime";
 import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/prisma/generated/client";
@@ -223,6 +224,8 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       revisionsUsed: result.data.revisionsUsed,
       revisionsIncluded: result.data.revisionsIncluded,
     });
+
+    broadcastAdminRealtimeTopics(["orders"]);
 
     return NextResponse.json(result);
   } catch (error) {

@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 
 import { apiClient } from "@/lib/api/client";
+import { useAdminRealtime } from "@/hooks/use-admin-realtime";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -286,7 +287,6 @@ export default function OrdersPage() {
       const response = await apiClient.get<AdminOrderStats>("/orders/stats");
       return response.data;
     },
-    refetchInterval: 30_000,
   });
 
   const analyticsQuery = useQuery({
@@ -302,7 +302,16 @@ export default function OrdersPage() {
       );
       return response.data;
     },
-    refetchInterval: 60_000,
+  });
+
+  useAdminRealtime({
+    topics: ["orders"],
+    onEvent: () => {
+      void queryClient.invalidateQueries({ queryKey: ["orders"] });
+      void queryClient.invalidateQueries({ queryKey: ["orders-stats"] });
+      void queryClient.invalidateQueries({ queryKey: ["orders-analytics"] });
+      void queryClient.invalidateQueries({ queryKey: ["user-detail"] });
+    },
   });
 
   const interventionMutation = useMutation({
