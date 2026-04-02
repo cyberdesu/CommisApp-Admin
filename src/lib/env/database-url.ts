@@ -1,3 +1,5 @@
+import "server-only";
+
 type AppEnv = "dev" | "prod";
 
 function normalizeAppEnv(input?: string): AppEnv | null {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/prisma/generated/client";
 
@@ -20,9 +21,14 @@ function isValidStatus(value: string): value is StatusFilter {
 }
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.payouts.list",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected payouts list request due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -43,6 +49,14 @@ export async function GET(req: NextRequest) {
 
     const search = (searchParams.get("search") || "").trim();
     const summaryOnly = searchParams.get("summary") === "1";
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      status,
+      search: search || null,
+      cursor,
+      limit,
+      summaryOnly,
+    });
 
     const statusFilter =
       status === "ALL" ? undefined : (status as "PENDING" | "SENT" | "FRAUD");
@@ -70,6 +84,9 @@ export async function GET(req: NextRequest) {
 
     if (summaryOnly) {
       const total = await prisma.payout.count({ where });
+      requestLogger.info("Fetched payout summary", {
+        total,
+      });
 
       return NextResponse.json({
         data: [],
@@ -102,6 +119,12 @@ export async function GET(req: NextRequest) {
       ? slice[slice.length - 1]?.id ?? null
       : null;
 
+    requestLogger.info("Fetched payout list", {
+      resultCount: slice.length,
+      hasNextPage,
+      nextCursor,
+    });
+
     const data = slice.map((payout) => ({
       id: payout.id,
       artistId: payout.artistId,
@@ -133,7 +156,9 @@ export async function GET(req: NextRequest) {
       filters: { status, search },
     });
   } catch (error) {
-    console.error("Fetch payouts error:", error);
+    logger.error("Failed to fetch payouts", {
+      error,
+    });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

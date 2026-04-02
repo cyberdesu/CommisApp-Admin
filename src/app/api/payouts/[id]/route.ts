@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { isAllowedOrigin } from "@/lib/auth/origin";
+import { createRequestLogger } from "@/lib/logger";
 import {
   PaypalPayoutError,
   createPaypalPayout,
@@ -38,8 +39,13 @@ class PayoutRouteError extends Error {
 }
 
 export async function PATCH(req: NextRequest, context: RouteContext) {
+  const logger = createRequestLogger(req, {
+    route: "api.payouts.update",
+  });
+
   try {
     if (!isAllowedOrigin(req)) {
+      logger.warn("Rejected payout update due to invalid origin");
       return NextResponse.json(
         { message: "Forbidden origin" },
         { status: 403 },
@@ -48,11 +54,13 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected payout update due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const { id } = await context.params;
     if (!id || !UUID_REGEX.test(id)) {
+      logger.warn("Rejected payout update due to invalid payout id", { id });
       return NextResponse.json(
         { message: "Invalid payout id" },
         { status: 400 },
@@ -61,6 +69,9 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
     const payload = updatePayoutSchema.safeParse(await req.json());
     if (!payload.success) {
+      logger.warn("Rejected payout update due to validation failure", {
+        errors: payload.error.flatten().fieldErrors,
+      });
       return NextResponse.json(
         {
           message: "Validation failed",
@@ -73,12 +84,20 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     const note = payload.data.note?.trim() || null;
     const newStatus =
       payload.data.action === "approve" ? "SENT" : "FRAUD";
+    const requestLogger = logger.child({
+      payoutId: id,
+      adminId: admin.id,
+      action: payload.data.action,
+    });
+
+    requestLogger.info("Processing payout update request");
 
     const result = await prisma.$transaction(
       async (tx) => {
         await tx.$executeRaw`
           SELECT pg_advisory_xact_lock(hashtext(${id}))
         `;
+        requestLogger.debug("Acquired advisory lock for payout");
 
         const lockedPayout = await tx.payout.findUnique({
           where: { id },
@@ -107,16 +126,22 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
               payoutBatchId: string | null;
               batchStatus: string | null;
               payoutItemId: string | null;
+              wasRecoveredFromDuplicate: boolean;
             }
           | null = null;
 
         if (payload.data.action === "approve") {
+          requestLogger.info("Approving payout and sending to PayPal", {
+            amount: lockedPayout.amount.toFixed(2),
+            currency: lockedPayout.currency,
+          });
           paypalResult = await createPaypalPayout({
             payoutId: lockedPayout.id,
             receiverEmail: lockedPayout.paypalEmail,
             amount: lockedPayout.amount.toFixed(2),
             currency: lockedPayout.currency,
             note,
+            logger: requestLogger,
           });
         }
 
@@ -142,7 +167,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
         const actionLabel =
           payload.data.action === "approve"
-            ? `submitted to PayPal${paypalResult?.batchStatus ? ` (${paypalResult.batchStatus})` : ""} and marked as SENT`
+            ? `${paypalResult?.wasRecoveredFromDuplicate ? "reconciled with existing PayPal batch" : "submitted to PayPal"}${paypalResult?.batchStatus ? ` (${paypalResult.batchStatus})` : ""} and marked as SENT`
             : "flagged as FRAUD";
 
         return {
@@ -157,9 +182,15 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       },
     );
 
+    requestLogger.info("Payout update completed successfully", {
+      paypal: result.paypal,
+    });
     return NextResponse.json(result);
   } catch (error) {
     if (error instanceof PayoutRouteError) {
+      logger.warn("Payout update failed with route error", {
+        error,
+      });
       return NextResponse.json(
         { message: error.message },
         { status: error.status },
@@ -169,8 +200,8 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     if (error instanceof PaypalPayoutError) {
       const debugId = getPaypalDebugId(error);
 
-      console.error("PayPal payout error:", {
-        message: error.message,
+      logger.error("PayPal payout request failed", {
+        error,
         status: error.status,
         debugId,
       });
@@ -190,7 +221,9 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       );
     }
 
-    console.error("Update payout error:", error);
+    logger.error("Unhandled payout update error", {
+      error,
+    });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

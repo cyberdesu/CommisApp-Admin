@@ -5,6 +5,7 @@ import {
   ArtistRequestStatus,
   isArtistRequestStatus,
 } from "@/lib/artist-verification";
+import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/prisma/generated/client";
 import { sanitizeImageSource } from "@/lib/security/url-safety";
@@ -49,9 +50,14 @@ function parseCursor(value: string | null) {
 }
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.artist-requests.list",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected artist requests list due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -72,6 +78,15 @@ export async function GET(req: NextRequest) {
 
     const search = (searchParams.get("search") || "").trim();
     const summaryOnly = searchParams.get("summary") === "1";
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      status,
+      limit,
+      hasCursor: Boolean(cursor),
+      hasSearch: Boolean(search),
+      searchLength: search.length,
+      summaryOnly,
+    });
 
     const statusFilter: ArtistRequestStatus | undefined = status === "ALL"
       ? undefined
@@ -101,6 +116,7 @@ export async function GET(req: NextRequest) {
 
     if (summaryOnly) {
       const total = await prisma.artistVerificationRequest.count({ where });
+      requestLogger.info("Fetched artist request summary", { total });
 
       return NextResponse.json({
         data: [],
@@ -166,6 +182,12 @@ export async function GET(req: NextRequest) {
       createdAt: request.user.createdAt,
     }));
 
+    requestLogger.info("Fetched artist requests list", {
+      resultCount: data.length,
+      hasNextPage,
+      nextCursor,
+    });
+
     return NextResponse.json({
       data,
       meta: {
@@ -180,7 +202,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Fetch artist requests error:", error);
+    logger.error("Failed to fetch artist requests", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

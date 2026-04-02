@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { isAllowedOrigin } from "@/lib/auth/origin";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 
 type RouteContext = {
@@ -50,24 +51,34 @@ function isSuspended(suspendedUntil: Date | null) {
 }
 
 export async function POST(req: NextRequest, context: RouteContext) {
+  const logger = createRequestLogger(req, {
+    route: "api.users.moderation",
+  });
+
   try {
     if (!isAllowedOrigin(req)) {
+      logger.warn("Rejected user moderation due to invalid origin");
       return NextResponse.json({ message: "Forbidden origin" }, { status: 403 });
     }
 
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected user moderation due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const { id: rawId } = await context.params;
     const userId = parseUserId(rawId);
     if (!userId) {
+      logger.warn("Rejected user moderation due to invalid user id", { rawId });
       return NextResponse.json({ message: "Invalid user id" }, { status: 400 });
     }
 
     const payload = moderationSchema.safeParse(await req.json());
     if (!payload.success) {
+      logger.warn("Rejected user moderation due to validation failure", {
+        errors: payload.error.flatten().fieldErrors,
+      });
       return NextResponse.json(
         {
           message: "Validation failed",
@@ -76,6 +87,12 @@ export async function POST(req: NextRequest, context: RouteContext) {
         { status: 400 },
       );
     }
+
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      userId,
+      action: payload.data.action,
+    });
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -87,16 +104,19 @@ export async function POST(req: NextRequest, context: RouteContext) {
     });
 
     if (!user) {
+      requestLogger.warn("User not found for moderation");
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     const reason = normalizeReason(payload.data.reason);
 
     if (payload.data.action === "BAN" && user.isBanned) {
+      requestLogger.warn("Rejected moderation because user is already banned");
       return NextResponse.json({ message: "User is already banned" }, { status: 409 });
     }
 
     if (payload.data.action === "SUSPEND" && user.isBanned) {
+      requestLogger.warn("Rejected suspend because user is banned");
       return NextResponse.json(
         { message: "Banned user cannot be suspended" },
         { status: 409 },
@@ -104,6 +124,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
     }
 
     if (payload.data.action === "UNBAN" && !user.isBanned) {
+      requestLogger.warn("Rejected unban because user is not banned");
       return NextResponse.json(
         { message: "User is not banned" },
         { status: 409 },
@@ -111,6 +132,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
     }
 
     if (payload.data.action === "UNSUSPEND" && user.isBanned) {
+      requestLogger.warn("Rejected unsuspend because user is banned");
       return NextResponse.json(
         { message: "Banned user cannot be unsuspended" },
         { status: 409 },
@@ -118,6 +140,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
     }
 
     if (payload.data.action === "UNSUSPEND" && !isSuspended(user.suspendedUntil)) {
+      requestLogger.warn("Rejected unsuspend because user is not suspended");
       return NextResponse.json(
         { message: "User is not currently suspended" },
         { status: 409 },
@@ -258,13 +281,14 @@ export async function POST(req: NextRequest, context: RouteContext) {
       }
     });
 
+    requestLogger.info("User moderation action applied successfully");
+
     return NextResponse.json(result);
   } catch (error) {
-    console.error("User moderation error:", error);
+    logger.error("Failed to apply user moderation", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
     );
   }
 }
-

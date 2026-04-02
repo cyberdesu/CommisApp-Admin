@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 import prisma from "@/lib/prisma";
 
@@ -14,19 +15,30 @@ async function resolveMedia(path?: string | null) {
 }
 
 export async function GET(req: NextRequest, context: RouteContext) {
+  const logger = createRequestLogger(req, {
+    route: "api.showcases.detail",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected showcase detail due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const { id } = await context.params;
     if (!id?.trim()) {
+      logger.warn("Rejected showcase detail due to invalid showcase id", { id });
       return NextResponse.json(
         { message: "Invalid showcase id" },
         { status: 400 },
       );
     }
+
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      showcaseId: id,
+    });
 
     const item = await prisma.showcaseItem.findUnique({
       where: { id },
@@ -82,6 +94,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
     });
 
     if (!item) {
+      requestLogger.warn("Showcase not found");
       return NextResponse.json(
         { message: "Showcase not found" },
         { status: 404 },
@@ -109,9 +122,13 @@ export async function GET(req: NextRequest, context: RouteContext) {
       })),
     };
 
+    requestLogger.info("Fetched showcase detail", {
+      showcaseFileCount: data.showcaseFiles.length,
+    });
+
     return NextResponse.json({ data });
   } catch (error) {
-    console.error("Fetch showcase detail error:", error);
+    logger.error("Failed to fetch showcase detail", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

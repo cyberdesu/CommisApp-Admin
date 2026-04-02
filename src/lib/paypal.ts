@@ -1,5 +1,7 @@
 import "server-only";
 
+import { createLogger, type AppLogger } from "@/lib/logger";
+
 const PAYPAL_AUTH_TIMEOUT_MS = 10_000;
 const PAYPAL_PAYOUT_TIMEOUT_MS = 15_000;
 const CURRENCY_CODE_REGEX = /^[A-Z]{3}$/;
@@ -27,13 +29,25 @@ type PaypalErrorResponse = {
   message?: string;
   debug_id?: string;
   details?: PaypalErrorDetail[];
+  links?: PaypalLink[];
+};
+
+type PaypalLink = {
+  href?: string;
+  rel?: string;
+  method?: string;
+  encType?: string;
 };
 
 type PaypalCreatePayoutResponse = {
   batch_header?: {
     payout_batch_id?: string;
     batch_status?: string;
+    sender_batch_header?: {
+      sender_batch_id?: string;
+    };
   };
+  links?: PaypalLink[];
   items?: Array<{
     payout_item_id?: string;
     transaction_status?: string;
@@ -69,6 +83,20 @@ export class PaypalPayoutError extends Error {
 
 export function getPaypalDebugId(error: PaypalPayoutError) {
   return error.details?.debug_id ?? null;
+}
+
+function findLinkByRel(
+  links: PaypalLink[] | undefined,
+  rel: string,
+  method?: string,
+) {
+  return (
+    links?.find(
+      (link) =>
+        link.rel === rel &&
+        (!method || !link.method || link.method.toUpperCase() === method),
+    ) ?? null
+  );
 }
 
 function readEnv(...keys: string[]) {
@@ -224,6 +252,49 @@ async function getAccessToken(config: PaypalConfig) {
   return accessToken;
 }
 
+async function fetchPaypalBatchByUrl(options: {
+  url: string;
+  accessToken: string;
+}) {
+  const response = await fetch(options.url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${options.accessToken}`,
+      Accept: "application/json",
+    },
+    cache: "no-store",
+    signal: AbortSignal.timeout(PAYPAL_PAYOUT_TIMEOUT_MS),
+  });
+
+  const raw = (await response.json().catch(() => null)) as
+    | PaypalCreatePayoutResponse
+    | PaypalErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new PaypalPayoutError(
+      formatPaypalErrorMessage(
+        raw as PaypalErrorResponse | null,
+        "Failed to fetch PayPal payout batch details.",
+      ),
+      {
+        status: response.status,
+        details: (raw as PaypalErrorResponse | null) ?? null,
+      },
+    );
+  }
+
+  return raw;
+}
+
+function extractDuplicateBatchLookupUrl(payload: PaypalErrorResponse | null) {
+  return (
+    findLinkByRel(payload?.links, "self", "GET")?.href ??
+    findLinkByRel(payload?.links, "duplicate", "GET")?.href ??
+    null
+  );
+}
+
 function buildPayoutMessage(note?: string | null) {
   if (note?.trim()) return note.trim();
   return "Your commission payout has been approved.";
@@ -235,10 +306,18 @@ export async function createPaypalPayout(options: {
   amount: string;
   currency: string;
   note?: string | null;
+  logger?: AppLogger;
 }) {
+  const logger = options.logger?.child({ component: "paypal" }) ??
+    createLogger({ component: "paypal", payoutId: options.payoutId });
+  const startedAt = Date.now();
+
   validatePayoutRequest(options);
 
   const config = getPaypalConfig();
+  logger.debug("Requesting PayPal access token", {
+    apiBaseUrl: config.apiBaseUrl,
+  });
   const accessToken = await getAccessToken(config);
 
   const payoutMessage = buildPayoutMessage(options.note);
@@ -264,6 +343,11 @@ export async function createPaypalPayout(options: {
     ],
   };
 
+  logger.info("Submitting payout to PayPal", {
+    currency: options.currency,
+    amount: options.amount,
+  });
+
   const response = await fetch(`${config.apiBaseUrl}/v1/payments/payouts`, {
     method: "POST",
     headers: {
@@ -283,14 +367,51 @@ export async function createPaypalPayout(options: {
     | null;
 
   if (!response.ok) {
+    const errorPayload = (raw as PaypalErrorResponse | null) ?? null;
+    const duplicateBatchLookupUrl = extractDuplicateBatchLookupUrl(errorPayload);
+
+    if (duplicateBatchLookupUrl) {
+      logger.warn("PayPal reported a duplicate payout request, fetching existing batch", {
+        statusCode: response.status,
+      });
+
+      const recovered = await fetchPaypalBatchByUrl({
+        url: duplicateBatchLookupUrl,
+        accessToken,
+      });
+
+      const recoveredBatchId = isPaypalCreatePayoutResponse(recovered)
+        ? recovered.batch_header?.payout_batch_id ?? null
+        : null;
+      const recoveredBatchStatus = isPaypalCreatePayoutResponse(recovered)
+        ? recovered.batch_header?.batch_status ?? null
+        : null;
+      const recoveredPayoutItemId = isPaypalCreatePayoutResponse(recovered)
+        ? recovered.items?.[0]?.payout_item_id ?? null
+        : null;
+
+      logger.info("Recovered existing PayPal payout batch after duplicate request", {
+        durationMs: Date.now() - startedAt,
+        payoutBatchId: recoveredBatchId,
+        batchStatus: recoveredBatchStatus,
+      });
+
+      return {
+        payoutBatchId: recoveredBatchId,
+        batchStatus: recoveredBatchStatus,
+        payoutItemId: recoveredPayoutItemId,
+        wasRecoveredFromDuplicate: true,
+      };
+    }
+
     throw new PaypalPayoutError(
       formatPaypalErrorMessage(
-        raw as PaypalErrorResponse | null,
+        errorPayload,
         "PayPal rejected the payout request.",
       ),
       {
         status: response.status,
-        details: (raw as PaypalErrorResponse | null) ?? null,
+        details: errorPayload,
       },
     );
   }
@@ -305,10 +426,18 @@ export async function createPaypalPayout(options: {
     ? raw.items?.[0]?.payout_item_id ?? null
     : null;
 
+  logger.info("PayPal payout created", {
+    durationMs: Date.now() - startedAt,
+    statusCode: response.status,
+    batchStatus,
+    payoutBatchId,
+    payoutItemId,
+  });
+
   return {
     payoutBatchId,
     batchStatus,
     payoutItemId,
-    raw,
+    wasRecoveredFromDuplicate: false,
   };
 }

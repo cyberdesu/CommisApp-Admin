@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/prisma/generated/client";
 
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 import prisma from "@/lib/prisma";
 
@@ -77,9 +78,14 @@ async function resolveMediaMap(paths: Array<string | null | undefined>) {
 }
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.chats.conversations.list",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected conversations list due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -90,6 +96,14 @@ export async function GET(req: NextRequest) {
     const cursor = parseCursor(cursorRaw);
     const search = normalizeSearch(searchParams.get("search"));
     const type = parseConversationType(searchParams.get("type"));
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      type,
+      limit,
+      hasCursor: Boolean(cursor),
+      hasSearch: Boolean(search),
+      searchLength: search.length,
+    });
 
     const filters: Prisma.ConversationWhereInput[] = [];
 
@@ -248,6 +262,12 @@ export async function GET(req: NextRequest) {
           })
         : null;
 
+    requestLogger.info("Fetched conversations list", {
+      resultCount: data.length,
+      hasNextPage,
+      nextCursor,
+    });
+
     return NextResponse.json({
       data,
       meta: {
@@ -262,7 +282,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Fetch conversations error:", error);
+    logger.error("Failed to fetch conversations", { error });
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

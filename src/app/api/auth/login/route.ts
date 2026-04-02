@@ -3,6 +3,7 @@ import '@/lib/auth/passport';
 import passport from 'passport';
 import { z } from 'zod';
 import { createSession, setSessionCookie } from '@/lib/auth/session';
+import { createRequestLogger } from '@/lib/logger';
 import prisma from '@/lib/prisma';
 
 type AdminUser = NonNullable<Awaited<ReturnType<typeof prisma.adminUser.findUnique>>>;
@@ -35,9 +36,14 @@ function runPassportLocal(
 }
 
 export async function POST(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.auth.login",
+  });
+
   try {
     const parsed = loginSchema.safeParse(await req.json());
     if (!parsed.success) {
+      logger.warn("Rejected login due to validation failure");
       return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
     }
     const { email, password } = parsed.data;
@@ -45,6 +51,7 @@ export async function POST(req: NextRequest) {
     const { user } = await runPassportLocal({ email, password });
 
     if (!user) {
+      logger.warn("Rejected login due to invalid credentials");
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
     }
 
@@ -59,9 +66,12 @@ export async function POST(req: NextRequest) {
     }, { status: 200 });
 
     setSessionCookie(response, sessionId);
+    logger.info("Admin login successful", {
+      adminId: user.id,
+    });
     return response;
   } catch (error) {
-    console.error('Login error:', error);
+    logger.error("Login request failed", { error });
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

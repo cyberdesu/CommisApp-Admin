@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { isAllowedOrigin } from "@/lib/auth/origin";
+import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 
 type RouteContext = {
@@ -57,10 +58,15 @@ async function enrichUserMedia<
 }
 
 export async function GET(req: NextRequest, context: RouteContext) {
+  const logger = createRequestLogger(req, {
+    route: "api.users.detail",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
 
     if (!admin) {
+      logger.warn("Rejected user detail due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -68,8 +74,14 @@ export async function GET(req: NextRequest, context: RouteContext) {
     const id = parseUserId(rawId);
 
     if (!id) {
+      logger.warn("Rejected user detail due to invalid user id", { rawId });
       return NextResponse.json({ message: "Invalid user id" }, { status: 400 });
     }
+
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      userId: id,
+    });
 
     const user = await prisma.user.findUnique({
       where: { id },
@@ -113,14 +125,17 @@ export async function GET(req: NextRequest, context: RouteContext) {
     });
 
     if (!user) {
+      requestLogger.warn("User not found");
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     const enrichedUser = await enrichUserMedia(user);
 
+    requestLogger.info("Fetched user detail");
+
     return NextResponse.json({ data: enrichedUser });
   } catch (error) {
-    console.error("Fetch user detail error:", error);
+    logger.error("Failed to fetch user detail", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
@@ -144,14 +159,20 @@ const updateUserSchema = z.object({
 });
 
 export async function PATCH(req: NextRequest, context: RouteContext) {
+  const logger = createRequestLogger(req, {
+    route: "api.users.update",
+  });
+
   try {
     if (!isAllowedOrigin(req)) {
+      logger.warn("Rejected user update due to invalid origin");
       return NextResponse.json({ message: "Forbidden origin" }, { status: 403 });
     }
 
     const admin = await getSessionAdmin(req);
 
     if (!admin) {
+      logger.warn("Rejected user update due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -159,8 +180,14 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     const id = parseUserId(rawId);
 
     if (!id) {
+      logger.warn("Rejected user update due to invalid user id", { rawId });
       return NextResponse.json({ message: "Invalid user id" }, { status: 400 });
     }
+
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      userId: id,
+    });
 
     const existingUser = await prisma.user.findUnique({
       where: { id },
@@ -173,6 +200,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     });
 
     if (!existingUser) {
+      requestLogger.warn("User not found for update");
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
@@ -180,6 +208,9 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     const validationResult = updateUserSchema.safeParse(body);
 
     if (!validationResult.success) {
+      requestLogger.warn("Rejected user update due to validation failure", {
+        errors: validationResult.error.flatten().fieldErrors,
+      });
       return NextResponse.json(
         { 
           message: "Validation failed", 
@@ -204,6 +235,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     const verifiedArtists = validatedData.verifiedArtists;
 
     if (body.username !== undefined && !username) {
+      requestLogger.warn("Rejected user update due to empty username");
       return NextResponse.json(
         { message: "Username is required when provided" },
         { status: 400 },
@@ -211,6 +243,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     }
 
     if (body.role !== undefined && !role) {
+      requestLogger.warn("Rejected user update due to empty role");
       return NextResponse.json(
         { message: "Role is required when provided" },
         { status: 400 },
@@ -224,6 +257,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       });
 
       if (duplicateEmail) {
+        requestLogger.warn("Rejected user update due to duplicate email");
         return NextResponse.json(
           { message: "Email is already in use" },
           { status: 409 },
@@ -238,6 +272,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       });
 
       if (duplicateUsername) {
+        requestLogger.warn("Rejected user update due to duplicate username");
         return NextResponse.json(
           { message: "Username is already in use" },
           { status: 409 },
@@ -322,6 +357,10 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
     const enrichedUser = await enrichUserMedia(updatedUser);
 
+    requestLogger.info("Updated user successfully", {
+      promotedToArtist: shouldApproveArtist,
+    });
+
     return NextResponse.json({
       message: shouldApproveArtist
         ? "Artist approved successfully"
@@ -329,7 +368,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       data: enrichedUser,
     });
   } catch (error) {
-    console.error("Update user error:", error);
+    logger.error("Failed to update user", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
@@ -338,14 +377,20 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(req: NextRequest, context: RouteContext) {
+  const logger = createRequestLogger(req, {
+    route: "api.users.delete",
+  });
+
   try {
     if (!isAllowedOrigin(req)) {
+      logger.warn("Rejected user delete due to invalid origin");
       return NextResponse.json({ message: "Forbidden origin" }, { status: 403 });
     }
 
     const admin = await getSessionAdmin(req);
 
     if (!admin) {
+      logger.warn("Rejected user delete due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -353,8 +398,14 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
     const id = parseUserId(rawId);
 
     if (!id) {
+      logger.warn("Rejected user delete due to invalid user id", { rawId });
       return NextResponse.json({ message: "Invalid user id" }, { status: 400 });
     }
+
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      userId: id,
+    });
 
     const existingUser = await prisma.user.findUnique({
       where: { id },
@@ -362,6 +413,7 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
     });
 
     if (!existingUser) {
+      requestLogger.warn("User not found for delete");
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
@@ -369,11 +421,13 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
       where: { id },
     });
 
+    requestLogger.info("Deleted user successfully");
+
     return NextResponse.json({
       message: "User deleted successfully",
     });
   } catch (error) {
-    console.error("Delete user error:", error);
+    logger.error("Failed to delete user", { error });
     return NextResponse.json(
       { message: "Failed to delete user" },
       { status: 500 },

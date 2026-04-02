@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.payouts.stats",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected payout stats request due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -16,6 +22,13 @@ export async function GET(req: NextRequest) {
       prisma.payout.count({ where: { status: "FRAUD" } }),
     ]);
 
+    logger.info("Fetched payout stats", {
+      adminId: admin.id,
+      pending,
+      sent,
+      fraud,
+    });
+
     return NextResponse.json({
       pending,
       sent,
@@ -23,7 +36,9 @@ export async function GET(req: NextRequest) {
       total: pending + sent + fraud,
     });
   } catch (error) {
-    console.error("Fetch payout stats error:", error);
+    logger.error("Failed to fetch payout stats", {
+      error,
+    });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

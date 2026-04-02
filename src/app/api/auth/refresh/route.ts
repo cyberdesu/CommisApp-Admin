@@ -5,6 +5,7 @@ import { z } from "zod";
 import { isAllowedOrigin } from "@/lib/auth/origin";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { generateAccessToken, generateRefreshToken } from "@/lib/auth/jwt";
+import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 
 const refreshSchema = z.object({
@@ -42,18 +43,25 @@ function parseTokenSubject(payload: string | JwtPayload): number | null {
 }
 
 export async function PUT(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.auth.refresh",
+  });
+
   try {
     if (!isAllowedOrigin(req)) {
+      logger.warn("Rejected refresh due to invalid origin");
       return NextResponse.json({ message: "Forbidden origin" }, { status: 403 });
     }
 
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected refresh due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const parsedBody = refreshSchema.safeParse(await req.json());
     if (!parsedBody.success) {
+      logger.warn("Rejected refresh due to validation failure");
       return NextResponse.json(
         { message: "Refresh token is required" },
         { status: 400 },
@@ -66,6 +74,9 @@ export async function PUT(req: NextRequest) {
     try {
       payload = jwt.verify(refreshToken, requireJwtSecret());
     } catch {
+      logger.warn("Rejected refresh due to invalid or expired JWT", {
+        adminId: admin.id,
+      });
       return NextResponse.json(
         { message: "Invalid or expired refresh token" },
         { status: 401 },
@@ -74,6 +85,9 @@ export async function PUT(req: NextRequest) {
 
     const tokenSub = parseTokenSubject(payload);
     if (!tokenSub) {
+      logger.warn("Rejected refresh due to invalid token subject", {
+        adminId: admin.id,
+      });
       return NextResponse.json({ message: "Invalid refresh token" }, { status: 401 });
     }
 
@@ -88,6 +102,10 @@ export async function PUT(req: NextRequest) {
       storedToken.userId !== tokenSub ||
       storedToken.expiresAt <= new Date()
     ) {
+      logger.warn("Rejected refresh due to token lookup mismatch", {
+        adminId: admin.id,
+        tokenUserId: tokenSub,
+      });
       return NextResponse.json({ message: "Invalid refresh token" }, { status: 401 });
     }
 
@@ -112,6 +130,11 @@ export async function PUT(req: NextRequest) {
       }),
     ]);
 
+    logger.info("Refresh token rotation completed", {
+      adminId: admin.id,
+      tokenUserId: storedToken.user.id,
+    });
+
     return NextResponse.json(
       {
         data: {
@@ -122,7 +145,7 @@ export async function PUT(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Refresh error:", error);
+    logger.error("Refresh request failed", { error });
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

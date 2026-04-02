@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.chats.stats",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected chat stats request due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -31,6 +37,15 @@ export async function GET(req: NextRequest) {
     const totalGroup =
       typeCounts.find((t) => t.type === "GROUP")?._count.id ?? 0;
 
+    logger.info("Fetched chat stats", {
+      adminId: admin.id,
+      totalConversations,
+      totalMessages,
+      activeToday,
+      totalDirect,
+      totalGroup,
+    });
+
     return NextResponse.json({
       data: {
         totalConversations,
@@ -41,7 +56,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Fetch chat stats error:", error);
+    logger.error("Failed to fetch chat stats", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

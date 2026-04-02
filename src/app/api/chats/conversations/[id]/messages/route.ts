@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/prisma/generated/client";
 
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 import prisma from "@/lib/prisma";
 
@@ -79,9 +80,14 @@ async function resolveMediaMap(paths: Array<string | null | undefined>) {
 }
 
 export async function GET(req: NextRequest, context: RouteContext) {
+  const logger = createRequestLogger(req, {
+    route: "api.chats.messages.list",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected messages list due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -89,6 +95,9 @@ export async function GET(req: NextRequest, context: RouteContext) {
     const conversationId = parseConversationId(rawConversationId);
 
     if (!conversationId) {
+      logger.warn("Rejected messages list due to invalid conversation id", {
+        rawConversationId,
+      });
       return NextResponse.json({ message: "Invalid conversation id" }, { status: 400 });
     }
 
@@ -98,6 +107,13 @@ export async function GET(req: NextRequest, context: RouteContext) {
     const cursorRaw = searchParams.get("cursor");
     const cursor = parseCursor(cursorRaw);
     const includeDeleted = parseIncludeDeleted(searchParams.get("includeDeleted"));
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      conversationId,
+      limit,
+      hasCursor: Boolean(cursor),
+      includeDeleted,
+    });
 
     const conversationWhere = { id: conversationId };
 
@@ -181,6 +197,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
     ]);
 
     if (!conversation) {
+      requestLogger.warn("Conversation not found while fetching messages");
       return NextResponse.json({ message: "Conversation not found" }, { status: 404 });
     }
 
@@ -256,6 +273,12 @@ export async function GET(req: NextRequest, context: RouteContext) {
           })
         : null;
 
+    requestLogger.info("Fetched conversation messages", {
+      messageCount: data.items.length,
+      hasNextPage,
+      nextCursor,
+    });
+
     return NextResponse.json({
       data,
       meta: {
@@ -267,7 +290,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
       },
     });
   } catch (error) {
-    console.error("Fetch messages error:", error);
+    logger.error("Failed to fetch conversation messages", { error });
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

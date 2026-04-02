@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { isAllowedOrigin } from "@/lib/auth/origin";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 
 const updateArtistRequestSchema = z.object({
@@ -26,19 +27,28 @@ function parseRequestId(rawId: string) {
 }
 
 export async function PATCH(req: NextRequest, context: RouteContext) {
+  const logger = createRequestLogger(req, {
+    route: "api.artist-requests.update",
+  });
+
   try {
     if (!isAllowedOrigin(req)) {
+      logger.warn("Rejected artist request update due to invalid origin");
       return NextResponse.json({ message: "Forbidden origin" }, { status: 403 });
     }
 
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected artist request update due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const { id: rawId } = await context.params;
     const requestId = parseRequestId(rawId);
     if (!requestId) {
+      logger.warn("Rejected artist request update due to invalid request id", {
+        rawId,
+      });
       return NextResponse.json(
         { message: "Invalid request id" },
         { status: 400 },
@@ -47,6 +57,9 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 
     const payload = updateArtistRequestSchema.safeParse(await req.json());
     if (!payload.success) {
+      logger.warn("Rejected artist request update due to validation failure", {
+        errors: payload.error.flatten().fieldErrors,
+      });
       return NextResponse.json(
         {
           message: "Validation failed",
@@ -55,6 +68,12 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
         { status: 400 },
       );
     }
+
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      requestId: requestId.toString(),
+      action: payload.data.action,
+    });
 
     const requestItem = await prisma.artistVerificationRequest.findUnique({
       where: { id: requestId },
@@ -91,6 +110,8 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
           reviewedByAdminId: admin.id,
         },
       });
+
+      requestLogger.info("Rejected artist verification request");
 
       return NextResponse.json({
         message: "Artist request rejected",
@@ -131,11 +152,15 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       });
     });
 
+    requestLogger.info("Approved artist verification request", {
+      userId: requestItem.userId,
+    });
+
     return NextResponse.json({
       message: "Artist approved successfully",
     });
   } catch (error) {
-    console.error("Update artist request error:", error);
+    logger.error("Failed to update artist request", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

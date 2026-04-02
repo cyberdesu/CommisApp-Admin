@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.users.stats",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected user stats request due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -19,6 +25,15 @@ export async function GET(req: NextRequest) {
         prisma.user.count({ where: { isBanned: true } }),
       ]);
 
+    logger.info("Fetched user stats", {
+      adminId: admin.id,
+      totalUsers,
+      verifiedCount,
+      verifiedArtistCount,
+      adminCount,
+      bannedCount,
+    });
+
     return NextResponse.json({
       data: {
         totalUsers,
@@ -29,7 +44,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Fetch user stats error:", error);
+    logger.error("Failed to fetch user stats", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

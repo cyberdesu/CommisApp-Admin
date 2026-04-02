@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 import prisma from "@/lib/prisma";
 
@@ -33,9 +34,14 @@ async function resolveAvatar(path?: string | null) {
 }
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.users.list",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected users list due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -54,6 +60,17 @@ export async function GET(req: NextRequest) {
       searchParams.get("verifiedArtists"),
     );
     const hasAvatar = parseBooleanFilter(searchParams.get("hasAvatar"));
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      limit,
+      hasCursor: Boolean(cursor),
+      hasSearch: Boolean(search),
+      searchLength: search.length,
+      role: role || "all",
+      verified: verified ?? "all",
+      verifiedArtists: verifiedArtists ?? "all",
+      hasAvatar: hasAvatar ?? "all",
+    });
 
     const whereClause = {
       ...(search
@@ -112,6 +129,12 @@ export async function GET(req: NextRequest) {
       ? String(slice[slice.length - 1]?.id ?? "")
       : null;
 
+    requestLogger.info("Fetched users list", {
+      resultCount: data.length,
+      hasNextPage,
+      nextCursor,
+    });
+
     return NextResponse.json({
       data,
       meta: {
@@ -129,7 +152,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Fetch users error:", error);
+    logger.error("Failed to fetch users", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

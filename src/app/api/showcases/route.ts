@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 
 const DEFAULT_LIMIT = 10;
@@ -46,9 +47,14 @@ function parseCursor(value: string | null): ShowcaseCursor | null {
 }
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, {
+    route: "api.showcases.list",
+  });
+
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
+      logger.warn("Rejected showcases list due to missing admin session");
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
@@ -62,6 +68,14 @@ export async function GET(req: NextRequest) {
     const summaryOnly = searchParams.get("summary") === "1";
     const cursorRaw = searchParams.get("cursor");
     const cursor = parseCursor(cursorRaw);
+    const requestLogger = logger.child({
+      adminId: admin.id,
+      limit,
+      hasCursor: Boolean(cursor),
+      hasSearch: Boolean(search),
+      searchLength: search.length,
+      summaryOnly,
+    });
 
     const baseWhere = search
       ? { title: { contains: search, mode: "insensitive" as const } }
@@ -69,6 +83,7 @@ export async function GET(req: NextRequest) {
 
     if (summaryOnly) {
       const total = await prisma.showcaseItem.count({ where: baseWhere });
+      requestLogger.info("Fetched showcase summary", { total });
       return NextResponse.json({
         data: [],
         meta: {
@@ -144,6 +159,12 @@ export async function GET(req: NextRequest) {
         })
       : null;
 
+    requestLogger.info("Fetched showcases list", {
+      resultCount: slice.length,
+      hasNextPage,
+      nextCursor,
+    });
+
     return NextResponse.json({
       data: slice,
       meta: {
@@ -154,7 +175,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Fetch showcases error:", error);
+    logger.error("Failed to fetch showcases", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
