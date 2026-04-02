@@ -294,11 +294,6 @@ export type ShowcaseNullableScalarRelationFilter = {
   isNot?: Prisma.ShowcaseWhereInput | null
 }
 
-export type ShowcaseScalarRelationFilter = {
-  is?: Prisma.ShowcaseWhereInput
-  isNot?: Prisma.ShowcaseWhereInput
-}
-
 export type ShowcaseOrderByRelevanceInput = {
   fields: Prisma.ShowcaseOrderByRelevanceFieldEnum | Prisma.ShowcaseOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
@@ -329,6 +324,11 @@ export type ShowcaseMinOrderByAggregateInput = {
 
 export type ShowcaseSumOrderByAggregateInput = {
   userId?: Prisma.SortOrder
+}
+
+export type ShowcaseScalarRelationFilter = {
+  is?: Prisma.ShowcaseWhereInput
+  isNot?: Prisma.ShowcaseWhereInput
 }
 
 export type ShowcaseCreateNestedOneWithoutUserInput = {

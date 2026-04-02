@@ -28,92 +28,196 @@ export type AggregateService = {
 
 export type ServiceAvgAggregateOutputType = {
   userId: number | null
-  price: number | null
+  basePrice: runtime.Decimal | null
+  deliveryDaysMin: number | null
+  deliveryDaysMax: number | null
+  revisionsIncluded: number | null
+  slotsTotal: number | null
+  slotsUsed: number | null
 }
 
 export type ServiceSumAggregateOutputType = {
   userId: number | null
-  price: number | null
+  basePrice: runtime.Decimal | null
+  deliveryDaysMin: number | null
+  deliveryDaysMax: number | null
+  revisionsIncluded: number | null
+  slotsTotal: number | null
+  slotsUsed: number | null
 }
 
 export type ServiceMinAggregateOutputType = {
   id: string | null
   userId: number | null
   title: string | null
-  price: number | null
-  status: string | null
+  slug: string | null
+  shortDescription: string | null
+  coverImageUrl: string | null
+  basePrice: runtime.Decimal | null
+  currency: string | null
+  deliveryDaysMin: number | null
+  deliveryDaysMax: number | null
+  revisionsIncluded: number | null
+  requestMode: $Enums.ServiceRequestMode | null
+  status: $Enums.ServiceStatus | null
+  slotsEnabled: boolean | null
+  slotsTotal: number | null
+  slotsUsed: number | null
+  isNSFWAllowed: boolean | null
+  isCommercialAllowed: boolean | null
+  canDo: string | null
+  cannotDo: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  folderId: string | null
 }
 
 export type ServiceMaxAggregateOutputType = {
   id: string | null
   userId: number | null
   title: string | null
-  price: number | null
-  status: string | null
+  slug: string | null
+  shortDescription: string | null
+  coverImageUrl: string | null
+  basePrice: runtime.Decimal | null
+  currency: string | null
+  deliveryDaysMin: number | null
+  deliveryDaysMax: number | null
+  revisionsIncluded: number | null
+  requestMode: $Enums.ServiceRequestMode | null
+  status: $Enums.ServiceStatus | null
+  slotsEnabled: boolean | null
+  slotsTotal: number | null
+  slotsUsed: number | null
+  isNSFWAllowed: boolean | null
+  isCommercialAllowed: boolean | null
+  canDo: string | null
+  cannotDo: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  folderId: string | null
 }
 
 export type ServiceCountAggregateOutputType = {
   id: number
   userId: number
   title: number
+  slug: number
+  shortDescription: number
   description: number
-  price: number
+  coverImageUrl: number
+  basePrice: number
+  currency: number
+  deliveryDaysMin: number
+  deliveryDaysMax: number
+  revisionsIncluded: number
+  requestMode: number
   status: number
+  slotsEnabled: number
+  slotsTotal: number
+  slotsUsed: number
+  isNSFWAllowed: number
+  isCommercialAllowed: number
+  canDo: number
+  cannotDo: number
   createdAt: number
   updatedAt: number
-  folderId: number
   _all: number
 }
 
 
 export type ServiceAvgAggregateInputType = {
   userId?: true
-  price?: true
+  basePrice?: true
+  deliveryDaysMin?: true
+  deliveryDaysMax?: true
+  revisionsIncluded?: true
+  slotsTotal?: true
+  slotsUsed?: true
 }
 
 export type ServiceSumAggregateInputType = {
   userId?: true
-  price?: true
+  basePrice?: true
+  deliveryDaysMin?: true
+  deliveryDaysMax?: true
+  revisionsIncluded?: true
+  slotsTotal?: true
+  slotsUsed?: true
 }
 
 export type ServiceMinAggregateInputType = {
   id?: true
   userId?: true
   title?: true
-  price?: true
+  slug?: true
+  shortDescription?: true
+  coverImageUrl?: true
+  basePrice?: true
+  currency?: true
+  deliveryDaysMin?: true
+  deliveryDaysMax?: true
+  revisionsIncluded?: true
+  requestMode?: true
   status?: true
+  slotsEnabled?: true
+  slotsTotal?: true
+  slotsUsed?: true
+  isNSFWAllowed?: true
+  isCommercialAllowed?: true
+  canDo?: true
+  cannotDo?: true
   createdAt?: true
   updatedAt?: true
-  folderId?: true
 }
 
 export type ServiceMaxAggregateInputType = {
   id?: true
   userId?: true
   title?: true
-  price?: true
+  slug?: true
+  shortDescription?: true
+  coverImageUrl?: true
+  basePrice?: true
+  currency?: true
+  deliveryDaysMin?: true
+  deliveryDaysMax?: true
+  revisionsIncluded?: true
+  requestMode?: true
   status?: true
+  slotsEnabled?: true
+  slotsTotal?: true
+  slotsUsed?: true
+  isNSFWAllowed?: true
+  isCommercialAllowed?: true
+  canDo?: true
+  cannotDo?: true
   createdAt?: true
   updatedAt?: true
-  folderId?: true
 }
 
 export type ServiceCountAggregateInputType = {
   id?: true
   userId?: true
   title?: true
+  slug?: true
+  shortDescription?: true
   description?: true
-  price?: true
+  coverImageUrl?: true
+  basePrice?: true
+  currency?: true
+  deliveryDaysMin?: true
+  deliveryDaysMax?: true
+  revisionsIncluded?: true
+  requestMode?: true
   status?: true
+  slotsEnabled?: true
+  slotsTotal?: true
+  slotsUsed?: true
+  isNSFWAllowed?: true
+  isCommercialAllowed?: true
+  canDo?: true
+  cannotDo?: true
   createdAt?: true
   updatedAt?: true
-  folderId?: true
   _all?: true
 }
 
@@ -207,12 +311,26 @@ export type ServiceGroupByOutputType = {
   id: string
   userId: number
   title: string
-  description: runtime.JsonValue
-  price: number
-  status: string
+  slug: string | null
+  shortDescription: string
+  description: runtime.JsonValue | null
+  coverImageUrl: string | null
+  basePrice: runtime.Decimal
+  currency: string
+  deliveryDaysMin: number | null
+  deliveryDaysMax: number | null
+  revisionsIncluded: number
+  requestMode: $Enums.ServiceRequestMode
+  status: $Enums.ServiceStatus
+  slotsEnabled: boolean
+  slotsTotal: number | null
+  slotsUsed: number
+  isNSFWAllowed: boolean
+  isCommercialAllowed: boolean
+  canDo: string | null
+  cannotDo: string | null
   createdAt: Date
   updatedAt: Date
-  folderId: string
   _count: ServiceCountAggregateOutputType | null
   _avg: ServiceAvgAggregateOutputType | null
   _sum: ServiceSumAggregateOutputType | null
@@ -242,58 +360,130 @@ export type ServiceWhereInput = {
   id?: Prisma.StringFilter<"Service"> | string
   userId?: Prisma.IntFilter<"Service"> | number
   title?: Prisma.StringFilter<"Service"> | string
-  description?: Prisma.JsonFilter<"Service">
-  price?: Prisma.FloatFilter<"Service"> | number
-  status?: Prisma.StringFilter<"Service"> | string
+  slug?: Prisma.StringNullableFilter<"Service"> | string | null
+  shortDescription?: Prisma.StringFilter<"Service"> | string
+  description?: Prisma.JsonNullableFilter<"Service">
+  coverImageUrl?: Prisma.StringNullableFilter<"Service"> | string | null
+  basePrice?: Prisma.DecimalFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFilter<"Service"> | string
+  deliveryDaysMin?: Prisma.IntNullableFilter<"Service"> | number | null
+  deliveryDaysMax?: Prisma.IntNullableFilter<"Service"> | number | null
+  revisionsIncluded?: Prisma.IntFilter<"Service"> | number
+  requestMode?: Prisma.EnumServiceRequestModeFilter<"Service"> | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFilter<"Service"> | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFilter<"Service"> | boolean
+  slotsTotal?: Prisma.IntNullableFilter<"Service"> | number | null
+  slotsUsed?: Prisma.IntFilter<"Service"> | number
+  isNSFWAllowed?: Prisma.BoolFilter<"Service"> | boolean
+  isCommercialAllowed?: Prisma.BoolFilter<"Service"> | boolean
+  canDo?: Prisma.StringNullableFilter<"Service"> | string | null
+  cannotDo?: Prisma.StringNullableFilter<"Service"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
-  folderId?: Prisma.StringFilter<"Service"> | string
-  folder?: Prisma.XOR<Prisma.FolderScalarRelationFilter, Prisma.FolderWhereInput>
-  policies?: Prisma.PolicyListRelationFilter
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  addons?: Prisma.ServiceAddonListRelationFilter
+  categories?: Prisma.TagListRelationFilter
+  questions?: Prisma.ServiceQuestionListRelationFilter
+  samples?: Prisma.ServiceSampleListRelationFilter
+  policies?: Prisma.ServicePolicyListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
 }
 
 export type ServiceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  price?: Prisma.SortOrder
+  slug?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortDescription?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  basePrice?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  deliveryDaysMin?: Prisma.SortOrderInput | Prisma.SortOrder
+  deliveryDaysMax?: Prisma.SortOrderInput | Prisma.SortOrder
+  revisionsIncluded?: Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  slotsEnabled?: Prisma.SortOrder
+  slotsTotal?: Prisma.SortOrderInput | Prisma.SortOrder
+  slotsUsed?: Prisma.SortOrder
+  isNSFWAllowed?: Prisma.SortOrder
+  isCommercialAllowed?: Prisma.SortOrder
+  canDo?: Prisma.SortOrderInput | Prisma.SortOrder
+  cannotDo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  folderId?: Prisma.SortOrder
-  folder?: Prisma.FolderOrderByWithRelationInput
-  policies?: Prisma.PolicyOrderByRelationAggregateInput
+  user?: Prisma.UserOrderByWithRelationInput
+  addons?: Prisma.ServiceAddonOrderByRelationAggregateInput
+  categories?: Prisma.TagOrderByRelationAggregateInput
+  questions?: Prisma.ServiceQuestionOrderByRelationAggregateInput
+  samples?: Prisma.ServiceSampleOrderByRelationAggregateInput
+  policies?: Prisma.ServicePolicyOrderByRelationAggregateInput
+  orders?: Prisma.OrderOrderByRelationAggregateInput
   _relevance?: Prisma.ServiceOrderByRelevanceInput
 }
 
 export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId_slug?: Prisma.ServiceUserIdSlugCompoundUniqueInput
   AND?: Prisma.ServiceWhereInput | Prisma.ServiceWhereInput[]
   OR?: Prisma.ServiceWhereInput[]
   NOT?: Prisma.ServiceWhereInput | Prisma.ServiceWhereInput[]
   userId?: Prisma.IntFilter<"Service"> | number
   title?: Prisma.StringFilter<"Service"> | string
-  description?: Prisma.JsonFilter<"Service">
-  price?: Prisma.FloatFilter<"Service"> | number
-  status?: Prisma.StringFilter<"Service"> | string
+  slug?: Prisma.StringNullableFilter<"Service"> | string | null
+  shortDescription?: Prisma.StringFilter<"Service"> | string
+  description?: Prisma.JsonNullableFilter<"Service">
+  coverImageUrl?: Prisma.StringNullableFilter<"Service"> | string | null
+  basePrice?: Prisma.DecimalFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFilter<"Service"> | string
+  deliveryDaysMin?: Prisma.IntNullableFilter<"Service"> | number | null
+  deliveryDaysMax?: Prisma.IntNullableFilter<"Service"> | number | null
+  revisionsIncluded?: Prisma.IntFilter<"Service"> | number
+  requestMode?: Prisma.EnumServiceRequestModeFilter<"Service"> | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFilter<"Service"> | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFilter<"Service"> | boolean
+  slotsTotal?: Prisma.IntNullableFilter<"Service"> | number | null
+  slotsUsed?: Prisma.IntFilter<"Service"> | number
+  isNSFWAllowed?: Prisma.BoolFilter<"Service"> | boolean
+  isCommercialAllowed?: Prisma.BoolFilter<"Service"> | boolean
+  canDo?: Prisma.StringNullableFilter<"Service"> | string | null
+  cannotDo?: Prisma.StringNullableFilter<"Service"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
-  folderId?: Prisma.StringFilter<"Service"> | string
-  folder?: Prisma.XOR<Prisma.FolderScalarRelationFilter, Prisma.FolderWhereInput>
-  policies?: Prisma.PolicyListRelationFilter
-}, "id">
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  addons?: Prisma.ServiceAddonListRelationFilter
+  categories?: Prisma.TagListRelationFilter
+  questions?: Prisma.ServiceQuestionListRelationFilter
+  samples?: Prisma.ServiceSampleListRelationFilter
+  policies?: Prisma.ServicePolicyListRelationFilter
+  orders?: Prisma.OrderListRelationFilter
+}, "id" | "userId_slug">
 
 export type ServiceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   title?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  price?: Prisma.SortOrder
+  slug?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortDescription?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  basePrice?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  deliveryDaysMin?: Prisma.SortOrderInput | Prisma.SortOrder
+  deliveryDaysMax?: Prisma.SortOrderInput | Prisma.SortOrder
+  revisionsIncluded?: Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  slotsEnabled?: Prisma.SortOrder
+  slotsTotal?: Prisma.SortOrderInput | Prisma.SortOrder
+  slotsUsed?: Prisma.SortOrder
+  isNSFWAllowed?: Prisma.SortOrder
+  isCommercialAllowed?: Prisma.SortOrder
+  canDo?: Prisma.SortOrderInput | Prisma.SortOrder
+  cannotDo?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  folderId?: Prisma.SortOrder
   _count?: Prisma.ServiceCountOrderByAggregateInput
   _avg?: Prisma.ServiceAvgOrderByAggregateInput
   _max?: Prisma.ServiceMaxOrderByAggregateInput
@@ -308,85 +498,203 @@ export type ServiceScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Service"> | string
   userId?: Prisma.IntWithAggregatesFilter<"Service"> | number
   title?: Prisma.StringWithAggregatesFilter<"Service"> | string
-  description?: Prisma.JsonWithAggregatesFilter<"Service">
-  price?: Prisma.FloatWithAggregatesFilter<"Service"> | number
-  status?: Prisma.StringWithAggregatesFilter<"Service"> | string
+  slug?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
+  shortDescription?: Prisma.StringWithAggregatesFilter<"Service"> | string
+  description?: Prisma.JsonNullableWithAggregatesFilter<"Service">
+  coverImageUrl?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
+  basePrice?: Prisma.DecimalWithAggregatesFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringWithAggregatesFilter<"Service"> | string
+  deliveryDaysMin?: Prisma.IntNullableWithAggregatesFilter<"Service"> | number | null
+  deliveryDaysMax?: Prisma.IntNullableWithAggregatesFilter<"Service"> | number | null
+  revisionsIncluded?: Prisma.IntWithAggregatesFilter<"Service"> | number
+  requestMode?: Prisma.EnumServiceRequestModeWithAggregatesFilter<"Service"> | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusWithAggregatesFilter<"Service"> | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolWithAggregatesFilter<"Service"> | boolean
+  slotsTotal?: Prisma.IntNullableWithAggregatesFilter<"Service"> | number | null
+  slotsUsed?: Prisma.IntWithAggregatesFilter<"Service"> | number
+  isNSFWAllowed?: Prisma.BoolWithAggregatesFilter<"Service"> | boolean
+  isCommercialAllowed?: Prisma.BoolWithAggregatesFilter<"Service"> | boolean
+  canDo?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
+  cannotDo?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
-  folderId?: Prisma.StringWithAggregatesFilter<"Service"> | string
 }
 
 export type ServiceCreateInput = {
   id?: string
-  userId: number
   title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price: number
-  status: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  folder: Prisma.FolderCreateNestedOneWithoutServiceInput
-  policies?: Prisma.PolicyCreateNestedManyWithoutServicesInput
+  user: Prisma.UserCreateNestedOneWithoutServicesInput
+  addons?: Prisma.ServiceAddonCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateInput = {
   id?: string
   userId: number
   title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price: number
-  status: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  folderId: string
-  policies?: Prisma.PolicyUncheckedCreateNestedManyWithoutServicesInput
+  addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagUncheckedCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  folder?: Prisma.FolderUpdateOneRequiredWithoutServiceNestedInput
-  policies?: Prisma.PolicyUpdateManyWithoutServicesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  folderId?: Prisma.StringFieldUpdateOperationsInput | string
-  policies?: Prisma.PolicyUncheckedUpdateManyWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUncheckedUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceCreateManyInput = {
   id?: string
   userId: number
   title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price: number
-  status: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  folderId: string
 }
 
 export type ServiceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -395,62 +703,26 @@ export type ServiceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  folderId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type ServiceOrderByRelevanceInput = {
-  fields: Prisma.ServiceOrderByRelevanceFieldEnum | Prisma.ServiceOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
-}
-
-export type ServiceCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  price?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  folderId?: Prisma.SortOrder
-}
-
-export type ServiceAvgOrderByAggregateInput = {
-  userId?: Prisma.SortOrder
-  price?: Prisma.SortOrder
-}
-
-export type ServiceMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  price?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  folderId?: Prisma.SortOrder
-}
-
-export type ServiceMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  price?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  folderId?: Prisma.SortOrder
-}
-
-export type ServiceSumOrderByAggregateInput = {
-  userId?: Prisma.SortOrder
-  price?: Prisma.SortOrder
 }
 
 export type ServiceListRelationFilter = {
@@ -463,137 +735,377 @@ export type ServiceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type ServiceOrderByRelevanceInput = {
+  fields: Prisma.ServiceOrderByRelevanceFieldEnum | Prisma.ServiceOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
-export type ServiceCreateNestedManyWithoutPoliciesInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput> | Prisma.ServiceCreateWithoutPoliciesInput[] | Prisma.ServiceUncheckedCreateWithoutPoliciesInput[]
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutPoliciesInput | Prisma.ServiceCreateOrConnectWithoutPoliciesInput[]
-  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-}
-
-export type ServiceUncheckedCreateNestedManyWithoutPoliciesInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput> | Prisma.ServiceCreateWithoutPoliciesInput[] | Prisma.ServiceUncheckedCreateWithoutPoliciesInput[]
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutPoliciesInput | Prisma.ServiceCreateOrConnectWithoutPoliciesInput[]
-  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-}
-
-export type ServiceUpdateManyWithoutPoliciesNestedInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput> | Prisma.ServiceCreateWithoutPoliciesInput[] | Prisma.ServiceUncheckedCreateWithoutPoliciesInput[]
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutPoliciesInput | Prisma.ServiceCreateOrConnectWithoutPoliciesInput[]
-  upsert?: Prisma.ServiceUpsertWithWhereUniqueWithoutPoliciesInput | Prisma.ServiceUpsertWithWhereUniqueWithoutPoliciesInput[]
-  set?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  disconnect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  delete?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  update?: Prisma.ServiceUpdateWithWhereUniqueWithoutPoliciesInput | Prisma.ServiceUpdateWithWhereUniqueWithoutPoliciesInput[]
-  updateMany?: Prisma.ServiceUpdateManyWithWhereWithoutPoliciesInput | Prisma.ServiceUpdateManyWithWhereWithoutPoliciesInput[]
-  deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
-}
-
-export type ServiceUncheckedUpdateManyWithoutPoliciesNestedInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput> | Prisma.ServiceCreateWithoutPoliciesInput[] | Prisma.ServiceUncheckedCreateWithoutPoliciesInput[]
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutPoliciesInput | Prisma.ServiceCreateOrConnectWithoutPoliciesInput[]
-  upsert?: Prisma.ServiceUpsertWithWhereUniqueWithoutPoliciesInput | Prisma.ServiceUpsertWithWhereUniqueWithoutPoliciesInput[]
-  set?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  disconnect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  delete?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  update?: Prisma.ServiceUpdateWithWhereUniqueWithoutPoliciesInput | Prisma.ServiceUpdateWithWhereUniqueWithoutPoliciesInput[]
-  updateMany?: Prisma.ServiceUpdateManyWithWhereWithoutPoliciesInput | Prisma.ServiceUpdateManyWithWhereWithoutPoliciesInput[]
-  deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
-}
-
-export type ServiceCreateNestedManyWithoutFolderInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutFolderInput, Prisma.ServiceUncheckedCreateWithoutFolderInput> | Prisma.ServiceCreateWithoutFolderInput[] | Prisma.ServiceUncheckedCreateWithoutFolderInput[]
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutFolderInput | Prisma.ServiceCreateOrConnectWithoutFolderInput[]
-  createMany?: Prisma.ServiceCreateManyFolderInputEnvelope
-  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-}
-
-export type ServiceUncheckedCreateNestedManyWithoutFolderInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutFolderInput, Prisma.ServiceUncheckedCreateWithoutFolderInput> | Prisma.ServiceCreateWithoutFolderInput[] | Prisma.ServiceUncheckedCreateWithoutFolderInput[]
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutFolderInput | Prisma.ServiceCreateOrConnectWithoutFolderInput[]
-  createMany?: Prisma.ServiceCreateManyFolderInputEnvelope
-  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-}
-
-export type ServiceUpdateManyWithoutFolderNestedInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutFolderInput, Prisma.ServiceUncheckedCreateWithoutFolderInput> | Prisma.ServiceCreateWithoutFolderInput[] | Prisma.ServiceUncheckedCreateWithoutFolderInput[]
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutFolderInput | Prisma.ServiceCreateOrConnectWithoutFolderInput[]
-  upsert?: Prisma.ServiceUpsertWithWhereUniqueWithoutFolderInput | Prisma.ServiceUpsertWithWhereUniqueWithoutFolderInput[]
-  createMany?: Prisma.ServiceCreateManyFolderInputEnvelope
-  set?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  disconnect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  delete?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  update?: Prisma.ServiceUpdateWithWhereUniqueWithoutFolderInput | Prisma.ServiceUpdateWithWhereUniqueWithoutFolderInput[]
-  updateMany?: Prisma.ServiceUpdateManyWithWhereWithoutFolderInput | Prisma.ServiceUpdateManyWithWhereWithoutFolderInput[]
-  deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
-}
-
-export type ServiceUncheckedUpdateManyWithoutFolderNestedInput = {
-  create?: Prisma.XOR<Prisma.ServiceCreateWithoutFolderInput, Prisma.ServiceUncheckedCreateWithoutFolderInput> | Prisma.ServiceCreateWithoutFolderInput[] | Prisma.ServiceUncheckedCreateWithoutFolderInput[]
-  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutFolderInput | Prisma.ServiceCreateOrConnectWithoutFolderInput[]
-  upsert?: Prisma.ServiceUpsertWithWhereUniqueWithoutFolderInput | Prisma.ServiceUpsertWithWhereUniqueWithoutFolderInput[]
-  createMany?: Prisma.ServiceCreateManyFolderInputEnvelope
-  set?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  disconnect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  delete?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
-  update?: Prisma.ServiceUpdateWithWhereUniqueWithoutFolderInput | Prisma.ServiceUpdateWithWhereUniqueWithoutFolderInput[]
-  updateMany?: Prisma.ServiceUpdateManyWithWhereWithoutFolderInput | Prisma.ServiceUpdateManyWithWhereWithoutFolderInput[]
-  deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
-}
-
-export type ServiceCreateWithoutPoliciesInput = {
-  id?: string
+export type ServiceUserIdSlugCompoundUniqueInput = {
   userId: number
+  slug: string
+}
+
+export type ServiceCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  shortDescription?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrder
+  basePrice?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  deliveryDaysMin?: Prisma.SortOrder
+  deliveryDaysMax?: Prisma.SortOrder
+  revisionsIncluded?: Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  slotsEnabled?: Prisma.SortOrder
+  slotsTotal?: Prisma.SortOrder
+  slotsUsed?: Prisma.SortOrder
+  isNSFWAllowed?: Prisma.SortOrder
+  isCommercialAllowed?: Prisma.SortOrder
+  canDo?: Prisma.SortOrder
+  cannotDo?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type ServiceAvgOrderByAggregateInput = {
+  userId?: Prisma.SortOrder
+  basePrice?: Prisma.SortOrder
+  deliveryDaysMin?: Prisma.SortOrder
+  deliveryDaysMax?: Prisma.SortOrder
+  revisionsIncluded?: Prisma.SortOrder
+  slotsTotal?: Prisma.SortOrder
+  slotsUsed?: Prisma.SortOrder
+}
+
+export type ServiceMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  shortDescription?: Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrder
+  basePrice?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  deliveryDaysMin?: Prisma.SortOrder
+  deliveryDaysMax?: Prisma.SortOrder
+  revisionsIncluded?: Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  slotsEnabled?: Prisma.SortOrder
+  slotsTotal?: Prisma.SortOrder
+  slotsUsed?: Prisma.SortOrder
+  isNSFWAllowed?: Prisma.SortOrder
+  isCommercialAllowed?: Prisma.SortOrder
+  canDo?: Prisma.SortOrder
+  cannotDo?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type ServiceMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  shortDescription?: Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrder
+  basePrice?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
+  deliveryDaysMin?: Prisma.SortOrder
+  deliveryDaysMax?: Prisma.SortOrder
+  revisionsIncluded?: Prisma.SortOrder
+  requestMode?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  slotsEnabled?: Prisma.SortOrder
+  slotsTotal?: Prisma.SortOrder
+  slotsUsed?: Prisma.SortOrder
+  isNSFWAllowed?: Prisma.SortOrder
+  isCommercialAllowed?: Prisma.SortOrder
+  canDo?: Prisma.SortOrder
+  cannotDo?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type ServiceSumOrderByAggregateInput = {
+  userId?: Prisma.SortOrder
+  basePrice?: Prisma.SortOrder
+  deliveryDaysMin?: Prisma.SortOrder
+  deliveryDaysMax?: Prisma.SortOrder
+  revisionsIncluded?: Prisma.SortOrder
+  slotsTotal?: Prisma.SortOrder
+  slotsUsed?: Prisma.SortOrder
+}
+
+export type ServiceScalarRelationFilter = {
+  is?: Prisma.ServiceWhereInput
+  isNot?: Prisma.ServiceWhereInput
+}
+
+export type ServiceNullableScalarRelationFilter = {
+  is?: Prisma.ServiceWhereInput | null
+  isNot?: Prisma.ServiceWhereInput | null
+}
+
+export type ServiceCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutUserInput, Prisma.ServiceUncheckedCreateWithoutUserInput> | Prisma.ServiceCreateWithoutUserInput[] | Prisma.ServiceUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutUserInput | Prisma.ServiceCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.ServiceCreateManyUserInputEnvelope
+  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+}
+
+export type ServiceUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutUserInput, Prisma.ServiceUncheckedCreateWithoutUserInput> | Prisma.ServiceCreateWithoutUserInput[] | Prisma.ServiceUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutUserInput | Prisma.ServiceCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.ServiceCreateManyUserInputEnvelope
+  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+}
+
+export type ServiceUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutUserInput, Prisma.ServiceUncheckedCreateWithoutUserInput> | Prisma.ServiceCreateWithoutUserInput[] | Prisma.ServiceUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutUserInput | Prisma.ServiceCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.ServiceUpsertWithWhereUniqueWithoutUserInput | Prisma.ServiceUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.ServiceCreateManyUserInputEnvelope
+  set?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  disconnect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  delete?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  update?: Prisma.ServiceUpdateWithWhereUniqueWithoutUserInput | Prisma.ServiceUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.ServiceUpdateManyWithWhereWithoutUserInput | Prisma.ServiceUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
+}
+
+export type ServiceUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutUserInput, Prisma.ServiceUncheckedCreateWithoutUserInput> | Prisma.ServiceCreateWithoutUserInput[] | Prisma.ServiceUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutUserInput | Prisma.ServiceCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.ServiceUpsertWithWhereUniqueWithoutUserInput | Prisma.ServiceUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.ServiceCreateManyUserInputEnvelope
+  set?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  disconnect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  delete?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  update?: Prisma.ServiceUpdateWithWhereUniqueWithoutUserInput | Prisma.ServiceUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.ServiceUpdateManyWithWhereWithoutUserInput | Prisma.ServiceUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
+}
+
+export type ServiceCreateNestedManyWithoutCategoriesInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutCategoriesInput, Prisma.ServiceUncheckedCreateWithoutCategoriesInput> | Prisma.ServiceCreateWithoutCategoriesInput[] | Prisma.ServiceUncheckedCreateWithoutCategoriesInput[]
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutCategoriesInput | Prisma.ServiceCreateOrConnectWithoutCategoriesInput[]
+  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+}
+
+export type ServiceUncheckedCreateNestedManyWithoutCategoriesInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutCategoriesInput, Prisma.ServiceUncheckedCreateWithoutCategoriesInput> | Prisma.ServiceCreateWithoutCategoriesInput[] | Prisma.ServiceUncheckedCreateWithoutCategoriesInput[]
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutCategoriesInput | Prisma.ServiceCreateOrConnectWithoutCategoriesInput[]
+  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+}
+
+export type ServiceUpdateManyWithoutCategoriesNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutCategoriesInput, Prisma.ServiceUncheckedCreateWithoutCategoriesInput> | Prisma.ServiceCreateWithoutCategoriesInput[] | Prisma.ServiceUncheckedCreateWithoutCategoriesInput[]
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutCategoriesInput | Prisma.ServiceCreateOrConnectWithoutCategoriesInput[]
+  upsert?: Prisma.ServiceUpsertWithWhereUniqueWithoutCategoriesInput | Prisma.ServiceUpsertWithWhereUniqueWithoutCategoriesInput[]
+  set?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  disconnect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  delete?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  update?: Prisma.ServiceUpdateWithWhereUniqueWithoutCategoriesInput | Prisma.ServiceUpdateWithWhereUniqueWithoutCategoriesInput[]
+  updateMany?: Prisma.ServiceUpdateManyWithWhereWithoutCategoriesInput | Prisma.ServiceUpdateManyWithWhereWithoutCategoriesInput[]
+  deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
+}
+
+export type ServiceUncheckedUpdateManyWithoutCategoriesNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutCategoriesInput, Prisma.ServiceUncheckedCreateWithoutCategoriesInput> | Prisma.ServiceCreateWithoutCategoriesInput[] | Prisma.ServiceUncheckedCreateWithoutCategoriesInput[]
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutCategoriesInput | Prisma.ServiceCreateOrConnectWithoutCategoriesInput[]
+  upsert?: Prisma.ServiceUpsertWithWhereUniqueWithoutCategoriesInput | Prisma.ServiceUpsertWithWhereUniqueWithoutCategoriesInput[]
+  set?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  disconnect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  delete?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  connect?: Prisma.ServiceWhereUniqueInput | Prisma.ServiceWhereUniqueInput[]
+  update?: Prisma.ServiceUpdateWithWhereUniqueWithoutCategoriesInput | Prisma.ServiceUpdateWithWhereUniqueWithoutCategoriesInput[]
+  updateMany?: Prisma.ServiceUpdateManyWithWhereWithoutCategoriesInput | Prisma.ServiceUpdateManyWithWhereWithoutCategoriesInput[]
+  deleteMany?: Prisma.ServiceScalarWhereInput | Prisma.ServiceScalarWhereInput[]
+}
+
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type EnumServiceRequestModeFieldUpdateOperationsInput = {
+  set?: $Enums.ServiceRequestMode
+}
+
+export type EnumServiceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ServiceStatus
+}
+
+export type ServiceCreateNestedOneWithoutAddonsInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutAddonsInput, Prisma.ServiceUncheckedCreateWithoutAddonsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutAddonsInput
+  connect?: Prisma.ServiceWhereUniqueInput
+}
+
+export type ServiceUpdateOneRequiredWithoutAddonsNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutAddonsInput, Prisma.ServiceUncheckedCreateWithoutAddonsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutAddonsInput
+  upsert?: Prisma.ServiceUpsertWithoutAddonsInput
+  connect?: Prisma.ServiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutAddonsInput, Prisma.ServiceUpdateWithoutAddonsInput>, Prisma.ServiceUncheckedUpdateWithoutAddonsInput>
+}
+
+export type ServiceCreateNestedOneWithoutQuestionsInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutQuestionsInput, Prisma.ServiceUncheckedCreateWithoutQuestionsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutQuestionsInput
+  connect?: Prisma.ServiceWhereUniqueInput
+}
+
+export type ServiceUpdateOneRequiredWithoutQuestionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutQuestionsInput, Prisma.ServiceUncheckedCreateWithoutQuestionsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutQuestionsInput
+  upsert?: Prisma.ServiceUpsertWithoutQuestionsInput
+  connect?: Prisma.ServiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutQuestionsInput, Prisma.ServiceUpdateWithoutQuestionsInput>, Prisma.ServiceUncheckedUpdateWithoutQuestionsInput>
+}
+
+export type ServiceCreateNestedOneWithoutPoliciesInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutPoliciesInput
+  connect?: Prisma.ServiceWhereUniqueInput
+}
+
+export type ServiceUpdateOneRequiredWithoutPoliciesNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutPoliciesInput
+  upsert?: Prisma.ServiceUpsertWithoutPoliciesInput
+  connect?: Prisma.ServiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutPoliciesInput, Prisma.ServiceUpdateWithoutPoliciesInput>, Prisma.ServiceUncheckedUpdateWithoutPoliciesInput>
+}
+
+export type ServiceCreateNestedOneWithoutSamplesInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutSamplesInput, Prisma.ServiceUncheckedCreateWithoutSamplesInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutSamplesInput
+  connect?: Prisma.ServiceWhereUniqueInput
+}
+
+export type ServiceUpdateOneRequiredWithoutSamplesNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutSamplesInput, Prisma.ServiceUncheckedCreateWithoutSamplesInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutSamplesInput
+  upsert?: Prisma.ServiceUpsertWithoutSamplesInput
+  connect?: Prisma.ServiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutSamplesInput, Prisma.ServiceUpdateWithoutSamplesInput>, Prisma.ServiceUncheckedUpdateWithoutSamplesInput>
+}
+
+export type ServiceCreateNestedOneWithoutOrdersInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutOrdersInput, Prisma.ServiceUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutOrdersInput
+  connect?: Prisma.ServiceWhereUniqueInput
+}
+
+export type ServiceUpdateOneWithoutOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutOrdersInput, Prisma.ServiceUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutOrdersInput
+  upsert?: Prisma.ServiceUpsertWithoutOrdersInput
+  disconnect?: Prisma.ServiceWhereInput | boolean
+  delete?: Prisma.ServiceWhereInput | boolean
+  connect?: Prisma.ServiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutOrdersInput, Prisma.ServiceUpdateWithoutOrdersInput>, Prisma.ServiceUncheckedUpdateWithoutOrdersInput>
+}
+
+export type ServiceCreateWithoutUserInput = {
+  id?: string
   title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price: number
-  status: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  folder: Prisma.FolderCreateNestedOneWithoutServiceInput
+  addons?: Prisma.ServiceAddonCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
 }
 
-export type ServiceUncheckedCreateWithoutPoliciesInput = {
+export type ServiceUncheckedCreateWithoutUserInput = {
   id?: string
-  userId: number
   title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price: number
-  status: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  folderId: string
+  addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagUncheckedCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
 }
 
-export type ServiceCreateOrConnectWithoutPoliciesInput = {
+export type ServiceCreateOrConnectWithoutUserInput = {
   where: Prisma.ServiceWhereUniqueInput
-  create: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutUserInput, Prisma.ServiceUncheckedCreateWithoutUserInput>
 }
 
-export type ServiceUpsertWithWhereUniqueWithoutPoliciesInput = {
+export type ServiceCreateManyUserInputEnvelope = {
+  data: Prisma.ServiceCreateManyUserInput | Prisma.ServiceCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type ServiceUpsertWithWhereUniqueWithoutUserInput = {
   where: Prisma.ServiceWhereUniqueInput
-  update: Prisma.XOR<Prisma.ServiceUpdateWithoutPoliciesInput, Prisma.ServiceUncheckedUpdateWithoutPoliciesInput>
-  create: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput>
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutUserInput, Prisma.ServiceUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutUserInput, Prisma.ServiceUncheckedCreateWithoutUserInput>
 }
 
-export type ServiceUpdateWithWhereUniqueWithoutPoliciesInput = {
+export type ServiceUpdateWithWhereUniqueWithoutUserInput = {
   where: Prisma.ServiceWhereUniqueInput
-  data: Prisma.XOR<Prisma.ServiceUpdateWithoutPoliciesInput, Prisma.ServiceUncheckedUpdateWithoutPoliciesInput>
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutUserInput, Prisma.ServiceUncheckedUpdateWithoutUserInput>
 }
 
-export type ServiceUpdateManyWithWhereWithoutPoliciesInput = {
+export type ServiceUpdateManyWithWhereWithoutUserInput = {
   where: Prisma.ServiceScalarWhereInput
-  data: Prisma.XOR<Prisma.ServiceUpdateManyMutationInput, Prisma.ServiceUncheckedUpdateManyWithoutPoliciesInput>
+  data: Prisma.XOR<Prisma.ServiceUpdateManyMutationInput, Prisma.ServiceUncheckedUpdateManyWithoutUserInput>
 }
 
 export type ServiceScalarWhereInput = {
@@ -603,142 +1115,1007 @@ export type ServiceScalarWhereInput = {
   id?: Prisma.StringFilter<"Service"> | string
   userId?: Prisma.IntFilter<"Service"> | number
   title?: Prisma.StringFilter<"Service"> | string
-  description?: Prisma.JsonFilter<"Service">
-  price?: Prisma.FloatFilter<"Service"> | number
-  status?: Prisma.StringFilter<"Service"> | string
+  slug?: Prisma.StringNullableFilter<"Service"> | string | null
+  shortDescription?: Prisma.StringFilter<"Service"> | string
+  description?: Prisma.JsonNullableFilter<"Service">
+  coverImageUrl?: Prisma.StringNullableFilter<"Service"> | string | null
+  basePrice?: Prisma.DecimalFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFilter<"Service"> | string
+  deliveryDaysMin?: Prisma.IntNullableFilter<"Service"> | number | null
+  deliveryDaysMax?: Prisma.IntNullableFilter<"Service"> | number | null
+  revisionsIncluded?: Prisma.IntFilter<"Service"> | number
+  requestMode?: Prisma.EnumServiceRequestModeFilter<"Service"> | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFilter<"Service"> | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFilter<"Service"> | boolean
+  slotsTotal?: Prisma.IntNullableFilter<"Service"> | number | null
+  slotsUsed?: Prisma.IntFilter<"Service"> | number
+  isNSFWAllowed?: Prisma.BoolFilter<"Service"> | boolean
+  isCommercialAllowed?: Prisma.BoolFilter<"Service"> | boolean
+  canDo?: Prisma.StringNullableFilter<"Service"> | string | null
+  cannotDo?: Prisma.StringNullableFilter<"Service"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
-  folderId?: Prisma.StringFilter<"Service"> | string
 }
 
-export type ServiceCreateWithoutFolderInput = {
+export type ServiceCreateWithoutCategoriesInput = {
+  id?: string
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutServicesInput
+  addons?: Prisma.ServiceAddonCreateNestedManyWithoutServiceInput
+  questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceUncheckedCreateWithoutCategoriesInput = {
   id?: string
   userId: number
   title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price: number
-  status: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  policies?: Prisma.PolicyCreateNestedManyWithoutServicesInput
+  addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
+  questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
 }
 
-export type ServiceUncheckedCreateWithoutFolderInput = {
-  id?: string
-  userId: number
-  title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price: number
-  status: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  policies?: Prisma.PolicyUncheckedCreateNestedManyWithoutServicesInput
-}
-
-export type ServiceCreateOrConnectWithoutFolderInput = {
+export type ServiceCreateOrConnectWithoutCategoriesInput = {
   where: Prisma.ServiceWhereUniqueInput
-  create: Prisma.XOR<Prisma.ServiceCreateWithoutFolderInput, Prisma.ServiceUncheckedCreateWithoutFolderInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutCategoriesInput, Prisma.ServiceUncheckedCreateWithoutCategoriesInput>
 }
 
-export type ServiceCreateManyFolderInputEnvelope = {
-  data: Prisma.ServiceCreateManyFolderInput | Prisma.ServiceCreateManyFolderInput[]
-  skipDuplicates?: boolean
-}
-
-export type ServiceUpsertWithWhereUniqueWithoutFolderInput = {
+export type ServiceUpsertWithWhereUniqueWithoutCategoriesInput = {
   where: Prisma.ServiceWhereUniqueInput
-  update: Prisma.XOR<Prisma.ServiceUpdateWithoutFolderInput, Prisma.ServiceUncheckedUpdateWithoutFolderInput>
-  create: Prisma.XOR<Prisma.ServiceCreateWithoutFolderInput, Prisma.ServiceUncheckedCreateWithoutFolderInput>
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutCategoriesInput, Prisma.ServiceUncheckedUpdateWithoutCategoriesInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutCategoriesInput, Prisma.ServiceUncheckedCreateWithoutCategoriesInput>
 }
 
-export type ServiceUpdateWithWhereUniqueWithoutFolderInput = {
+export type ServiceUpdateWithWhereUniqueWithoutCategoriesInput = {
   where: Prisma.ServiceWhereUniqueInput
-  data: Prisma.XOR<Prisma.ServiceUpdateWithoutFolderInput, Prisma.ServiceUncheckedUpdateWithoutFolderInput>
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutCategoriesInput, Prisma.ServiceUncheckedUpdateWithoutCategoriesInput>
 }
 
-export type ServiceUpdateManyWithWhereWithoutFolderInput = {
+export type ServiceUpdateManyWithWhereWithoutCategoriesInput = {
   where: Prisma.ServiceScalarWhereInput
-  data: Prisma.XOR<Prisma.ServiceUpdateManyMutationInput, Prisma.ServiceUncheckedUpdateManyWithoutFolderInput>
+  data: Prisma.XOR<Prisma.ServiceUpdateManyMutationInput, Prisma.ServiceUncheckedUpdateManyWithoutCategoriesInput>
+}
+
+export type ServiceCreateWithoutAddonsInput = {
+  id?: string
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutServicesInput
+  categories?: Prisma.TagCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceUncheckedCreateWithoutAddonsInput = {
+  id?: string
+  userId: number
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  categories?: Prisma.TagUncheckedCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceCreateOrConnectWithoutAddonsInput = {
+  where: Prisma.ServiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutAddonsInput, Prisma.ServiceUncheckedCreateWithoutAddonsInput>
+}
+
+export type ServiceUpsertWithoutAddonsInput = {
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutAddonsInput, Prisma.ServiceUncheckedUpdateWithoutAddonsInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutAddonsInput, Prisma.ServiceUncheckedCreateWithoutAddonsInput>
+  where?: Prisma.ServiceWhereInput
+}
+
+export type ServiceUpdateToOneWithWhereWithoutAddonsInput = {
+  where?: Prisma.ServiceWhereInput
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutAddonsInput, Prisma.ServiceUncheckedUpdateWithoutAddonsInput>
+}
+
+export type ServiceUpdateWithoutAddonsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  categories?: Prisma.TagUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceUncheckedUpdateWithoutAddonsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  categories?: Prisma.TagUncheckedUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceCreateWithoutQuestionsInput = {
+  id?: string
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutServicesInput
+  addons?: Prisma.ServiceAddonCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagCreateNestedManyWithoutServicesInput
+  samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceUncheckedCreateWithoutQuestionsInput = {
+  id?: string
+  userId: number
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagUncheckedCreateNestedManyWithoutServicesInput
+  samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceCreateOrConnectWithoutQuestionsInput = {
+  where: Prisma.ServiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutQuestionsInput, Prisma.ServiceUncheckedCreateWithoutQuestionsInput>
+}
+
+export type ServiceUpsertWithoutQuestionsInput = {
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutQuestionsInput, Prisma.ServiceUncheckedUpdateWithoutQuestionsInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutQuestionsInput, Prisma.ServiceUncheckedCreateWithoutQuestionsInput>
+  where?: Prisma.ServiceWhereInput
+}
+
+export type ServiceUpdateToOneWithWhereWithoutQuestionsInput = {
+  where?: Prisma.ServiceWhereInput
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutQuestionsInput, Prisma.ServiceUncheckedUpdateWithoutQuestionsInput>
+}
+
+export type ServiceUpdateWithoutQuestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUpdateManyWithoutServicesNestedInput
+  samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceUncheckedUpdateWithoutQuestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUncheckedUpdateManyWithoutServicesNestedInput
+  samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceCreateWithoutPoliciesInput = {
+  id?: string
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutServicesInput
+  addons?: Prisma.ServiceAddonCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceUncheckedCreateWithoutPoliciesInput = {
+  id?: string
+  userId: number
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagUncheckedCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceCreateOrConnectWithoutPoliciesInput = {
+  where: Prisma.ServiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput>
+}
+
+export type ServiceUpsertWithoutPoliciesInput = {
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutPoliciesInput, Prisma.ServiceUncheckedUpdateWithoutPoliciesInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutPoliciesInput, Prisma.ServiceUncheckedCreateWithoutPoliciesInput>
+  where?: Prisma.ServiceWhereInput
+}
+
+export type ServiceUpdateToOneWithWhereWithoutPoliciesInput = {
+  where?: Prisma.ServiceWhereInput
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutPoliciesInput, Prisma.ServiceUncheckedUpdateWithoutPoliciesInput>
 }
 
 export type ServiceUpdateWithoutPoliciesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  folder?: Prisma.FolderUpdateOneRequiredWithoutServiceNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutPoliciesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  folderId?: Prisma.StringFieldUpdateOperationsInput | string
+  addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUncheckedUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
 }
 
-export type ServiceUncheckedUpdateManyWithoutPoliciesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  folderId?: Prisma.StringFieldUpdateOperationsInput | string
+export type ServiceCreateWithoutSamplesInput = {
+  id?: string
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutServicesInput
+  addons?: Prisma.ServiceAddonCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
 }
 
-export type ServiceCreateManyFolderInput = {
+export type ServiceUncheckedCreateWithoutSamplesInput = {
   id?: string
   userId: number
   title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price: number
-  status: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagUncheckedCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceCreateOrConnectWithoutSamplesInput = {
+  where: Prisma.ServiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutSamplesInput, Prisma.ServiceUncheckedCreateWithoutSamplesInput>
+}
+
+export type ServiceUpsertWithoutSamplesInput = {
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutSamplesInput, Prisma.ServiceUncheckedUpdateWithoutSamplesInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutSamplesInput, Prisma.ServiceUncheckedCreateWithoutSamplesInput>
+  where?: Prisma.ServiceWhereInput
+}
+
+export type ServiceUpdateToOneWithWhereWithoutSamplesInput = {
+  where?: Prisma.ServiceWhereInput
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutSamplesInput, Prisma.ServiceUncheckedUpdateWithoutSamplesInput>
+}
+
+export type ServiceUpdateWithoutSamplesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceUncheckedUpdateWithoutSamplesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUncheckedUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceCreateWithoutOrdersInput = {
+  id?: string
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutServicesInput
+  addons?: Prisma.ServiceAddonCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceUncheckedCreateWithoutOrdersInput = {
+  id?: string
+  userId: number
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagUncheckedCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceCreateOrConnectWithoutOrdersInput = {
+  where: Prisma.ServiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutOrdersInput, Prisma.ServiceUncheckedCreateWithoutOrdersInput>
+}
+
+export type ServiceUpsertWithoutOrdersInput = {
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutOrdersInput, Prisma.ServiceUncheckedUpdateWithoutOrdersInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutOrdersInput, Prisma.ServiceUncheckedCreateWithoutOrdersInput>
+  where?: Prisma.ServiceWhereInput
+}
+
+export type ServiceUpdateToOneWithWhereWithoutOrdersInput = {
+  where?: Prisma.ServiceWhereInput
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutOrdersInput, Prisma.ServiceUncheckedUpdateWithoutOrdersInput>
+}
+
+export type ServiceUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceUncheckedUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUncheckedUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceCreateManyUserInput = {
+  id?: string
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type ServiceUpdateWithoutFolderInput = {
+export type ServiceUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  policies?: Prisma.PolicyUpdateManyWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
 }
 
-export type ServiceUncheckedUpdateWithoutFolderInput = {
+export type ServiceUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  policies?: Prisma.PolicyUncheckedUpdateManyWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUncheckedUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
 }
 
-export type ServiceUncheckedUpdateManyWithoutFolderInput = {
+export type ServiceUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ServiceUpdateWithoutCategoriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUpdateManyWithoutServiceNestedInput
+  questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceUncheckedUpdateWithoutCategoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  price?: Prisma.FloatFieldUpdateOperationsInput | number
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
+  questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceUncheckedUpdateManyWithoutCategoriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -749,11 +2126,21 @@ export type ServiceUncheckedUpdateManyWithoutFolderInput = {
  */
 
 export type ServiceCountOutputType = {
+  addons: number
+  categories: number
+  questions: number
+  samples: number
   policies: number
+  orders: number
 }
 
 export type ServiceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  addons?: boolean | ServiceCountOutputTypeCountAddonsArgs
+  categories?: boolean | ServiceCountOutputTypeCountCategoriesArgs
+  questions?: boolean | ServiceCountOutputTypeCountQuestionsArgs
+  samples?: boolean | ServiceCountOutputTypeCountSamplesArgs
   policies?: boolean | ServiceCountOutputTypeCountPoliciesArgs
+  orders?: boolean | ServiceCountOutputTypeCountOrdersArgs
 }
 
 /**
@@ -769,8 +2156,43 @@ export type ServiceCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
 /**
  * ServiceCountOutputType without action
  */
+export type ServiceCountOutputTypeCountAddonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceAddonWhereInput
+}
+
+/**
+ * ServiceCountOutputType without action
+ */
+export type ServiceCountOutputTypeCountCategoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TagWhereInput
+}
+
+/**
+ * ServiceCountOutputType without action
+ */
+export type ServiceCountOutputTypeCountQuestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceQuestionWhereInput
+}
+
+/**
+ * ServiceCountOutputType without action
+ */
+export type ServiceCountOutputTypeCountSamplesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceSampleWhereInput
+}
+
+/**
+ * ServiceCountOutputType without action
+ */
 export type ServiceCountOutputTypeCountPoliciesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PolicyWhereInput
+  where?: Prisma.ServicePolicyWhereInput
+}
+
+/**
+ * ServiceCountOutputType without action
+ */
+export type ServiceCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
 }
 
 
@@ -778,14 +2200,33 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   userId?: boolean
   title?: boolean
+  slug?: boolean
+  shortDescription?: boolean
   description?: boolean
-  price?: boolean
+  coverImageUrl?: boolean
+  basePrice?: boolean
+  currency?: boolean
+  deliveryDaysMin?: boolean
+  deliveryDaysMax?: boolean
+  revisionsIncluded?: boolean
+  requestMode?: boolean
   status?: boolean
+  slotsEnabled?: boolean
+  slotsTotal?: boolean
+  slotsUsed?: boolean
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: boolean
+  cannotDo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  folderId?: boolean
-  folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  addons?: boolean | Prisma.Service$addonsArgs<ExtArgs>
+  categories?: boolean | Prisma.Service$categoriesArgs<ExtArgs>
+  questions?: boolean | Prisma.Service$questionsArgs<ExtArgs>
+  samples?: boolean | Prisma.Service$samplesArgs<ExtArgs>
   policies?: boolean | Prisma.Service$policiesArgs<ExtArgs>
+  orders?: boolean | Prisma.Service$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["service"]>
 
@@ -793,69 +2234,135 @@ export type ServiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   userId?: boolean
   title?: boolean
+  slug?: boolean
+  shortDescription?: boolean
   description?: boolean
-  price?: boolean
+  coverImageUrl?: boolean
+  basePrice?: boolean
+  currency?: boolean
+  deliveryDaysMin?: boolean
+  deliveryDaysMax?: boolean
+  revisionsIncluded?: boolean
+  requestMode?: boolean
   status?: boolean
+  slotsEnabled?: boolean
+  slotsTotal?: boolean
+  slotsUsed?: boolean
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: boolean
+  cannotDo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  folderId?: boolean
-  folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["service"]>
 
 export type ServiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   title?: boolean
+  slug?: boolean
+  shortDescription?: boolean
   description?: boolean
-  price?: boolean
+  coverImageUrl?: boolean
+  basePrice?: boolean
+  currency?: boolean
+  deliveryDaysMin?: boolean
+  deliveryDaysMax?: boolean
+  revisionsIncluded?: boolean
+  requestMode?: boolean
   status?: boolean
+  slotsEnabled?: boolean
+  slotsTotal?: boolean
+  slotsUsed?: boolean
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: boolean
+  cannotDo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  folderId?: boolean
-  folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["service"]>
 
 export type ServiceSelectScalar = {
   id?: boolean
   userId?: boolean
   title?: boolean
+  slug?: boolean
+  shortDescription?: boolean
   description?: boolean
-  price?: boolean
+  coverImageUrl?: boolean
+  basePrice?: boolean
+  currency?: boolean
+  deliveryDaysMin?: boolean
+  deliveryDaysMax?: boolean
+  revisionsIncluded?: boolean
+  requestMode?: boolean
   status?: boolean
+  slotsEnabled?: boolean
+  slotsTotal?: boolean
+  slotsUsed?: boolean
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: boolean
+  cannotDo?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  folderId?: boolean
 }
 
-export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "price" | "status" | "createdAt" | "updatedAt" | "folderId", ExtArgs["result"]["service"]>
+export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "slug" | "shortDescription" | "description" | "coverImageUrl" | "basePrice" | "currency" | "deliveryDaysMin" | "deliveryDaysMax" | "revisionsIncluded" | "requestMode" | "status" | "slotsEnabled" | "slotsTotal" | "slotsUsed" | "isNSFWAllowed" | "isCommercialAllowed" | "canDo" | "cannotDo" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
 export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  addons?: boolean | Prisma.Service$addonsArgs<ExtArgs>
+  categories?: boolean | Prisma.Service$categoriesArgs<ExtArgs>
+  questions?: boolean | Prisma.Service$questionsArgs<ExtArgs>
+  samples?: boolean | Prisma.Service$samplesArgs<ExtArgs>
   policies?: boolean | Prisma.Service$policiesArgs<ExtArgs>
+  orders?: boolean | Prisma.Service$ordersArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ServiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ServiceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  folder?: boolean | Prisma.FolderDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Service"
   objects: {
-    folder: Prisma.$FolderPayload<ExtArgs>
-    policies: Prisma.$PolicyPayload<ExtArgs>[]
+    user: Prisma.$UserPayload<ExtArgs>
+    addons: Prisma.$ServiceAddonPayload<ExtArgs>[]
+    categories: Prisma.$TagPayload<ExtArgs>[]
+    questions: Prisma.$ServiceQuestionPayload<ExtArgs>[]
+    samples: Prisma.$ServiceSamplePayload<ExtArgs>[]
+    policies: Prisma.$ServicePolicyPayload<ExtArgs>[]
+    orders: Prisma.$OrderPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: number
     title: string
-    description: runtime.JsonValue
-    price: number
-    status: string
+    slug: string | null
+    shortDescription: string
+    description: runtime.JsonValue | null
+    coverImageUrl: string | null
+    basePrice: runtime.Decimal
+    currency: string
+    deliveryDaysMin: number | null
+    deliveryDaysMax: number | null
+    revisionsIncluded: number
+    requestMode: $Enums.ServiceRequestMode
+    status: $Enums.ServiceStatus
+    slotsEnabled: boolean
+    slotsTotal: number | null
+    slotsUsed: number
+    isNSFWAllowed: boolean
+    isCommercialAllowed: boolean
+    canDo: string | null
+    cannotDo: string | null
     createdAt: Date
     updatedAt: Date
-    folderId: string
   }, ExtArgs["result"]["service"]>
   composites: {}
 }
@@ -1250,8 +2757,13 @@ readonly fields: ServiceFieldRefs;
  */
 export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  folder<T extends Prisma.FolderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FolderDefaultArgs<ExtArgs>>): Prisma.Prisma__FolderClient<runtime.Types.Result.GetResult<Prisma.$FolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  policies<T extends Prisma.Service$policiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$policiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  addons<T extends Prisma.Service$addonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$addonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceAddonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  categories<T extends Prisma.Service$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  questions<T extends Prisma.Service$questionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  samples<T extends Prisma.Service$samplesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$samplesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceSamplePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  policies<T extends Prisma.Service$policiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$policiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  orders<T extends Prisma.Service$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1284,12 +2796,26 @@ export interface ServiceFieldRefs {
   readonly id: Prisma.FieldRef<"Service", 'String'>
   readonly userId: Prisma.FieldRef<"Service", 'Int'>
   readonly title: Prisma.FieldRef<"Service", 'String'>
+  readonly slug: Prisma.FieldRef<"Service", 'String'>
+  readonly shortDescription: Prisma.FieldRef<"Service", 'String'>
   readonly description: Prisma.FieldRef<"Service", 'Json'>
-  readonly price: Prisma.FieldRef<"Service", 'Float'>
-  readonly status: Prisma.FieldRef<"Service", 'String'>
+  readonly coverImageUrl: Prisma.FieldRef<"Service", 'String'>
+  readonly basePrice: Prisma.FieldRef<"Service", 'Decimal'>
+  readonly currency: Prisma.FieldRef<"Service", 'String'>
+  readonly deliveryDaysMin: Prisma.FieldRef<"Service", 'Int'>
+  readonly deliveryDaysMax: Prisma.FieldRef<"Service", 'Int'>
+  readonly revisionsIncluded: Prisma.FieldRef<"Service", 'Int'>
+  readonly requestMode: Prisma.FieldRef<"Service", 'ServiceRequestMode'>
+  readonly status: Prisma.FieldRef<"Service", 'ServiceStatus'>
+  readonly slotsEnabled: Prisma.FieldRef<"Service", 'Boolean'>
+  readonly slotsTotal: Prisma.FieldRef<"Service", 'Int'>
+  readonly slotsUsed: Prisma.FieldRef<"Service", 'Int'>
+  readonly isNSFWAllowed: Prisma.FieldRef<"Service", 'Boolean'>
+  readonly isCommercialAllowed: Prisma.FieldRef<"Service", 'Boolean'>
+  readonly canDo: Prisma.FieldRef<"Service", 'String'>
+  readonly cannotDo: Prisma.FieldRef<"Service", 'String'>
   readonly createdAt: Prisma.FieldRef<"Service", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Service", 'DateTime'>
-  readonly folderId: Prisma.FieldRef<"Service", 'String'>
 }
     
 
@@ -1691,27 +3217,147 @@ export type ServiceDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
+ * Service.addons
+ */
+export type Service$addonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceAddon
+   */
+  select?: Prisma.ServiceAddonSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceAddon
+   */
+  omit?: Prisma.ServiceAddonOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceAddonInclude<ExtArgs> | null
+  where?: Prisma.ServiceAddonWhereInput
+  orderBy?: Prisma.ServiceAddonOrderByWithRelationInput | Prisma.ServiceAddonOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceAddonWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceAddonScalarFieldEnum | Prisma.ServiceAddonScalarFieldEnum[]
+}
+
+/**
+ * Service.categories
+ */
+export type Service$categoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Tag
+   */
+  select?: Prisma.TagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Tag
+   */
+  omit?: Prisma.TagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TagInclude<ExtArgs> | null
+  where?: Prisma.TagWhereInput
+  orderBy?: Prisma.TagOrderByWithRelationInput | Prisma.TagOrderByWithRelationInput[]
+  cursor?: Prisma.TagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TagScalarFieldEnum | Prisma.TagScalarFieldEnum[]
+}
+
+/**
+ * Service.questions
+ */
+export type Service$questionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceQuestion
+   */
+  select?: Prisma.ServiceQuestionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceQuestion
+   */
+  omit?: Prisma.ServiceQuestionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceQuestionInclude<ExtArgs> | null
+  where?: Prisma.ServiceQuestionWhereInput
+  orderBy?: Prisma.ServiceQuestionOrderByWithRelationInput | Prisma.ServiceQuestionOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceQuestionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceQuestionScalarFieldEnum | Prisma.ServiceQuestionScalarFieldEnum[]
+}
+
+/**
+ * Service.samples
+ */
+export type Service$samplesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceSample
+   */
+  select?: Prisma.ServiceSampleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceSample
+   */
+  omit?: Prisma.ServiceSampleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceSampleInclude<ExtArgs> | null
+  where?: Prisma.ServiceSampleWhereInput
+  orderBy?: Prisma.ServiceSampleOrderByWithRelationInput | Prisma.ServiceSampleOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceSampleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceSampleScalarFieldEnum | Prisma.ServiceSampleScalarFieldEnum[]
+}
+
+/**
  * Service.policies
  */
 export type Service$policiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Policy
+   * Select specific fields to fetch from the ServicePolicy
    */
-  select?: Prisma.PolicySelect<ExtArgs> | null
+  select?: Prisma.ServicePolicySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Policy
+   * Omit specific fields from the ServicePolicy
    */
-  omit?: Prisma.PolicyOmit<ExtArgs> | null
+  omit?: Prisma.ServicePolicyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.PolicyInclude<ExtArgs> | null
-  where?: Prisma.PolicyWhereInput
-  orderBy?: Prisma.PolicyOrderByWithRelationInput | Prisma.PolicyOrderByWithRelationInput[]
-  cursor?: Prisma.PolicyWhereUniqueInput
+  include?: Prisma.ServicePolicyInclude<ExtArgs> | null
+  where?: Prisma.ServicePolicyWhereInput
+  orderBy?: Prisma.ServicePolicyOrderByWithRelationInput | Prisma.ServicePolicyOrderByWithRelationInput[]
+  cursor?: Prisma.ServicePolicyWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.PolicyScalarFieldEnum | Prisma.PolicyScalarFieldEnum[]
+  distinct?: Prisma.ServicePolicyScalarFieldEnum | Prisma.ServicePolicyScalarFieldEnum[]
+}
+
+/**
+ * Service.orders
+ */
+export type Service$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
 }
 
 /**

@@ -167,6 +167,7 @@ export type TagWhereInput = {
   nameTag?: Prisma.StringFilter<"Tag"> | string
   createdAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   showcaseItems?: Prisma.ShowcaseItemListRelationFilter
+  services?: Prisma.ServiceListRelationFilter
 }
 
 export type TagOrderByWithRelationInput = {
@@ -174,6 +175,7 @@ export type TagOrderByWithRelationInput = {
   nameTag?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   showcaseItems?: Prisma.ShowcaseItemOrderByRelationAggregateInput
+  services?: Prisma.ServiceOrderByRelationAggregateInput
   _relevance?: Prisma.TagOrderByRelevanceInput
 }
 
@@ -185,6 +187,7 @@ export type TagWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TagWhereInput | Prisma.TagWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   showcaseItems?: Prisma.ShowcaseItemListRelationFilter
+  services?: Prisma.ServiceListRelationFilter
 }, "id" | "nameTag">
 
 export type TagOrderByWithAggregationInput = {
@@ -210,6 +213,7 @@ export type TagCreateInput = {
   nameTag: string
   createdAt?: Date | string
   showcaseItems?: Prisma.ShowcaseItemCreateNestedManyWithoutTagsInput
+  services?: Prisma.ServiceCreateNestedManyWithoutCategoriesInput
 }
 
 export type TagUncheckedCreateInput = {
@@ -217,6 +221,7 @@ export type TagUncheckedCreateInput = {
   nameTag: string
   createdAt?: Date | string
   showcaseItems?: Prisma.ShowcaseItemUncheckedCreateNestedManyWithoutTagsInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCategoriesInput
 }
 
 export type TagUpdateInput = {
@@ -224,6 +229,7 @@ export type TagUpdateInput = {
   nameTag?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   showcaseItems?: Prisma.ShowcaseItemUpdateManyWithoutTagsNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutCategoriesNestedInput
 }
 
 export type TagUncheckedUpdateInput = {
@@ -231,6 +237,7 @@ export type TagUncheckedUpdateInput = {
   nameTag?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   showcaseItems?: Prisma.ShowcaseItemUncheckedUpdateManyWithoutTagsNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutCategoriesNestedInput
 }
 
 export type TagCreateManyInput = {
@@ -323,16 +330,56 @@ export type TagUncheckedUpdateManyWithoutShowcaseItemsNestedInput = {
   deleteMany?: Prisma.TagScalarWhereInput | Prisma.TagScalarWhereInput[]
 }
 
+export type TagCreateNestedManyWithoutServicesInput = {
+  create?: Prisma.XOR<Prisma.TagCreateWithoutServicesInput, Prisma.TagUncheckedCreateWithoutServicesInput> | Prisma.TagCreateWithoutServicesInput[] | Prisma.TagUncheckedCreateWithoutServicesInput[]
+  connectOrCreate?: Prisma.TagCreateOrConnectWithoutServicesInput | Prisma.TagCreateOrConnectWithoutServicesInput[]
+  connect?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+}
+
+export type TagUncheckedCreateNestedManyWithoutServicesInput = {
+  create?: Prisma.XOR<Prisma.TagCreateWithoutServicesInput, Prisma.TagUncheckedCreateWithoutServicesInput> | Prisma.TagCreateWithoutServicesInput[] | Prisma.TagUncheckedCreateWithoutServicesInput[]
+  connectOrCreate?: Prisma.TagCreateOrConnectWithoutServicesInput | Prisma.TagCreateOrConnectWithoutServicesInput[]
+  connect?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+}
+
+export type TagUpdateManyWithoutServicesNestedInput = {
+  create?: Prisma.XOR<Prisma.TagCreateWithoutServicesInput, Prisma.TagUncheckedCreateWithoutServicesInput> | Prisma.TagCreateWithoutServicesInput[] | Prisma.TagUncheckedCreateWithoutServicesInput[]
+  connectOrCreate?: Prisma.TagCreateOrConnectWithoutServicesInput | Prisma.TagCreateOrConnectWithoutServicesInput[]
+  upsert?: Prisma.TagUpsertWithWhereUniqueWithoutServicesInput | Prisma.TagUpsertWithWhereUniqueWithoutServicesInput[]
+  set?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+  disconnect?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+  delete?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+  connect?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+  update?: Prisma.TagUpdateWithWhereUniqueWithoutServicesInput | Prisma.TagUpdateWithWhereUniqueWithoutServicesInput[]
+  updateMany?: Prisma.TagUpdateManyWithWhereWithoutServicesInput | Prisma.TagUpdateManyWithWhereWithoutServicesInput[]
+  deleteMany?: Prisma.TagScalarWhereInput | Prisma.TagScalarWhereInput[]
+}
+
+export type TagUncheckedUpdateManyWithoutServicesNestedInput = {
+  create?: Prisma.XOR<Prisma.TagCreateWithoutServicesInput, Prisma.TagUncheckedCreateWithoutServicesInput> | Prisma.TagCreateWithoutServicesInput[] | Prisma.TagUncheckedCreateWithoutServicesInput[]
+  connectOrCreate?: Prisma.TagCreateOrConnectWithoutServicesInput | Prisma.TagCreateOrConnectWithoutServicesInput[]
+  upsert?: Prisma.TagUpsertWithWhereUniqueWithoutServicesInput | Prisma.TagUpsertWithWhereUniqueWithoutServicesInput[]
+  set?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+  disconnect?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+  delete?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+  connect?: Prisma.TagWhereUniqueInput | Prisma.TagWhereUniqueInput[]
+  update?: Prisma.TagUpdateWithWhereUniqueWithoutServicesInput | Prisma.TagUpdateWithWhereUniqueWithoutServicesInput[]
+  updateMany?: Prisma.TagUpdateManyWithWhereWithoutServicesInput | Prisma.TagUpdateManyWithWhereWithoutServicesInput[]
+  deleteMany?: Prisma.TagScalarWhereInput | Prisma.TagScalarWhereInput[]
+}
+
 export type TagCreateWithoutShowcaseItemsInput = {
   id?: string
   nameTag: string
   createdAt?: Date | string
+  services?: Prisma.ServiceCreateNestedManyWithoutCategoriesInput
 }
 
 export type TagUncheckedCreateWithoutShowcaseItemsInput = {
   id?: string
   nameTag: string
   createdAt?: Date | string
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCategoriesInput
 }
 
 export type TagCreateOrConnectWithoutShowcaseItemsInput = {
@@ -365,19 +412,76 @@ export type TagScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
 }
 
+export type TagCreateWithoutServicesInput = {
+  id?: string
+  nameTag: string
+  createdAt?: Date | string
+  showcaseItems?: Prisma.ShowcaseItemCreateNestedManyWithoutTagsInput
+}
+
+export type TagUncheckedCreateWithoutServicesInput = {
+  id?: string
+  nameTag: string
+  createdAt?: Date | string
+  showcaseItems?: Prisma.ShowcaseItemUncheckedCreateNestedManyWithoutTagsInput
+}
+
+export type TagCreateOrConnectWithoutServicesInput = {
+  where: Prisma.TagWhereUniqueInput
+  create: Prisma.XOR<Prisma.TagCreateWithoutServicesInput, Prisma.TagUncheckedCreateWithoutServicesInput>
+}
+
+export type TagUpsertWithWhereUniqueWithoutServicesInput = {
+  where: Prisma.TagWhereUniqueInput
+  update: Prisma.XOR<Prisma.TagUpdateWithoutServicesInput, Prisma.TagUncheckedUpdateWithoutServicesInput>
+  create: Prisma.XOR<Prisma.TagCreateWithoutServicesInput, Prisma.TagUncheckedCreateWithoutServicesInput>
+}
+
+export type TagUpdateWithWhereUniqueWithoutServicesInput = {
+  where: Prisma.TagWhereUniqueInput
+  data: Prisma.XOR<Prisma.TagUpdateWithoutServicesInput, Prisma.TagUncheckedUpdateWithoutServicesInput>
+}
+
+export type TagUpdateManyWithWhereWithoutServicesInput = {
+  where: Prisma.TagScalarWhereInput
+  data: Prisma.XOR<Prisma.TagUpdateManyMutationInput, Prisma.TagUncheckedUpdateManyWithoutServicesInput>
+}
+
 export type TagUpdateWithoutShowcaseItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nameTag?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.ServiceUpdateManyWithoutCategoriesNestedInput
 }
 
 export type TagUncheckedUpdateWithoutShowcaseItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nameTag?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutCategoriesNestedInput
 }
 
 export type TagUncheckedUpdateManyWithoutShowcaseItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nameTag?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TagUpdateWithoutServicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nameTag?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  showcaseItems?: Prisma.ShowcaseItemUpdateManyWithoutTagsNestedInput
+}
+
+export type TagUncheckedUpdateWithoutServicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nameTag?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  showcaseItems?: Prisma.ShowcaseItemUncheckedUpdateManyWithoutTagsNestedInput
+}
+
+export type TagUncheckedUpdateManyWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nameTag?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -390,10 +494,12 @@ export type TagUncheckedUpdateManyWithoutShowcaseItemsInput = {
 
 export type TagCountOutputType = {
   showcaseItems: number
+  services: number
 }
 
 export type TagCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   showcaseItems?: boolean | TagCountOutputTypeCountShowcaseItemsArgs
+  services?: boolean | TagCountOutputTypeCountServicesArgs
 }
 
 /**
@@ -413,12 +519,20 @@ export type TagCountOutputTypeCountShowcaseItemsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.ShowcaseItemWhereInput
 }
 
+/**
+ * TagCountOutputType without action
+ */
+export type TagCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceWhereInput
+}
+
 
 export type TagSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nameTag?: boolean
   createdAt?: boolean
   showcaseItems?: boolean | Prisma.Tag$showcaseItemsArgs<ExtArgs>
+  services?: boolean | Prisma.Tag$servicesArgs<ExtArgs>
   _count?: boolean | Prisma.TagCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tag"]>
 
@@ -443,6 +557,7 @@ export type TagSelectScalar = {
 export type TagOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nameTag" | "createdAt", ExtArgs["result"]["tag"]>
 export type TagInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   showcaseItems?: boolean | Prisma.Tag$showcaseItemsArgs<ExtArgs>
+  services?: boolean | Prisma.Tag$servicesArgs<ExtArgs>
   _count?: boolean | Prisma.TagCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TagIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -452,6 +567,7 @@ export type $TagPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   name: "Tag"
   objects: {
     showcaseItems: Prisma.$ShowcaseItemPayload<ExtArgs>[]
+    services: Prisma.$ServicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -852,6 +968,7 @@ readonly fields: TagFieldRefs;
 export interface Prisma__TagClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   showcaseItems<T extends Prisma.Tag$showcaseItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tag$showcaseItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShowcaseItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  services<T extends Prisma.Tag$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tag$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1298,6 +1415,30 @@ export type Tag$showcaseItemsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ShowcaseItemScalarFieldEnum | Prisma.ShowcaseItemScalarFieldEnum[]
+}
+
+/**
+ * Tag.services
+ */
+export type Tag$servicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Service
+   */
+  select?: Prisma.ServiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Service
+   */
+  omit?: Prisma.ServiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceInclude<ExtArgs> | null
+  where?: Prisma.ServiceWhereInput
+  orderBy?: Prisma.ServiceOrderByWithRelationInput | Prisma.ServiceOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceScalarFieldEnum | Prisma.ServiceScalarFieldEnum[]
 }
 
 /**

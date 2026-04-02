@@ -40,6 +40,7 @@ export type SettingsMinAggregateOutputType = {
   id: number | null
   userId: number | null
   likesPrivacy: $Enums.LikesPrivacy | null
+  paypalEmail: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -48,6 +49,7 @@ export type SettingsMaxAggregateOutputType = {
   id: number | null
   userId: number | null
   likesPrivacy: $Enums.LikesPrivacy | null
+  paypalEmail: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +58,7 @@ export type SettingsCountAggregateOutputType = {
   id: number
   userId: number
   likesPrivacy: number
+  paypalEmail: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -76,6 +79,7 @@ export type SettingsMinAggregateInputType = {
   id?: true
   userId?: true
   likesPrivacy?: true
+  paypalEmail?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -84,6 +88,7 @@ export type SettingsMaxAggregateInputType = {
   id?: true
   userId?: true
   likesPrivacy?: true
+  paypalEmail?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -92,6 +97,7 @@ export type SettingsCountAggregateInputType = {
   id?: true
   userId?: true
   likesPrivacy?: true
+  paypalEmail?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -187,6 +193,7 @@ export type SettingsGroupByOutputType = {
   id: number
   userId: number
   likesPrivacy: $Enums.LikesPrivacy
+  paypalEmail: string | null
   createdAt: Date
   updatedAt: Date
   _count: SettingsCountAggregateOutputType | null
@@ -218,6 +225,7 @@ export type SettingsWhereInput = {
   id?: Prisma.IntFilter<"Settings"> | number
   userId?: Prisma.IntFilter<"Settings"> | number
   likesPrivacy?: Prisma.EnumLikesPrivacyFilter<"Settings"> | $Enums.LikesPrivacy
+  paypalEmail?: Prisma.StringNullableFilter<"Settings"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Settings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Settings"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -227,9 +235,11 @@ export type SettingsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   likesPrivacy?: Prisma.SortOrder
+  paypalEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.SettingsOrderByRelevanceInput
 }
 
 export type SettingsWhereUniqueInput = Prisma.AtLeast<{
@@ -239,6 +249,7 @@ export type SettingsWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SettingsWhereInput[]
   NOT?: Prisma.SettingsWhereInput | Prisma.SettingsWhereInput[]
   likesPrivacy?: Prisma.EnumLikesPrivacyFilter<"Settings"> | $Enums.LikesPrivacy
+  paypalEmail?: Prisma.StringNullableFilter<"Settings"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Settings"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Settings"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -248,6 +259,7 @@ export type SettingsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   likesPrivacy?: Prisma.SortOrder
+  paypalEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SettingsCountOrderByAggregateInput
@@ -264,12 +276,14 @@ export type SettingsScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Settings"> | number
   userId?: Prisma.IntWithAggregatesFilter<"Settings"> | number
   likesPrivacy?: Prisma.EnumLikesPrivacyWithAggregatesFilter<"Settings"> | $Enums.LikesPrivacy
+  paypalEmail?: Prisma.StringNullableWithAggregatesFilter<"Settings"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Settings"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Settings"> | Date | string
 }
 
 export type SettingsCreateInput = {
   likesPrivacy?: $Enums.LikesPrivacy
+  paypalEmail?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSettingsInput
@@ -279,12 +293,14 @@ export type SettingsUncheckedCreateInput = {
   id?: number
   userId: number
   likesPrivacy?: $Enums.LikesPrivacy
+  paypalEmail?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type SettingsUpdateInput = {
   likesPrivacy?: Prisma.EnumLikesPrivacyFieldUpdateOperationsInput | $Enums.LikesPrivacy
+  paypalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSettingsNestedInput
@@ -294,6 +310,7 @@ export type SettingsUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   likesPrivacy?: Prisma.EnumLikesPrivacyFieldUpdateOperationsInput | $Enums.LikesPrivacy
+  paypalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -302,12 +319,14 @@ export type SettingsCreateManyInput = {
   id?: number
   userId: number
   likesPrivacy?: $Enums.LikesPrivacy
+  paypalEmail?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type SettingsUpdateManyMutationInput = {
   likesPrivacy?: Prisma.EnumLikesPrivacyFieldUpdateOperationsInput | $Enums.LikesPrivacy
+  paypalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -316,6 +335,7 @@ export type SettingsUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   likesPrivacy?: Prisma.EnumLikesPrivacyFieldUpdateOperationsInput | $Enums.LikesPrivacy
+  paypalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -325,10 +345,17 @@ export type SettingsNullableScalarRelationFilter = {
   isNot?: Prisma.SettingsWhereInput | null
 }
 
+export type SettingsOrderByRelevanceInput = {
+  fields: Prisma.SettingsOrderByRelevanceFieldEnum | Prisma.SettingsOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type SettingsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   likesPrivacy?: Prisma.SortOrder
+  paypalEmail?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -342,6 +369,7 @@ export type SettingsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   likesPrivacy?: Prisma.SortOrder
+  paypalEmail?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -350,6 +378,7 @@ export type SettingsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   likesPrivacy?: Prisma.SortOrder
+  paypalEmail?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -397,6 +426,7 @@ export type EnumLikesPrivacyFieldUpdateOperationsInput = {
 
 export type SettingsCreateWithoutUserInput = {
   likesPrivacy?: $Enums.LikesPrivacy
+  paypalEmail?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -404,6 +434,7 @@ export type SettingsCreateWithoutUserInput = {
 export type SettingsUncheckedCreateWithoutUserInput = {
   id?: number
   likesPrivacy?: $Enums.LikesPrivacy
+  paypalEmail?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -426,6 +457,7 @@ export type SettingsUpdateToOneWithWhereWithoutUserInput = {
 
 export type SettingsUpdateWithoutUserInput = {
   likesPrivacy?: Prisma.EnumLikesPrivacyFieldUpdateOperationsInput | $Enums.LikesPrivacy
+  paypalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -433,6 +465,7 @@ export type SettingsUpdateWithoutUserInput = {
 export type SettingsUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   likesPrivacy?: Prisma.EnumLikesPrivacyFieldUpdateOperationsInput | $Enums.LikesPrivacy
+  paypalEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -443,6 +476,7 @@ export type SettingsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   userId?: boolean
   likesPrivacy?: boolean
+  paypalEmail?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -452,6 +486,7 @@ export type SettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   userId?: boolean
   likesPrivacy?: boolean
+  paypalEmail?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -461,6 +496,7 @@ export type SettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   userId?: boolean
   likesPrivacy?: boolean
+  paypalEmail?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -470,11 +506,12 @@ export type SettingsSelectScalar = {
   id?: boolean
   userId?: boolean
   likesPrivacy?: boolean
+  paypalEmail?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "likesPrivacy" | "createdAt" | "updatedAt", ExtArgs["result"]["settings"]>
+export type SettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "likesPrivacy" | "paypalEmail" | "createdAt" | "updatedAt", ExtArgs["result"]["settings"]>
 export type SettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -494,6 +531,7 @@ export type $SettingsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: number
     userId: number
     likesPrivacy: $Enums.LikesPrivacy
+    paypalEmail: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["settings"]>
@@ -923,6 +961,7 @@ export interface SettingsFieldRefs {
   readonly id: Prisma.FieldRef<"Settings", 'Int'>
   readonly userId: Prisma.FieldRef<"Settings", 'Int'>
   readonly likesPrivacy: Prisma.FieldRef<"Settings", 'LikesPrivacy'>
+  readonly paypalEmail: Prisma.FieldRef<"Settings", 'String'>
   readonly createdAt: Prisma.FieldRef<"Settings", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Settings", 'DateTime'>
 }

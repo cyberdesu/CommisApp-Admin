@@ -61,24 +61,30 @@ export const ModelName = {
   otp: 'otp',
   AuthToken: 'AuthToken',
   RefreshToken: 'RefreshToken',
-  PublicViewRecord: 'PublicViewRecord',
-  FingerprintProfile: 'FingerprintProfile',
-  BehavioralLog: 'BehavioralLog',
-  ProfileSearchRecord: 'ProfileSearchRecord',
-  AuthAuditLog: 'AuthAuditLog',
-  ShowcaseItem: 'ShowcaseItem',
   Showcase: 'Showcase',
+  ShowcaseItem: 'ShowcaseItem',
   ShowcaseFile: 'ShowcaseFile',
   Tag: 'Tag',
   Service: 'Service',
-  Policy: 'Policy',
-  Folder: 'Folder',
+  ServiceAddon: 'ServiceAddon',
+  ServiceQuestion: 'ServiceQuestion',
+  ServicePolicy: 'ServicePolicy',
+  ServiceSample: 'ServiceSample',
+  CustomRequest: 'CustomRequest',
+  Order: 'Order',
+  Payment: 'Payment',
+  Payout: 'Payout',
+  OrderEvent: 'OrderEvent',
   Workflow: 'Workflow',
   SubPhase: 'SubPhase',
-  RequestForm: 'RequestForm',
   UserInteraction: 'UserInteraction',
   Follow: 'Follow',
   Bookmark: 'Bookmark',
+  PublicViewRecord: 'PublicViewRecord',
+  BehavioralLog: 'BehavioralLog',
+  ProfileSearchRecord: 'ProfileSearchRecord',
+  FingerprintProfile: 'FingerprintProfile',
+  AuthAuditLog: 'AuthAuditLog',
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',
   Message: 'Message',
@@ -180,6 +186,7 @@ export const SettingsScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   likesPrivacy: 'likesPrivacy',
+  paypalEmail: 'paypalEmail',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -236,64 +243,13 @@ export const RefreshTokenScalarFieldEnum = {
 export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
-export const PublicViewRecordScalarFieldEnum = {
-  id: 'id',
-  showcaseItemId: 'showcaseItemId',
-  fingerprint: 'fingerprint',
-  createdAt: 'createdAt',
-  country: 'country'
-} as const
-
-export type PublicViewRecordScalarFieldEnum = (typeof PublicViewRecordScalarFieldEnum)[keyof typeof PublicViewRecordScalarFieldEnum]
-
-
-export const FingerprintProfileScalarFieldEnum = {
-  id: 'id',
-  fingerprint: 'fingerprint',
-  trustScore: 'trustScore',
-  isBlocked: 'isBlocked',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type FingerprintProfileScalarFieldEnum = (typeof FingerprintProfileScalarFieldEnum)[keyof typeof FingerprintProfileScalarFieldEnum]
-
-
-export const BehavioralLogScalarFieldEnum = {
-  id: 'id',
-  fingerprint: 'fingerprint',
-  showcaseItemId: 'showcaseItemId',
-  timestamp: 'timestamp',
-  userAgent: 'userAgent'
-} as const
-
-export type BehavioralLogScalarFieldEnum = (typeof BehavioralLogScalarFieldEnum)[keyof typeof BehavioralLogScalarFieldEnum]
-
-
-export const ProfileSearchRecordScalarFieldEnum = {
-  id: 'id',
-  searchedUserId: 'searchedUserId',
-  searcherUserId: 'searcherUserId',
-  fingerprint: 'fingerprint',
-  createdAt: 'createdAt'
-} as const
-
-export type ProfileSearchRecordScalarFieldEnum = (typeof ProfileSearchRecordScalarFieldEnum)[keyof typeof ProfileSearchRecordScalarFieldEnum]
-
-
-export const AuthAuditLogScalarFieldEnum = {
+export const ShowcaseScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  email: 'email',
-  event: 'event',
-  success: 'success',
-  message: 'message',
-  ip: 'ip',
-  userAgent: 'userAgent',
-  createdAt: 'createdAt'
+  isVerified: 'isVerified'
 } as const
 
-export type AuthAuditLogScalarFieldEnum = (typeof AuthAuditLogScalarFieldEnum)[keyof typeof AuthAuditLogScalarFieldEnum]
+export type ShowcaseScalarFieldEnum = (typeof ShowcaseScalarFieldEnum)[keyof typeof ShowcaseScalarFieldEnum]
 
 
 export const ShowcaseItemScalarFieldEnum = {
@@ -304,8 +260,6 @@ export const ShowcaseItemScalarFieldEnum = {
   isDraft: 'isDraft',
   isFromVerifiedCommission: 'isFromVerifiedCommission',
   commissionId: 'commissionId',
-  isAvailableAsService: 'isAvailableAsService',
-  linkedServiceId: 'linkedServiceId',
   containsMatureContent: 'containsMatureContent',
   contentWarnings: 'contentWarnings',
   likeCount: 'likeCount',
@@ -320,15 +274,6 @@ export const ShowcaseItemScalarFieldEnum = {
 } as const
 
 export type ShowcaseItemScalarFieldEnum = (typeof ShowcaseItemScalarFieldEnum)[keyof typeof ShowcaseItemScalarFieldEnum]
-
-
-export const ShowcaseScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  isVerified: 'isVerified'
-} as const
-
-export type ShowcaseScalarFieldEnum = (typeof ShowcaseScalarFieldEnum)[keyof typeof ShowcaseScalarFieldEnum]
 
 
 export const ShowcaseFileScalarFieldEnum = {
@@ -356,38 +301,171 @@ export const ServiceScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   title: 'title',
+  slug: 'slug',
+  shortDescription: 'shortDescription',
   description: 'description',
-  price: 'price',
+  coverImageUrl: 'coverImageUrl',
+  basePrice: 'basePrice',
+  currency: 'currency',
+  deliveryDaysMin: 'deliveryDaysMin',
+  deliveryDaysMax: 'deliveryDaysMax',
+  revisionsIncluded: 'revisionsIncluded',
+  requestMode: 'requestMode',
   status: 'status',
+  slotsEnabled: 'slotsEnabled',
+  slotsTotal: 'slotsTotal',
+  slotsUsed: 'slotsUsed',
+  isNSFWAllowed: 'isNSFWAllowed',
+  isCommercialAllowed: 'isCommercialAllowed',
+  canDo: 'canDo',
+  cannotDo: 'cannotDo',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  folderId: 'folderId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
 
 
-export const PolicyScalarFieldEnum = {
+export const ServiceAddonScalarFieldEnum = {
   id: 'id',
-  uid: 'uid',
+  serviceId: 'serviceId',
   name: 'name',
+  description: 'description',
+  price: 'price',
+  currency: 'currency',
+  isActive: 'isActive',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceAddonScalarFieldEnum = (typeof ServiceAddonScalarFieldEnum)[keyof typeof ServiceAddonScalarFieldEnum]
+
+
+export const ServiceQuestionScalarFieldEnum = {
+  id: 'id',
+  serviceId: 'serviceId',
+  label: 'label',
+  helperText: 'helperText',
+  type: 'type',
+  isRequired: 'isRequired',
+  options: 'options',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceQuestionScalarFieldEnum = (typeof ServiceQuestionScalarFieldEnum)[keyof typeof ServiceQuestionScalarFieldEnum]
+
+
+export const ServicePolicyScalarFieldEnum = {
+  id: 'id',
+  serviceId: 'serviceId',
+  title: 'title',
   content: 'content',
+  position: 'position',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type PolicyScalarFieldEnum = (typeof PolicyScalarFieldEnum)[keyof typeof PolicyScalarFieldEnum]
+export type ServicePolicyScalarFieldEnum = (typeof ServicePolicyScalarFieldEnum)[keyof typeof ServicePolicyScalarFieldEnum]
 
 
-export const FolderScalarFieldEnum = {
+export const ServiceSampleScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  userId: 'userId',
+  serviceId: 'serviceId',
+  showcaseItemId: 'showcaseItemId',
+  position: 'position',
+  createdAt: 'createdAt'
+} as const
+
+export type ServiceSampleScalarFieldEnum = (typeof ServiceSampleScalarFieldEnum)[keyof typeof ServiceSampleScalarFieldEnum]
+
+
+export const CustomRequestScalarFieldEnum = {
+  id: 'id',
+  artistId: 'artistId',
+  clientId: 'clientId',
+  status: 'status',
+  title: 'title',
+  message: 'message',
+  attachments: 'attachments',
+  budget: 'budget',
+  currency: 'currency',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type FolderScalarFieldEnum = (typeof FolderScalarFieldEnum)[keyof typeof FolderScalarFieldEnum]
+export type CustomRequestScalarFieldEnum = (typeof CustomRequestScalarFieldEnum)[keyof typeof CustomRequestScalarFieldEnum]
+
+
+export const OrderScalarFieldEnum = {
+  id: 'id',
+  serviceId: 'serviceId',
+  artistId: 'artistId',
+  clientId: 'clientId',
+  source: 'source',
+  status: 'status',
+  titleSnapshot: 'titleSnapshot',
+  briefSnapshot: 'briefSnapshot',
+  priceSnapshot: 'priceSnapshot',
+  currency: 'currency',
+  deliveryDaysMin: 'deliveryDaysMin',
+  deliveryDaysMax: 'deliveryDaysMax',
+  revisionsIncluded: 'revisionsIncluded',
+  revisionsUsed: 'revisionsUsed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  provider: 'provider',
+  status: 'status',
+  paypalOrderId: 'paypalOrderId',
+  paypalCaptureId: 'paypalCaptureId',
+  amount: 'amount',
+  currency: 'currency',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PayoutScalarFieldEnum = {
+  id: 'id',
+  artistId: 'artistId',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  paypalEmail: 'paypalEmail',
+  reviewedAt: 'reviewedAt',
+  reviewedByAdminId: 'reviewedByAdminId',
+  reviewNote: 'reviewNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PayoutScalarFieldEnum = (typeof PayoutScalarFieldEnum)[keyof typeof PayoutScalarFieldEnum]
+
+
+export const OrderEventScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  type: 'type',
+  description: 'description',
+  actorId: 'actorId',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type OrderEventScalarFieldEnum = (typeof OrderEventScalarFieldEnum)[keyof typeof OrderEventScalarFieldEnum]
 
 
 export const WorkflowScalarFieldEnum = {
@@ -413,22 +491,6 @@ export const SubPhaseScalarFieldEnum = {
 } as const
 
 export type SubPhaseScalarFieldEnum = (typeof SubPhaseScalarFieldEnum)[keyof typeof SubPhaseScalarFieldEnum]
-
-
-export const RequestFormScalarFieldEnum = {
-  id: 'id',
-  userID: 'userID',
-  name: 'name',
-  personalNote: 'personalNote',
-  isUserEmailRequired: 'isUserEmailRequired',
-  formCurrency: 'formCurrency',
-  form: 'form',
-  socials: 'socials',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type RequestFormScalarFieldEnum = (typeof RequestFormScalarFieldEnum)[keyof typeof RequestFormScalarFieldEnum]
 
 
 export const UserInteractionScalarFieldEnum = {
@@ -461,10 +523,71 @@ export const BookmarkScalarFieldEnum = {
 export type BookmarkScalarFieldEnum = (typeof BookmarkScalarFieldEnum)[keyof typeof BookmarkScalarFieldEnum]
 
 
+export const PublicViewRecordScalarFieldEnum = {
+  id: 'id',
+  showcaseItemId: 'showcaseItemId',
+  fingerprint: 'fingerprint',
+  createdAt: 'createdAt',
+  country: 'country'
+} as const
+
+export type PublicViewRecordScalarFieldEnum = (typeof PublicViewRecordScalarFieldEnum)[keyof typeof PublicViewRecordScalarFieldEnum]
+
+
+export const BehavioralLogScalarFieldEnum = {
+  id: 'id',
+  fingerprint: 'fingerprint',
+  showcaseItemId: 'showcaseItemId',
+  timestamp: 'timestamp',
+  userAgent: 'userAgent'
+} as const
+
+export type BehavioralLogScalarFieldEnum = (typeof BehavioralLogScalarFieldEnum)[keyof typeof BehavioralLogScalarFieldEnum]
+
+
+export const ProfileSearchRecordScalarFieldEnum = {
+  id: 'id',
+  searchedUserId: 'searchedUserId',
+  searcherUserId: 'searcherUserId',
+  fingerprint: 'fingerprint',
+  createdAt: 'createdAt'
+} as const
+
+export type ProfileSearchRecordScalarFieldEnum = (typeof ProfileSearchRecordScalarFieldEnum)[keyof typeof ProfileSearchRecordScalarFieldEnum]
+
+
+export const FingerprintProfileScalarFieldEnum = {
+  id: 'id',
+  fingerprint: 'fingerprint',
+  trustScore: 'trustScore',
+  isBlocked: 'isBlocked',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FingerprintProfileScalarFieldEnum = (typeof FingerprintProfileScalarFieldEnum)[keyof typeof FingerprintProfileScalarFieldEnum]
+
+
+export const AuthAuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  email: 'email',
+  event: 'event',
+  success: 'success',
+  message: 'message',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+} as const
+
+export type AuthAuditLogScalarFieldEnum = (typeof AuthAuditLogScalarFieldEnum)[keyof typeof AuthAuditLogScalarFieldEnum]
+
+
 export const ConversationScalarFieldEnum = {
   id: 'id',
   type: 'type',
   name: 'name',
+  orderId: 'orderId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -514,7 +637,8 @@ export const NotificationScalarFieldEnum = {
   createdAt: 'createdAt',
   messageId: 'messageId',
   followerId: 'followerId',
-  showcaseItemId: 'showcaseItemId'
+  showcaseItemId: 'showcaseItemId',
+  orderId: 'orderId'
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
@@ -533,6 +657,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -599,6 +731,13 @@ export const ArtistVerificationRequestOrderByRelevanceFieldEnum = {
 export type ArtistVerificationRequestOrderByRelevanceFieldEnum = (typeof ArtistVerificationRequestOrderByRelevanceFieldEnum)[keyof typeof ArtistVerificationRequestOrderByRelevanceFieldEnum]
 
 
+export const SettingsOrderByRelevanceFieldEnum = {
+  paypalEmail: 'paypalEmail'
+} as const
+
+export type SettingsOrderByRelevanceFieldEnum = (typeof SettingsOrderByRelevanceFieldEnum)[keyof typeof SettingsOrderByRelevanceFieldEnum]
+
+
 export const SocialsOrderByRelevanceFieldEnum = {
   instagram: 'instagram',
   twitter: 'twitter',
@@ -631,50 +770,11 @@ export const RefreshTokenOrderByRelevanceFieldEnum = {
 export type RefreshTokenOrderByRelevanceFieldEnum = (typeof RefreshTokenOrderByRelevanceFieldEnum)[keyof typeof RefreshTokenOrderByRelevanceFieldEnum]
 
 
-export const PublicViewRecordOrderByRelevanceFieldEnum = {
-  showcaseItemId: 'showcaseItemId',
-  fingerprint: 'fingerprint',
-  country: 'country'
+export const ShowcaseOrderByRelevanceFieldEnum = {
+  id: 'id'
 } as const
 
-export type PublicViewRecordOrderByRelevanceFieldEnum = (typeof PublicViewRecordOrderByRelevanceFieldEnum)[keyof typeof PublicViewRecordOrderByRelevanceFieldEnum]
-
-
-export const FingerprintProfileOrderByRelevanceFieldEnum = {
-  id: 'id',
-  fingerprint: 'fingerprint'
-} as const
-
-export type FingerprintProfileOrderByRelevanceFieldEnum = (typeof FingerprintProfileOrderByRelevanceFieldEnum)[keyof typeof FingerprintProfileOrderByRelevanceFieldEnum]
-
-
-export const BehavioralLogOrderByRelevanceFieldEnum = {
-  id: 'id',
-  fingerprint: 'fingerprint',
-  showcaseItemId: 'showcaseItemId',
-  userAgent: 'userAgent'
-} as const
-
-export type BehavioralLogOrderByRelevanceFieldEnum = (typeof BehavioralLogOrderByRelevanceFieldEnum)[keyof typeof BehavioralLogOrderByRelevanceFieldEnum]
-
-
-export const ProfileSearchRecordOrderByRelevanceFieldEnum = {
-  fingerprint: 'fingerprint'
-} as const
-
-export type ProfileSearchRecordOrderByRelevanceFieldEnum = (typeof ProfileSearchRecordOrderByRelevanceFieldEnum)[keyof typeof ProfileSearchRecordOrderByRelevanceFieldEnum]
-
-
-export const AuthAuditLogOrderByRelevanceFieldEnum = {
-  id: 'id',
-  email: 'email',
-  event: 'event',
-  message: 'message',
-  ip: 'ip',
-  userAgent: 'userAgent'
-} as const
-
-export type AuthAuditLogOrderByRelevanceFieldEnum = (typeof AuthAuditLogOrderByRelevanceFieldEnum)[keyof typeof AuthAuditLogOrderByRelevanceFieldEnum]
+export type ShowcaseOrderByRelevanceFieldEnum = (typeof ShowcaseOrderByRelevanceFieldEnum)[keyof typeof ShowcaseOrderByRelevanceFieldEnum]
 
 
 export const JsonNullValueFilter = {
@@ -690,18 +790,10 @@ export const ShowcaseItemOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
   commissionId: 'commissionId',
-  linkedServiceId: 'linkedServiceId',
   showcaseId: 'showcaseId'
 } as const
 
 export type ShowcaseItemOrderByRelevanceFieldEnum = (typeof ShowcaseItemOrderByRelevanceFieldEnum)[keyof typeof ShowcaseItemOrderByRelevanceFieldEnum]
-
-
-export const ShowcaseOrderByRelevanceFieldEnum = {
-  id: 'id'
-} as const
-
-export type ShowcaseOrderByRelevanceFieldEnum = (typeof ShowcaseOrderByRelevanceFieldEnum)[keyof typeof ShowcaseOrderByRelevanceFieldEnum]
 
 
 export const ShowcaseFileOrderByRelevanceFieldEnum = {
@@ -725,27 +817,105 @@ export type TagOrderByRelevanceFieldEnum = (typeof TagOrderByRelevanceFieldEnum)
 export const ServiceOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
-  status: 'status',
-  folderId: 'folderId'
+  slug: 'slug',
+  shortDescription: 'shortDescription',
+  coverImageUrl: 'coverImageUrl',
+  currency: 'currency',
+  canDo: 'canDo',
+  cannotDo: 'cannotDo'
 } as const
 
 export type ServiceOrderByRelevanceFieldEnum = (typeof ServiceOrderByRelevanceFieldEnum)[keyof typeof ServiceOrderByRelevanceFieldEnum]
 
 
-export const PolicyOrderByRelevanceFieldEnum = {
+export const ServiceAddonOrderByRelevanceFieldEnum = {
+  id: 'id',
+  serviceId: 'serviceId',
   name: 'name',
+  description: 'description',
+  currency: 'currency'
+} as const
+
+export type ServiceAddonOrderByRelevanceFieldEnum = (typeof ServiceAddonOrderByRelevanceFieldEnum)[keyof typeof ServiceAddonOrderByRelevanceFieldEnum]
+
+
+export const ServiceQuestionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  serviceId: 'serviceId',
+  label: 'label',
+  helperText: 'helperText'
+} as const
+
+export type ServiceQuestionOrderByRelevanceFieldEnum = (typeof ServiceQuestionOrderByRelevanceFieldEnum)[keyof typeof ServiceQuestionOrderByRelevanceFieldEnum]
+
+
+export const ServicePolicyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  serviceId: 'serviceId',
+  title: 'title',
   content: 'content'
 } as const
 
-export type PolicyOrderByRelevanceFieldEnum = (typeof PolicyOrderByRelevanceFieldEnum)[keyof typeof PolicyOrderByRelevanceFieldEnum]
+export type ServicePolicyOrderByRelevanceFieldEnum = (typeof ServicePolicyOrderByRelevanceFieldEnum)[keyof typeof ServicePolicyOrderByRelevanceFieldEnum]
 
 
-export const FolderOrderByRelevanceFieldEnum = {
+export const ServiceSampleOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name'
+  serviceId: 'serviceId',
+  showcaseItemId: 'showcaseItemId'
 } as const
 
-export type FolderOrderByRelevanceFieldEnum = (typeof FolderOrderByRelevanceFieldEnum)[keyof typeof FolderOrderByRelevanceFieldEnum]
+export type ServiceSampleOrderByRelevanceFieldEnum = (typeof ServiceSampleOrderByRelevanceFieldEnum)[keyof typeof ServiceSampleOrderByRelevanceFieldEnum]
+
+
+export const CustomRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  message: 'message',
+  currency: 'currency'
+} as const
+
+export type CustomRequestOrderByRelevanceFieldEnum = (typeof CustomRequestOrderByRelevanceFieldEnum)[keyof typeof CustomRequestOrderByRelevanceFieldEnum]
+
+
+export const OrderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  serviceId: 'serviceId',
+  titleSnapshot: 'titleSnapshot',
+  currency: 'currency'
+} as const
+
+export type OrderOrderByRelevanceFieldEnum = (typeof OrderOrderByRelevanceFieldEnum)[keyof typeof OrderOrderByRelevanceFieldEnum]
+
+
+export const PaymentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  paypalOrderId: 'paypalOrderId',
+  paypalCaptureId: 'paypalCaptureId',
+  currency: 'currency'
+} as const
+
+export type PaymentOrderByRelevanceFieldEnum = (typeof PaymentOrderByRelevanceFieldEnum)[keyof typeof PaymentOrderByRelevanceFieldEnum]
+
+
+export const PayoutOrderByRelevanceFieldEnum = {
+  id: 'id',
+  currency: 'currency',
+  paypalEmail: 'paypalEmail',
+  reviewNote: 'reviewNote'
+} as const
+
+export type PayoutOrderByRelevanceFieldEnum = (typeof PayoutOrderByRelevanceFieldEnum)[keyof typeof PayoutOrderByRelevanceFieldEnum]
+
+
+export const OrderEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  description: 'description'
+} as const
+
+export type OrderEventOrderByRelevanceFieldEnum = (typeof OrderEventOrderByRelevanceFieldEnum)[keyof typeof OrderEventOrderByRelevanceFieldEnum]
 
 
 export const WorkflowOrderByRelevanceFieldEnum = {
@@ -765,16 +935,6 @@ export const SubPhaseOrderByRelevanceFieldEnum = {
 export type SubPhaseOrderByRelevanceFieldEnum = (typeof SubPhaseOrderByRelevanceFieldEnum)[keyof typeof SubPhaseOrderByRelevanceFieldEnum]
 
 
-export const RequestFormOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  personalNote: 'personalNote',
-  formCurrency: 'formCurrency'
-} as const
-
-export type RequestFormOrderByRelevanceFieldEnum = (typeof RequestFormOrderByRelevanceFieldEnum)[keyof typeof RequestFormOrderByRelevanceFieldEnum]
-
-
 export const UserInteractionOrderByRelevanceFieldEnum = {
   showcaseItemId: 'showcaseItemId',
   interactionType: 'interactionType'
@@ -790,9 +950,56 @@ export const BookmarkOrderByRelevanceFieldEnum = {
 export type BookmarkOrderByRelevanceFieldEnum = (typeof BookmarkOrderByRelevanceFieldEnum)[keyof typeof BookmarkOrderByRelevanceFieldEnum]
 
 
+export const PublicViewRecordOrderByRelevanceFieldEnum = {
+  showcaseItemId: 'showcaseItemId',
+  fingerprint: 'fingerprint',
+  country: 'country'
+} as const
+
+export type PublicViewRecordOrderByRelevanceFieldEnum = (typeof PublicViewRecordOrderByRelevanceFieldEnum)[keyof typeof PublicViewRecordOrderByRelevanceFieldEnum]
+
+
+export const BehavioralLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  fingerprint: 'fingerprint',
+  showcaseItemId: 'showcaseItemId',
+  userAgent: 'userAgent'
+} as const
+
+export type BehavioralLogOrderByRelevanceFieldEnum = (typeof BehavioralLogOrderByRelevanceFieldEnum)[keyof typeof BehavioralLogOrderByRelevanceFieldEnum]
+
+
+export const ProfileSearchRecordOrderByRelevanceFieldEnum = {
+  fingerprint: 'fingerprint'
+} as const
+
+export type ProfileSearchRecordOrderByRelevanceFieldEnum = (typeof ProfileSearchRecordOrderByRelevanceFieldEnum)[keyof typeof ProfileSearchRecordOrderByRelevanceFieldEnum]
+
+
+export const FingerprintProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  fingerprint: 'fingerprint'
+} as const
+
+export type FingerprintProfileOrderByRelevanceFieldEnum = (typeof FingerprintProfileOrderByRelevanceFieldEnum)[keyof typeof FingerprintProfileOrderByRelevanceFieldEnum]
+
+
+export const AuthAuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  email: 'email',
+  event: 'event',
+  message: 'message',
+  ip: 'ip',
+  userAgent: 'userAgent'
+} as const
+
+export type AuthAuditLogOrderByRelevanceFieldEnum = (typeof AuthAuditLogOrderByRelevanceFieldEnum)[keyof typeof AuthAuditLogOrderByRelevanceFieldEnum]
+
+
 export const ConversationOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  orderId: 'orderId'
 } as const
 
 export type ConversationOrderByRelevanceFieldEnum = (typeof ConversationOrderByRelevanceFieldEnum)[keyof typeof ConversationOrderByRelevanceFieldEnum]
@@ -823,7 +1030,8 @@ export const NotificationOrderByRelevanceFieldEnum = {
   title: 'title',
   body: 'body',
   messageId: 'messageId',
-  showcaseItemId: 'showcaseItemId'
+  showcaseItemId: 'showcaseItemId',
+  orderId: 'orderId'
 } as const
 
 export type NotificationOrderByRelevanceFieldEnum = (typeof NotificationOrderByRelevanceFieldEnum)[keyof typeof NotificationOrderByRelevanceFieldEnum]

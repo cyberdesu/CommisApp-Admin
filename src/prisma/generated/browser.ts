@@ -68,40 +68,15 @@ export type AuthToken = Prisma.AuthTokenModel
  */
 export type RefreshToken = Prisma.RefreshTokenModel
 /**
- * Model PublicViewRecord
+ * Model Showcase
  * 
  */
-export type PublicViewRecord = Prisma.PublicViewRecordModel
-/**
- * Model FingerprintProfile
- * 
- */
-export type FingerprintProfile = Prisma.FingerprintProfileModel
-/**
- * Model BehavioralLog
- * 
- */
-export type BehavioralLog = Prisma.BehavioralLogModel
-/**
- * Model ProfileSearchRecord
- * 
- */
-export type ProfileSearchRecord = Prisma.ProfileSearchRecordModel
-/**
- * Model AuthAuditLog
- * 
- */
-export type AuthAuditLog = Prisma.AuthAuditLogModel
+export type Showcase = Prisma.ShowcaseModel
 /**
  * Model ShowcaseItem
  * 
  */
 export type ShowcaseItem = Prisma.ShowcaseItemModel
-/**
- * Model Showcase
- * 
- */
-export type Showcase = Prisma.ShowcaseModel
 /**
  * Model ShowcaseFile
  * 
@@ -118,15 +93,50 @@ export type Tag = Prisma.TagModel
  */
 export type Service = Prisma.ServiceModel
 /**
- * Model Policy
+ * Model ServiceAddon
  * 
  */
-export type Policy = Prisma.PolicyModel
+export type ServiceAddon = Prisma.ServiceAddonModel
 /**
- * Model Folder
+ * Model ServiceQuestion
  * 
  */
-export type Folder = Prisma.FolderModel
+export type ServiceQuestion = Prisma.ServiceQuestionModel
+/**
+ * Model ServicePolicy
+ * 
+ */
+export type ServicePolicy = Prisma.ServicePolicyModel
+/**
+ * Model ServiceSample
+ * 
+ */
+export type ServiceSample = Prisma.ServiceSampleModel
+/**
+ * Model CustomRequest
+ * 
+ */
+export type CustomRequest = Prisma.CustomRequestModel
+/**
+ * Model Order
+ * 
+ */
+export type Order = Prisma.OrderModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model Payout
+ * 
+ */
+export type Payout = Prisma.PayoutModel
+/**
+ * Model OrderEvent
+ * 
+ */
+export type OrderEvent = Prisma.OrderEventModel
 /**
  * Model Workflow
  * 
@@ -137,11 +147,6 @@ export type Workflow = Prisma.WorkflowModel
  * 
  */
 export type SubPhase = Prisma.SubPhaseModel
-/**
- * Model RequestForm
- * 
- */
-export type RequestForm = Prisma.RequestFormModel
 /**
  * Model UserInteraction
  * 
@@ -157,6 +162,31 @@ export type Follow = Prisma.FollowModel
  * 
  */
 export type Bookmark = Prisma.BookmarkModel
+/**
+ * Model PublicViewRecord
+ * 
+ */
+export type PublicViewRecord = Prisma.PublicViewRecordModel
+/**
+ * Model BehavioralLog
+ * 
+ */
+export type BehavioralLog = Prisma.BehavioralLogModel
+/**
+ * Model ProfileSearchRecord
+ * 
+ */
+export type ProfileSearchRecord = Prisma.ProfileSearchRecordModel
+/**
+ * Model FingerprintProfile
+ * 
+ */
+export type FingerprintProfile = Prisma.FingerprintProfileModel
+/**
+ * Model AuthAuditLog
+ * 
+ */
+export type AuthAuditLog = Prisma.AuthAuditLogModel
 /**
  * Model Conversation
  * 

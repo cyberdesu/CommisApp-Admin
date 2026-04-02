@@ -46,9 +46,104 @@ export const MainPhaseKey = {
 export type MainPhaseKey = (typeof MainPhaseKey)[keyof typeof MainPhaseKey]
 
 
+export const ServiceStatus = {
+  DRAFT: 'DRAFT',
+  OPEN: 'OPEN',
+  PAUSED: 'PAUSED',
+  CLOSED: 'CLOSED'
+} as const
+
+export type ServiceStatus = (typeof ServiceStatus)[keyof typeof ServiceStatus]
+
+
+export const ServiceRequestMode = {
+  MANUAL_REVIEW: 'MANUAL_REVIEW',
+  INSTANT_ORDER: 'INSTANT_ORDER'
+} as const
+
+export type ServiceRequestMode = (typeof ServiceRequestMode)[keyof typeof ServiceRequestMode]
+
+
+export const ServiceQuestionType = {
+  SHORT_TEXT: 'SHORT_TEXT',
+  LONG_TEXT: 'LONG_TEXT',
+  SINGLE_SELECT: 'SINGLE_SELECT',
+  MULTI_SELECT: 'MULTI_SELECT',
+  BOOLEAN: 'BOOLEAN',
+  FILE: 'FILE',
+  NUMBER: 'NUMBER'
+} as const
+
+export type ServiceQuestionType = (typeof ServiceQuestionType)[keyof typeof ServiceQuestionType]
+
+
+export const OrderStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAITING_FOR_CLIENT: 'WAITING_FOR_CLIENT',
+  DELIVERED: 'DELIVERED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
+
+
+export const OrderSource = {
+  SERVICE: 'SERVICE',
+  CUSTOM_REQUEST: 'CUSTOM_REQUEST'
+} as const
+
+export type OrderSource = (typeof OrderSource)[keyof typeof OrderSource]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const PaymentProvider = {
+  PAYPAL: 'PAYPAL'
+} as const
+
+export type PaymentProvider = (typeof PaymentProvider)[keyof typeof PaymentProvider]
+
+
+export const PayoutStatus = {
+  PENDING: 'PENDING',
+  SENT: 'SENT',
+  FRAUD: 'FRAUD'
+} as const
+
+export type PayoutStatus = (typeof PayoutStatus)[keyof typeof PayoutStatus]
+
+
+export const OrderEventType = {
+  ORDER_CREATED: 'ORDER_CREATED',
+  ORDER_ACCEPTED: 'ORDER_ACCEPTED',
+  ORDER_REJECTED: 'ORDER_REJECTED',
+  PAYMENT_CAPTURED: 'PAYMENT_CAPTURED',
+  STATUS_CHANGED: 'STATUS_CHANGED',
+  REVISION_REQUESTED: 'REVISION_REQUESTED',
+  ORDER_COMPLETED: 'ORDER_COMPLETED',
+  ORDER_CANCELLED: 'ORDER_CANCELLED',
+  MESSAGE_SENT: 'MESSAGE_SENT'
+} as const
+
+export type OrderEventType = (typeof OrderEventType)[keyof typeof OrderEventType]
+
+
 export const ConversationType = {
   DIRECT: 'DIRECT',
-  GROUP: 'GROUP'
+  GROUP: 'GROUP',
+  ORDER: 'ORDER'
 } as const
 
 export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType]
@@ -68,7 +163,12 @@ export const NotificationType = {
   NEW_FOLLOWER: 'NEW_FOLLOWER',
   SHOWCASE_LIKE: 'SHOWCASE_LIKE',
   COMMISSION_UPDATE: 'COMMISSION_UPDATE',
-  SYSTEM_ANNOUNCEMENT: 'SYSTEM_ANNOUNCEMENT'
+  SYSTEM_ANNOUNCEMENT: 'SYSTEM_ANNOUNCEMENT',
+  ORDER_CREATED: 'ORDER_CREATED',
+  ORDER_UPDATED: 'ORDER_UPDATED',
+  SERVICE_PAUSED: 'SERVICE_PAUSED',
+  SERVICE_PUBLISHED: 'SERVICE_PUBLISHED',
+  ARTIST_VERIFIED: 'ARTIST_VERIFIED'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

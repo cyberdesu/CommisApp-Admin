@@ -45,8 +45,6 @@ export type ShowcaseItemMinAggregateOutputType = {
   isDraft: boolean | null
   isFromVerifiedCommission: boolean | null
   commissionId: string | null
-  isAvailableAsService: boolean | null
-  linkedServiceId: string | null
   containsMatureContent: boolean | null
   likeCount: number | null
   viewCount: number | null
@@ -64,8 +62,6 @@ export type ShowcaseItemMaxAggregateOutputType = {
   isDraft: boolean | null
   isFromVerifiedCommission: boolean | null
   commissionId: string | null
-  isAvailableAsService: boolean | null
-  linkedServiceId: string | null
   containsMatureContent: boolean | null
   likeCount: number | null
   viewCount: number | null
@@ -84,8 +80,6 @@ export type ShowcaseItemCountAggregateOutputType = {
   isDraft: number
   isFromVerifiedCommission: number
   commissionId: number
-  isAvailableAsService: number
-  linkedServiceId: number
   containsMatureContent: number
   contentWarnings: number
   likeCount: number
@@ -120,8 +114,6 @@ export type ShowcaseItemMinAggregateInputType = {
   isDraft?: true
   isFromVerifiedCommission?: true
   commissionId?: true
-  isAvailableAsService?: true
-  linkedServiceId?: true
   containsMatureContent?: true
   likeCount?: true
   viewCount?: true
@@ -139,8 +131,6 @@ export type ShowcaseItemMaxAggregateInputType = {
   isDraft?: true
   isFromVerifiedCommission?: true
   commissionId?: true
-  isAvailableAsService?: true
-  linkedServiceId?: true
   containsMatureContent?: true
   likeCount?: true
   viewCount?: true
@@ -159,8 +149,6 @@ export type ShowcaseItemCountAggregateInputType = {
   isDraft?: true
   isFromVerifiedCommission?: true
   commissionId?: true
-  isAvailableAsService?: true
-  linkedServiceId?: true
   containsMatureContent?: true
   contentWarnings?: true
   likeCount?: true
@@ -269,8 +257,6 @@ export type ShowcaseItemGroupByOutputType = {
   isDraft: boolean
   isFromVerifiedCommission: boolean
   commissionId: string | null
-  isAvailableAsService: boolean
-  linkedServiceId: string | null
   containsMatureContent: boolean
   contentWarnings: runtime.JsonValue
   likeCount: number
@@ -315,8 +301,6 @@ export type ShowcaseItemWhereInput = {
   isDraft?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   isFromVerifiedCommission?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   commissionId?: Prisma.StringNullableFilter<"ShowcaseItem"> | string | null
-  isAvailableAsService?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
-  linkedServiceId?: Prisma.StringNullableFilter<"ShowcaseItem"> | string | null
   containsMatureContent?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   contentWarnings?: Prisma.JsonFilter<"ShowcaseItem">
   likeCount?: Prisma.IntFilter<"ShowcaseItem"> | number
@@ -334,6 +318,7 @@ export type ShowcaseItemWhereInput = {
   bookmarkedBy?: Prisma.BookmarkListRelationFilter
   showcaseFiles?: Prisma.ShowcaseFileListRelationFilter
   interactions?: Prisma.UserInteractionListRelationFilter
+  serviceSamples?: Prisma.ServiceSampleListRelationFilter
 }
 
 export type ShowcaseItemOrderByWithRelationInput = {
@@ -344,8 +329,6 @@ export type ShowcaseItemOrderByWithRelationInput = {
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  isAvailableAsService?: Prisma.SortOrder
-  linkedServiceId?: Prisma.SortOrderInput | Prisma.SortOrder
   containsMatureContent?: Prisma.SortOrder
   contentWarnings?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
@@ -363,6 +346,7 @@ export type ShowcaseItemOrderByWithRelationInput = {
   bookmarkedBy?: Prisma.BookmarkOrderByRelationAggregateInput
   showcaseFiles?: Prisma.ShowcaseFileOrderByRelationAggregateInput
   interactions?: Prisma.UserInteractionOrderByRelationAggregateInput
+  serviceSamples?: Prisma.ServiceSampleOrderByRelationAggregateInput
   _relevance?: Prisma.ShowcaseItemOrderByRelevanceInput
 }
 
@@ -377,8 +361,6 @@ export type ShowcaseItemWhereUniqueInput = Prisma.AtLeast<{
   isDraft?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   isFromVerifiedCommission?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   commissionId?: Prisma.StringNullableFilter<"ShowcaseItem"> | string | null
-  isAvailableAsService?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
-  linkedServiceId?: Prisma.StringNullableFilter<"ShowcaseItem"> | string | null
   containsMatureContent?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   contentWarnings?: Prisma.JsonFilter<"ShowcaseItem">
   likeCount?: Prisma.IntFilter<"ShowcaseItem"> | number
@@ -396,6 +378,7 @@ export type ShowcaseItemWhereUniqueInput = Prisma.AtLeast<{
   bookmarkedBy?: Prisma.BookmarkListRelationFilter
   showcaseFiles?: Prisma.ShowcaseFileListRelationFilter
   interactions?: Prisma.UserInteractionListRelationFilter
+  serviceSamples?: Prisma.ServiceSampleListRelationFilter
 }, "id">
 
 export type ShowcaseItemOrderByWithAggregationInput = {
@@ -406,8 +389,6 @@ export type ShowcaseItemOrderByWithAggregationInput = {
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  isAvailableAsService?: Prisma.SortOrder
-  linkedServiceId?: Prisma.SortOrderInput | Prisma.SortOrder
   containsMatureContent?: Prisma.SortOrder
   contentWarnings?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
@@ -437,8 +418,6 @@ export type ShowcaseItemScalarWhereWithAggregatesInput = {
   isDraft?: Prisma.BoolWithAggregatesFilter<"ShowcaseItem"> | boolean
   isFromVerifiedCommission?: Prisma.BoolWithAggregatesFilter<"ShowcaseItem"> | boolean
   commissionId?: Prisma.StringNullableWithAggregatesFilter<"ShowcaseItem"> | string | null
-  isAvailableAsService?: Prisma.BoolWithAggregatesFilter<"ShowcaseItem"> | boolean
-  linkedServiceId?: Prisma.StringNullableWithAggregatesFilter<"ShowcaseItem"> | string | null
   containsMatureContent?: Prisma.BoolWithAggregatesFilter<"ShowcaseItem"> | boolean
   contentWarnings?: Prisma.JsonWithAggregatesFilter<"ShowcaseItem">
   likeCount?: Prisma.IntWithAggregatesFilter<"ShowcaseItem"> | number
@@ -460,8 +439,6 @@ export type ShowcaseItemCreateInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -478,6 +455,7 @@ export type ShowcaseItemCreateInput = {
   bookmarkedBy?: Prisma.BookmarkCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemUncheckedCreateInput = {
@@ -488,8 +466,6 @@ export type ShowcaseItemUncheckedCreateInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -506,6 +482,7 @@ export type ShowcaseItemUncheckedCreateInput = {
   bookmarkedBy?: Prisma.BookmarkUncheckedCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemUpdateInput = {
@@ -516,8 +493,6 @@ export type ShowcaseItemUpdateInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -534,6 +509,7 @@ export type ShowcaseItemUpdateInput = {
   bookmarkedBy?: Prisma.BookmarkUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemUncheckedUpdateInput = {
@@ -544,8 +520,6 @@ export type ShowcaseItemUncheckedUpdateInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -562,6 +536,7 @@ export type ShowcaseItemUncheckedUpdateInput = {
   bookmarkedBy?: Prisma.BookmarkUncheckedUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemCreateManyInput = {
@@ -572,8 +547,6 @@ export type ShowcaseItemCreateManyInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -595,8 +568,6 @@ export type ShowcaseItemUpdateManyMutationInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -617,8 +588,6 @@ export type ShowcaseItemUncheckedUpdateManyInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -632,9 +601,14 @@ export type ShowcaseItemUncheckedUpdateManyInput = {
   showcaseId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type ShowcaseItemScalarRelationFilter = {
-  is?: Prisma.ShowcaseItemWhereInput
-  isNot?: Prisma.ShowcaseItemWhereInput
+export type ShowcaseItemListRelationFilter = {
+  every?: Prisma.ShowcaseItemWhereInput
+  some?: Prisma.ShowcaseItemWhereInput
+  none?: Prisma.ShowcaseItemWhereInput
+}
+
+export type ShowcaseItemOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type ShowcaseItemOrderByRelevanceInput = {
@@ -651,8 +625,6 @@ export type ShowcaseItemCountOrderByAggregateInput = {
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrder
-  isAvailableAsService?: Prisma.SortOrder
-  linkedServiceId?: Prisma.SortOrder
   containsMatureContent?: Prisma.SortOrder
   contentWarnings?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
@@ -679,8 +651,6 @@ export type ShowcaseItemMaxOrderByAggregateInput = {
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrder
-  isAvailableAsService?: Prisma.SortOrder
-  linkedServiceId?: Prisma.SortOrder
   containsMatureContent?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   viewCount?: Prisma.SortOrder
@@ -698,8 +668,6 @@ export type ShowcaseItemMinOrderByAggregateInput = {
   isDraft?: Prisma.SortOrder
   isFromVerifiedCommission?: Prisma.SortOrder
   commissionId?: Prisma.SortOrder
-  isAvailableAsService?: Prisma.SortOrder
-  linkedServiceId?: Prisma.SortOrder
   containsMatureContent?: Prisma.SortOrder
   likeCount?: Prisma.SortOrder
   viewCount?: Prisma.SortOrder
@@ -716,28 +684,9 @@ export type ShowcaseItemSumOrderByAggregateInput = {
   viewCount?: Prisma.SortOrder
 }
 
-export type ShowcaseItemListRelationFilter = {
-  every?: Prisma.ShowcaseItemWhereInput
-  some?: Prisma.ShowcaseItemWhereInput
-  none?: Prisma.ShowcaseItemWhereInput
-}
-
-export type ShowcaseItemOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
-export type ShowcaseItemCreateNestedOneWithoutPublicViewsInput = {
-  create?: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedCreateWithoutPublicViewsInput>
-  connectOrCreate?: Prisma.ShowcaseItemCreateOrConnectWithoutPublicViewsInput
-  connect?: Prisma.ShowcaseItemWhereUniqueInput
-}
-
-export type ShowcaseItemUpdateOneRequiredWithoutPublicViewsNestedInput = {
-  create?: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedCreateWithoutPublicViewsInput>
-  connectOrCreate?: Prisma.ShowcaseItemCreateOrConnectWithoutPublicViewsInput
-  upsert?: Prisma.ShowcaseItemUpsertWithoutPublicViewsInput
-  connect?: Prisma.ShowcaseItemWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ShowcaseItemUpdateToOneWithWhereWithoutPublicViewsInput, Prisma.ShowcaseItemUpdateWithoutPublicViewsInput>, Prisma.ShowcaseItemUncheckedUpdateWithoutPublicViewsInput>
+export type ShowcaseItemScalarRelationFilter = {
+  is?: Prisma.ShowcaseItemWhereInput
+  isNot?: Prisma.ShowcaseItemWhereInput
 }
 
 export type ShowcaseItemCreateNestedManyWithoutShowcaseInput = {
@@ -834,6 +783,20 @@ export type ShowcaseItemUncheckedUpdateManyWithoutTagsNestedInput = {
   deleteMany?: Prisma.ShowcaseItemScalarWhereInput | Prisma.ShowcaseItemScalarWhereInput[]
 }
 
+export type ShowcaseItemCreateNestedOneWithoutServiceSamplesInput = {
+  create?: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutServiceSamplesInput, Prisma.ShowcaseItemUncheckedCreateWithoutServiceSamplesInput>
+  connectOrCreate?: Prisma.ShowcaseItemCreateOrConnectWithoutServiceSamplesInput
+  connect?: Prisma.ShowcaseItemWhereUniqueInput
+}
+
+export type ShowcaseItemUpdateOneRequiredWithoutServiceSamplesNestedInput = {
+  create?: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutServiceSamplesInput, Prisma.ShowcaseItemUncheckedCreateWithoutServiceSamplesInput>
+  connectOrCreate?: Prisma.ShowcaseItemCreateOrConnectWithoutServiceSamplesInput
+  upsert?: Prisma.ShowcaseItemUpsertWithoutServiceSamplesInput
+  connect?: Prisma.ShowcaseItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ShowcaseItemUpdateToOneWithWhereWithoutServiceSamplesInput, Prisma.ShowcaseItemUpdateWithoutServiceSamplesInput>, Prisma.ShowcaseItemUncheckedUpdateWithoutServiceSamplesInput>
+}
+
 export type ShowcaseItemCreateNestedOneWithoutInteractionsInput = {
   create?: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutInteractionsInput, Prisma.ShowcaseItemUncheckedCreateWithoutInteractionsInput>
   connectOrCreate?: Prisma.ShowcaseItemCreateOrConnectWithoutInteractionsInput
@@ -862,128 +825,18 @@ export type ShowcaseItemUpdateOneRequiredWithoutBookmarkedByNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ShowcaseItemUpdateToOneWithWhereWithoutBookmarkedByInput, Prisma.ShowcaseItemUpdateWithoutBookmarkedByInput>, Prisma.ShowcaseItemUncheckedUpdateWithoutBookmarkedByInput>
 }
 
-export type ShowcaseItemCreateWithoutPublicViewsInput = {
-  id?: string
-  title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  imageCount?: number
-  isDraft?: boolean
-  isFromVerifiedCommission?: boolean
-  commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
-  containsMatureContent?: boolean
-  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  likeCount?: number
-  viewCount?: number
-  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  hasTaggedCharacterProfiles?: boolean
-  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isUsingCombinedQuery?: boolean
-  showcase: Prisma.ShowcaseCreateNestedOneWithoutShowcaseItemsInput
-  tags?: Prisma.TagCreateNestedManyWithoutShowcaseItemsInput
-  bookmarkedBy?: Prisma.BookmarkCreateNestedManyWithoutShowcaseItemInput
-  showcaseFiles?: Prisma.ShowcaseFileCreateNestedManyWithoutShowcaseItemInput
-  interactions?: Prisma.UserInteractionCreateNestedManyWithoutShowcaseItemInput
+export type ShowcaseItemCreateNestedOneWithoutPublicViewsInput = {
+  create?: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedCreateWithoutPublicViewsInput>
+  connectOrCreate?: Prisma.ShowcaseItemCreateOrConnectWithoutPublicViewsInput
+  connect?: Prisma.ShowcaseItemWhereUniqueInput
 }
 
-export type ShowcaseItemUncheckedCreateWithoutPublicViewsInput = {
-  id?: string
-  title: string
-  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  imageCount?: number
-  isDraft?: boolean
-  isFromVerifiedCommission?: boolean
-  commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
-  containsMatureContent?: boolean
-  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  likeCount?: number
-  viewCount?: number
-  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  hasTaggedCharacterProfiles?: boolean
-  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  isUsingCombinedQuery?: boolean
-  showcaseId: string
-  tags?: Prisma.TagUncheckedCreateNestedManyWithoutShowcaseItemsInput
-  bookmarkedBy?: Prisma.BookmarkUncheckedCreateNestedManyWithoutShowcaseItemInput
-  showcaseFiles?: Prisma.ShowcaseFileUncheckedCreateNestedManyWithoutShowcaseItemInput
-  interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutShowcaseItemInput
-}
-
-export type ShowcaseItemCreateOrConnectWithoutPublicViewsInput = {
-  where: Prisma.ShowcaseItemWhereUniqueInput
-  create: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedCreateWithoutPublicViewsInput>
-}
-
-export type ShowcaseItemUpsertWithoutPublicViewsInput = {
-  update: Prisma.XOR<Prisma.ShowcaseItemUpdateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedUpdateWithoutPublicViewsInput>
-  create: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedCreateWithoutPublicViewsInput>
-  where?: Prisma.ShowcaseItemWhereInput
-}
-
-export type ShowcaseItemUpdateToOneWithWhereWithoutPublicViewsInput = {
-  where?: Prisma.ShowcaseItemWhereInput
-  data: Prisma.XOR<Prisma.ShowcaseItemUpdateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedUpdateWithoutPublicViewsInput>
-}
-
-export type ShowcaseItemUpdateWithoutPublicViewsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
-  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
-  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  hasTaggedCharacterProfiles?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isUsingCombinedQuery?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  showcase?: Prisma.ShowcaseUpdateOneRequiredWithoutShowcaseItemsNestedInput
-  tags?: Prisma.TagUpdateManyWithoutShowcaseItemsNestedInput
-  bookmarkedBy?: Prisma.BookmarkUpdateManyWithoutShowcaseItemNestedInput
-  showcaseFiles?: Prisma.ShowcaseFileUpdateManyWithoutShowcaseItemNestedInput
-  interactions?: Prisma.UserInteractionUpdateManyWithoutShowcaseItemNestedInput
-}
-
-export type ShowcaseItemUncheckedUpdateWithoutPublicViewsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
-  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
-  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  hasTaggedCharacterProfiles?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  isUsingCombinedQuery?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  showcaseId?: Prisma.StringFieldUpdateOperationsInput | string
-  tags?: Prisma.TagUncheckedUpdateManyWithoutShowcaseItemsNestedInput
-  bookmarkedBy?: Prisma.BookmarkUncheckedUpdateManyWithoutShowcaseItemNestedInput
-  showcaseFiles?: Prisma.ShowcaseFileUncheckedUpdateManyWithoutShowcaseItemNestedInput
-  interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutShowcaseItemNestedInput
+export type ShowcaseItemUpdateOneRequiredWithoutPublicViewsNestedInput = {
+  create?: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedCreateWithoutPublicViewsInput>
+  connectOrCreate?: Prisma.ShowcaseItemCreateOrConnectWithoutPublicViewsInput
+  upsert?: Prisma.ShowcaseItemUpsertWithoutPublicViewsInput
+  connect?: Prisma.ShowcaseItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ShowcaseItemUpdateToOneWithWhereWithoutPublicViewsInput, Prisma.ShowcaseItemUpdateWithoutPublicViewsInput>, Prisma.ShowcaseItemUncheckedUpdateWithoutPublicViewsInput>
 }
 
 export type ShowcaseItemCreateWithoutShowcaseInput = {
@@ -994,8 +847,6 @@ export type ShowcaseItemCreateWithoutShowcaseInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1011,6 +862,7 @@ export type ShowcaseItemCreateWithoutShowcaseInput = {
   bookmarkedBy?: Prisma.BookmarkCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemUncheckedCreateWithoutShowcaseInput = {
@@ -1021,8 +873,6 @@ export type ShowcaseItemUncheckedCreateWithoutShowcaseInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1038,6 +888,7 @@ export type ShowcaseItemUncheckedCreateWithoutShowcaseInput = {
   bookmarkedBy?: Prisma.BookmarkUncheckedCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemCreateOrConnectWithoutShowcaseInput = {
@@ -1077,8 +928,6 @@ export type ShowcaseItemScalarWhereInput = {
   isDraft?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   isFromVerifiedCommission?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   commissionId?: Prisma.StringNullableFilter<"ShowcaseItem"> | string | null
-  isAvailableAsService?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
-  linkedServiceId?: Prisma.StringNullableFilter<"ShowcaseItem"> | string | null
   containsMatureContent?: Prisma.BoolFilter<"ShowcaseItem"> | boolean
   contentWarnings?: Prisma.JsonFilter<"ShowcaseItem">
   likeCount?: Prisma.IntFilter<"ShowcaseItem"> | number
@@ -1100,8 +949,6 @@ export type ShowcaseItemCreateWithoutShowcaseFilesInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1117,6 +964,7 @@ export type ShowcaseItemCreateWithoutShowcaseFilesInput = {
   publicViews?: Prisma.PublicViewRecordCreateNestedManyWithoutShowcaseItemInput
   bookmarkedBy?: Prisma.BookmarkCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemUncheckedCreateWithoutShowcaseFilesInput = {
@@ -1127,8 +975,6 @@ export type ShowcaseItemUncheckedCreateWithoutShowcaseFilesInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1144,6 +990,7 @@ export type ShowcaseItemUncheckedCreateWithoutShowcaseFilesInput = {
   publicViews?: Prisma.PublicViewRecordUncheckedCreateNestedManyWithoutShowcaseItemInput
   bookmarkedBy?: Prisma.BookmarkUncheckedCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemCreateOrConnectWithoutShowcaseFilesInput = {
@@ -1170,8 +1017,6 @@ export type ShowcaseItemUpdateWithoutShowcaseFilesInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1187,6 +1032,7 @@ export type ShowcaseItemUpdateWithoutShowcaseFilesInput = {
   publicViews?: Prisma.PublicViewRecordUpdateManyWithoutShowcaseItemNestedInput
   bookmarkedBy?: Prisma.BookmarkUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemUncheckedUpdateWithoutShowcaseFilesInput = {
@@ -1197,8 +1043,6 @@ export type ShowcaseItemUncheckedUpdateWithoutShowcaseFilesInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1214,6 +1058,7 @@ export type ShowcaseItemUncheckedUpdateWithoutShowcaseFilesInput = {
   publicViews?: Prisma.PublicViewRecordUncheckedUpdateManyWithoutShowcaseItemNestedInput
   bookmarkedBy?: Prisma.BookmarkUncheckedUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemCreateWithoutTagsInput = {
@@ -1224,8 +1069,6 @@ export type ShowcaseItemCreateWithoutTagsInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1241,6 +1084,7 @@ export type ShowcaseItemCreateWithoutTagsInput = {
   bookmarkedBy?: Prisma.BookmarkCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemUncheckedCreateWithoutTagsInput = {
@@ -1251,8 +1095,6 @@ export type ShowcaseItemUncheckedCreateWithoutTagsInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1268,6 +1110,7 @@ export type ShowcaseItemUncheckedCreateWithoutTagsInput = {
   bookmarkedBy?: Prisma.BookmarkUncheckedCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemCreateOrConnectWithoutTagsInput = {
@@ -1291,7 +1134,7 @@ export type ShowcaseItemUpdateManyWithWhereWithoutTagsInput = {
   data: Prisma.XOR<Prisma.ShowcaseItemUpdateManyMutationInput, Prisma.ShowcaseItemUncheckedUpdateManyWithoutTagsInput>
 }
 
-export type ShowcaseItemCreateWithoutInteractionsInput = {
+export type ShowcaseItemCreateWithoutServiceSamplesInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1299,8 +1142,6 @@ export type ShowcaseItemCreateWithoutInteractionsInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1316,9 +1157,10 @@ export type ShowcaseItemCreateWithoutInteractionsInput = {
   publicViews?: Prisma.PublicViewRecordCreateNestedManyWithoutShowcaseItemInput
   bookmarkedBy?: Prisma.BookmarkCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileCreateNestedManyWithoutShowcaseItemInput
+  interactions?: Prisma.UserInteractionCreateNestedManyWithoutShowcaseItemInput
 }
 
-export type ShowcaseItemUncheckedCreateWithoutInteractionsInput = {
+export type ShowcaseItemUncheckedCreateWithoutServiceSamplesInput = {
   id?: string
   title: string
   description: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1326,8 +1168,6 @@ export type ShowcaseItemUncheckedCreateWithoutInteractionsInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1343,6 +1183,127 @@ export type ShowcaseItemUncheckedCreateWithoutInteractionsInput = {
   publicViews?: Prisma.PublicViewRecordUncheckedCreateNestedManyWithoutShowcaseItemInput
   bookmarkedBy?: Prisma.BookmarkUncheckedCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedCreateNestedManyWithoutShowcaseItemInput
+  interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutShowcaseItemInput
+}
+
+export type ShowcaseItemCreateOrConnectWithoutServiceSamplesInput = {
+  where: Prisma.ShowcaseItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutServiceSamplesInput, Prisma.ShowcaseItemUncheckedCreateWithoutServiceSamplesInput>
+}
+
+export type ShowcaseItemUpsertWithoutServiceSamplesInput = {
+  update: Prisma.XOR<Prisma.ShowcaseItemUpdateWithoutServiceSamplesInput, Prisma.ShowcaseItemUncheckedUpdateWithoutServiceSamplesInput>
+  create: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutServiceSamplesInput, Prisma.ShowcaseItemUncheckedCreateWithoutServiceSamplesInput>
+  where?: Prisma.ShowcaseItemWhereInput
+}
+
+export type ShowcaseItemUpdateToOneWithWhereWithoutServiceSamplesInput = {
+  where?: Prisma.ShowcaseItemWhereInput
+  data: Prisma.XOR<Prisma.ShowcaseItemUpdateWithoutServiceSamplesInput, Prisma.ShowcaseItemUncheckedUpdateWithoutServiceSamplesInput>
+}
+
+export type ShowcaseItemUpdateWithoutServiceSamplesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  hasTaggedCharacterProfiles?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isUsingCombinedQuery?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showcase?: Prisma.ShowcaseUpdateOneRequiredWithoutShowcaseItemsNestedInput
+  tags?: Prisma.TagUpdateManyWithoutShowcaseItemsNestedInput
+  publicViews?: Prisma.PublicViewRecordUpdateManyWithoutShowcaseItemNestedInput
+  bookmarkedBy?: Prisma.BookmarkUpdateManyWithoutShowcaseItemNestedInput
+  showcaseFiles?: Prisma.ShowcaseFileUpdateManyWithoutShowcaseItemNestedInput
+  interactions?: Prisma.UserInteractionUpdateManyWithoutShowcaseItemNestedInput
+}
+
+export type ShowcaseItemUncheckedUpdateWithoutServiceSamplesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  hasTaggedCharacterProfiles?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isUsingCombinedQuery?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showcaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.TagUncheckedUpdateManyWithoutShowcaseItemsNestedInput
+  publicViews?: Prisma.PublicViewRecordUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  bookmarkedBy?: Prisma.BookmarkUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  showcaseFiles?: Prisma.ShowcaseFileUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutShowcaseItemNestedInput
+}
+
+export type ShowcaseItemCreateWithoutInteractionsInput = {
+  id?: string
+  title: string
+  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
+  isDraft?: boolean
+  isFromVerifiedCommission?: boolean
+  commissionId?: string | null
+  containsMatureContent?: boolean
+  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  likeCount?: number
+  viewCount?: number
+  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  hasTaggedCharacterProfiles?: boolean
+  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isUsingCombinedQuery?: boolean
+  showcase: Prisma.ShowcaseCreateNestedOneWithoutShowcaseItemsInput
+  tags?: Prisma.TagCreateNestedManyWithoutShowcaseItemsInput
+  publicViews?: Prisma.PublicViewRecordCreateNestedManyWithoutShowcaseItemInput
+  bookmarkedBy?: Prisma.BookmarkCreateNestedManyWithoutShowcaseItemInput
+  showcaseFiles?: Prisma.ShowcaseFileCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleCreateNestedManyWithoutShowcaseItemInput
+}
+
+export type ShowcaseItemUncheckedCreateWithoutInteractionsInput = {
+  id?: string
+  title: string
+  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
+  isDraft?: boolean
+  isFromVerifiedCommission?: boolean
+  commissionId?: string | null
+  containsMatureContent?: boolean
+  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  likeCount?: number
+  viewCount?: number
+  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  hasTaggedCharacterProfiles?: boolean
+  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isUsingCombinedQuery?: boolean
+  showcaseId: string
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutShowcaseItemsInput
+  publicViews?: Prisma.PublicViewRecordUncheckedCreateNestedManyWithoutShowcaseItemInput
+  bookmarkedBy?: Prisma.BookmarkUncheckedCreateNestedManyWithoutShowcaseItemInput
+  showcaseFiles?: Prisma.ShowcaseFileUncheckedCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemCreateOrConnectWithoutInteractionsInput = {
@@ -1369,8 +1330,6 @@ export type ShowcaseItemUpdateWithoutInteractionsInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1386,6 +1345,7 @@ export type ShowcaseItemUpdateWithoutInteractionsInput = {
   publicViews?: Prisma.PublicViewRecordUpdateManyWithoutShowcaseItemNestedInput
   bookmarkedBy?: Prisma.BookmarkUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemUncheckedUpdateWithoutInteractionsInput = {
@@ -1396,8 +1356,6 @@ export type ShowcaseItemUncheckedUpdateWithoutInteractionsInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1413,6 +1371,7 @@ export type ShowcaseItemUncheckedUpdateWithoutInteractionsInput = {
   publicViews?: Prisma.PublicViewRecordUncheckedUpdateManyWithoutShowcaseItemNestedInput
   bookmarkedBy?: Prisma.BookmarkUncheckedUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemCreateWithoutBookmarkedByInput = {
@@ -1423,8 +1382,6 @@ export type ShowcaseItemCreateWithoutBookmarkedByInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1440,6 +1397,7 @@ export type ShowcaseItemCreateWithoutBookmarkedByInput = {
   publicViews?: Prisma.PublicViewRecordCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemUncheckedCreateWithoutBookmarkedByInput = {
@@ -1450,8 +1408,6 @@ export type ShowcaseItemUncheckedCreateWithoutBookmarkedByInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1467,6 +1423,7 @@ export type ShowcaseItemUncheckedCreateWithoutBookmarkedByInput = {
   publicViews?: Prisma.PublicViewRecordUncheckedCreateNestedManyWithoutShowcaseItemInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedCreateNestedManyWithoutShowcaseItemInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutShowcaseItemInput
 }
 
 export type ShowcaseItemCreateOrConnectWithoutBookmarkedByInput = {
@@ -1493,8 +1450,6 @@ export type ShowcaseItemUpdateWithoutBookmarkedByInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1510,6 +1465,7 @@ export type ShowcaseItemUpdateWithoutBookmarkedByInput = {
   publicViews?: Prisma.PublicViewRecordUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemUncheckedUpdateWithoutBookmarkedByInput = {
@@ -1520,8 +1476,6 @@ export type ShowcaseItemUncheckedUpdateWithoutBookmarkedByInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1537,6 +1491,127 @@ export type ShowcaseItemUncheckedUpdateWithoutBookmarkedByInput = {
   publicViews?: Prisma.PublicViewRecordUncheckedUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutShowcaseItemNestedInput
+}
+
+export type ShowcaseItemCreateWithoutPublicViewsInput = {
+  id?: string
+  title: string
+  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
+  isDraft?: boolean
+  isFromVerifiedCommission?: boolean
+  commissionId?: string | null
+  containsMatureContent?: boolean
+  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  likeCount?: number
+  viewCount?: number
+  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  hasTaggedCharacterProfiles?: boolean
+  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isUsingCombinedQuery?: boolean
+  showcase: Prisma.ShowcaseCreateNestedOneWithoutShowcaseItemsInput
+  tags?: Prisma.TagCreateNestedManyWithoutShowcaseItemsInput
+  bookmarkedBy?: Prisma.BookmarkCreateNestedManyWithoutShowcaseItemInput
+  showcaseFiles?: Prisma.ShowcaseFileCreateNestedManyWithoutShowcaseItemInput
+  interactions?: Prisma.UserInteractionCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleCreateNestedManyWithoutShowcaseItemInput
+}
+
+export type ShowcaseItemUncheckedCreateWithoutPublicViewsInput = {
+  id?: string
+  title: string
+  description: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: number
+  isDraft?: boolean
+  isFromVerifiedCommission?: boolean
+  commissionId?: string | null
+  containsMatureContent?: boolean
+  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  likeCount?: number
+  viewCount?: number
+  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  hasTaggedCharacterProfiles?: boolean
+  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isUsingCombinedQuery?: boolean
+  showcaseId: string
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutShowcaseItemsInput
+  bookmarkedBy?: Prisma.BookmarkUncheckedCreateNestedManyWithoutShowcaseItemInput
+  showcaseFiles?: Prisma.ShowcaseFileUncheckedCreateNestedManyWithoutShowcaseItemInput
+  interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutShowcaseItemInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutShowcaseItemInput
+}
+
+export type ShowcaseItemCreateOrConnectWithoutPublicViewsInput = {
+  where: Prisma.ShowcaseItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedCreateWithoutPublicViewsInput>
+}
+
+export type ShowcaseItemUpsertWithoutPublicViewsInput = {
+  update: Prisma.XOR<Prisma.ShowcaseItemUpdateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedUpdateWithoutPublicViewsInput>
+  create: Prisma.XOR<Prisma.ShowcaseItemCreateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedCreateWithoutPublicViewsInput>
+  where?: Prisma.ShowcaseItemWhereInput
+}
+
+export type ShowcaseItemUpdateToOneWithWhereWithoutPublicViewsInput = {
+  where?: Prisma.ShowcaseItemWhereInput
+  data: Prisma.XOR<Prisma.ShowcaseItemUpdateWithoutPublicViewsInput, Prisma.ShowcaseItemUncheckedUpdateWithoutPublicViewsInput>
+}
+
+export type ShowcaseItemUpdateWithoutPublicViewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  hasTaggedCharacterProfiles?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isUsingCombinedQuery?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showcase?: Prisma.ShowcaseUpdateOneRequiredWithoutShowcaseItemsNestedInput
+  tags?: Prisma.TagUpdateManyWithoutShowcaseItemsNestedInput
+  bookmarkedBy?: Prisma.BookmarkUpdateManyWithoutShowcaseItemNestedInput
+  showcaseFiles?: Prisma.ShowcaseFileUpdateManyWithoutShowcaseItemNestedInput
+  interactions?: Prisma.UserInteractionUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUpdateManyWithoutShowcaseItemNestedInput
+}
+
+export type ShowcaseItemUncheckedUpdateWithoutPublicViewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  imageCount?: Prisma.IntFieldUpdateOperationsInput | number
+  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  likeCount?: Prisma.IntFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  boostConfig?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  hasTaggedCharacterProfiles?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taggedCharacterProfiles?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isUsingCombinedQuery?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showcaseId?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.TagUncheckedUpdateManyWithoutShowcaseItemsNestedInput
+  bookmarkedBy?: Prisma.BookmarkUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  showcaseFiles?: Prisma.ShowcaseFileUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemCreateManyShowcaseInput = {
@@ -1547,8 +1622,6 @@ export type ShowcaseItemCreateManyShowcaseInput = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: string | null
-  isAvailableAsService?: boolean
-  linkedServiceId?: string | null
   containsMatureContent?: boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: number
@@ -1569,8 +1642,6 @@ export type ShowcaseItemUpdateWithoutShowcaseInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1586,6 +1657,7 @@ export type ShowcaseItemUpdateWithoutShowcaseInput = {
   bookmarkedBy?: Prisma.BookmarkUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemUncheckedUpdateWithoutShowcaseInput = {
@@ -1596,8 +1668,6 @@ export type ShowcaseItemUncheckedUpdateWithoutShowcaseInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1613,6 +1683,7 @@ export type ShowcaseItemUncheckedUpdateWithoutShowcaseInput = {
   bookmarkedBy?: Prisma.BookmarkUncheckedUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemUncheckedUpdateManyWithoutShowcaseInput = {
@@ -1623,8 +1694,6 @@ export type ShowcaseItemUncheckedUpdateManyWithoutShowcaseInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1645,8 +1714,6 @@ export type ShowcaseItemUpdateWithoutTagsInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1662,6 +1729,7 @@ export type ShowcaseItemUpdateWithoutTagsInput = {
   bookmarkedBy?: Prisma.BookmarkUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemUncheckedUpdateWithoutTagsInput = {
@@ -1672,8 +1740,6 @@ export type ShowcaseItemUncheckedUpdateWithoutTagsInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1689,6 +1755,7 @@ export type ShowcaseItemUncheckedUpdateWithoutTagsInput = {
   bookmarkedBy?: Prisma.BookmarkUncheckedUpdateManyWithoutShowcaseItemNestedInput
   showcaseFiles?: Prisma.ShowcaseFileUncheckedUpdateManyWithoutShowcaseItemNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutShowcaseItemNestedInput
+  serviceSamples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutShowcaseItemNestedInput
 }
 
 export type ShowcaseItemUncheckedUpdateManyWithoutTagsInput = {
@@ -1699,8 +1766,6 @@ export type ShowcaseItemUncheckedUpdateManyWithoutTagsInput = {
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFromVerifiedCommission?: Prisma.BoolFieldUpdateOperationsInput | boolean
   commissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isAvailableAsService?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  linkedServiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   containsMatureContent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   contentWarnings?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   likeCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1725,6 +1790,7 @@ export type ShowcaseItemCountOutputType = {
   bookmarkedBy: number
   showcaseFiles: number
   interactions: number
+  serviceSamples: number
 }
 
 export type ShowcaseItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1733,6 +1799,7 @@ export type ShowcaseItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   bookmarkedBy?: boolean | ShowcaseItemCountOutputTypeCountBookmarkedByArgs
   showcaseFiles?: boolean | ShowcaseItemCountOutputTypeCountShowcaseFilesArgs
   interactions?: boolean | ShowcaseItemCountOutputTypeCountInteractionsArgs
+  serviceSamples?: boolean | ShowcaseItemCountOutputTypeCountServiceSamplesArgs
 }
 
 /**
@@ -1780,6 +1847,13 @@ export type ShowcaseItemCountOutputTypeCountInteractionsArgs<ExtArgs extends run
   where?: Prisma.UserInteractionWhereInput
 }
 
+/**
+ * ShowcaseItemCountOutputType without action
+ */
+export type ShowcaseItemCountOutputTypeCountServiceSamplesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceSampleWhereInput
+}
+
 
 export type ShowcaseItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1789,8 +1863,6 @@ export type ShowcaseItemSelect<ExtArgs extends runtime.Types.Extensions.Internal
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: boolean
-  isAvailableAsService?: boolean
-  linkedServiceId?: boolean
   containsMatureContent?: boolean
   contentWarnings?: boolean
   likeCount?: boolean
@@ -1808,6 +1880,7 @@ export type ShowcaseItemSelect<ExtArgs extends runtime.Types.Extensions.Internal
   bookmarkedBy?: boolean | Prisma.ShowcaseItem$bookmarkedByArgs<ExtArgs>
   showcaseFiles?: boolean | Prisma.ShowcaseItem$showcaseFilesArgs<ExtArgs>
   interactions?: boolean | Prisma.ShowcaseItem$interactionsArgs<ExtArgs>
+  serviceSamples?: boolean | Prisma.ShowcaseItem$serviceSamplesArgs<ExtArgs>
   _count?: boolean | Prisma.ShowcaseItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["showcaseItem"]>
 
@@ -1819,8 +1892,6 @@ export type ShowcaseItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: boolean
-  isAvailableAsService?: boolean
-  linkedServiceId?: boolean
   containsMatureContent?: boolean
   contentWarnings?: boolean
   likeCount?: boolean
@@ -1843,8 +1914,6 @@ export type ShowcaseItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: boolean
-  isAvailableAsService?: boolean
-  linkedServiceId?: boolean
   containsMatureContent?: boolean
   contentWarnings?: boolean
   likeCount?: boolean
@@ -1867,8 +1936,6 @@ export type ShowcaseItemSelectScalar = {
   isDraft?: boolean
   isFromVerifiedCommission?: boolean
   commissionId?: boolean
-  isAvailableAsService?: boolean
-  linkedServiceId?: boolean
   containsMatureContent?: boolean
   contentWarnings?: boolean
   likeCount?: boolean
@@ -1882,7 +1949,7 @@ export type ShowcaseItemSelectScalar = {
   showcaseId?: boolean
 }
 
-export type ShowcaseItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "imageCount" | "isDraft" | "isFromVerifiedCommission" | "commissionId" | "isAvailableAsService" | "linkedServiceId" | "containsMatureContent" | "contentWarnings" | "likeCount" | "viewCount" | "boostConfig" | "hasTaggedCharacterProfiles" | "taggedCharacterProfiles" | "createdAt" | "updatedAt" | "isUsingCombinedQuery" | "showcaseId", ExtArgs["result"]["showcaseItem"]>
+export type ShowcaseItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "imageCount" | "isDraft" | "isFromVerifiedCommission" | "commissionId" | "containsMatureContent" | "contentWarnings" | "likeCount" | "viewCount" | "boostConfig" | "hasTaggedCharacterProfiles" | "taggedCharacterProfiles" | "createdAt" | "updatedAt" | "isUsingCombinedQuery" | "showcaseId", ExtArgs["result"]["showcaseItem"]>
 export type ShowcaseItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   showcase?: boolean | Prisma.ShowcaseDefaultArgs<ExtArgs>
   tags?: boolean | Prisma.ShowcaseItem$tagsArgs<ExtArgs>
@@ -1890,6 +1957,7 @@ export type ShowcaseItemInclude<ExtArgs extends runtime.Types.Extensions.Interna
   bookmarkedBy?: boolean | Prisma.ShowcaseItem$bookmarkedByArgs<ExtArgs>
   showcaseFiles?: boolean | Prisma.ShowcaseItem$showcaseFilesArgs<ExtArgs>
   interactions?: boolean | Prisma.ShowcaseItem$interactionsArgs<ExtArgs>
+  serviceSamples?: boolean | Prisma.ShowcaseItem$serviceSamplesArgs<ExtArgs>
   _count?: boolean | Prisma.ShowcaseItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ShowcaseItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1908,6 +1976,7 @@ export type $ShowcaseItemPayload<ExtArgs extends runtime.Types.Extensions.Intern
     bookmarkedBy: Prisma.$BookmarkPayload<ExtArgs>[]
     showcaseFiles: Prisma.$ShowcaseFilePayload<ExtArgs>[]
     interactions: Prisma.$UserInteractionPayload<ExtArgs>[]
+    serviceSamples: Prisma.$ServiceSamplePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1917,8 +1986,6 @@ export type $ShowcaseItemPayload<ExtArgs extends runtime.Types.Extensions.Intern
     isDraft: boolean
     isFromVerifiedCommission: boolean
     commissionId: string | null
-    isAvailableAsService: boolean
-    linkedServiceId: string | null
     containsMatureContent: boolean
     contentWarnings: runtime.JsonValue
     likeCount: number
@@ -2330,6 +2397,7 @@ export interface Prisma__ShowcaseItemClient<T, Null = never, ExtArgs extends run
   bookmarkedBy<T extends Prisma.ShowcaseItem$bookmarkedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShowcaseItem$bookmarkedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookmarkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   showcaseFiles<T extends Prisma.ShowcaseItem$showcaseFilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShowcaseItem$showcaseFilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShowcaseFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interactions<T extends Prisma.ShowcaseItem$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShowcaseItem$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  serviceSamples<T extends Prisma.ShowcaseItem$serviceSamplesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ShowcaseItem$serviceSamplesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceSamplePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2366,8 +2434,6 @@ export interface ShowcaseItemFieldRefs {
   readonly isDraft: Prisma.FieldRef<"ShowcaseItem", 'Boolean'>
   readonly isFromVerifiedCommission: Prisma.FieldRef<"ShowcaseItem", 'Boolean'>
   readonly commissionId: Prisma.FieldRef<"ShowcaseItem", 'String'>
-  readonly isAvailableAsService: Prisma.FieldRef<"ShowcaseItem", 'Boolean'>
-  readonly linkedServiceId: Prisma.FieldRef<"ShowcaseItem", 'String'>
   readonly containsMatureContent: Prisma.FieldRef<"ShowcaseItem", 'Boolean'>
   readonly contentWarnings: Prisma.FieldRef<"ShowcaseItem", 'Json'>
   readonly likeCount: Prisma.FieldRef<"ShowcaseItem", 'Int'>
@@ -2897,6 +2963,30 @@ export type ShowcaseItem$interactionsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.UserInteractionScalarFieldEnum | Prisma.UserInteractionScalarFieldEnum[]
+}
+
+/**
+ * ShowcaseItem.serviceSamples
+ */
+export type ShowcaseItem$serviceSamplesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceSample
+   */
+  select?: Prisma.ServiceSampleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceSample
+   */
+  omit?: Prisma.ServiceSampleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceSampleInclude<ExtArgs> | null
+  where?: Prisma.ServiceSampleWhereInput
+  orderBy?: Prisma.ServiceSampleOrderByWithRelationInput | Prisma.ServiceSampleOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceSampleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceSampleScalarFieldEnum | Prisma.ServiceSampleScalarFieldEnum[]
 }
 
 /**

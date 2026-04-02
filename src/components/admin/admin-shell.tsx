@@ -13,6 +13,7 @@ import {
   Settings,
   ShieldCheck,
   Users,
+  Wallet,
   Image as ImageIcon,
 } from "lucide-react";
 
@@ -66,6 +67,12 @@ const menus = [
     icon: BadgeCheck,
   },
   {
+    href: "/payouts",
+    label: "Payouts",
+    description: "Manage artist payouts",
+    icon: Wallet,
+  },
+  {
     href: "/settings",
     label: "Settings",
     description: "Control preferences",
@@ -79,6 +86,7 @@ function getPageTitle(pathname: string) {
   if (pathname.startsWith("/showcases")) return "Showcases Management";
   if (pathname.startsWith("/chats")) return "Chat Monitoring";
   if (pathname.startsWith("/artist-requests")) return "Artist Verification";
+  if (pathname.startsWith("/payouts")) return "Payout Management";
   if (pathname.startsWith("/settings")) return "System Settings";
 
   return "Admin Panel";
@@ -93,9 +101,11 @@ type ArtistRequestsMetaResponse = {
 function SidebarContent({
   pathname,
   pendingArtistRequests,
+  pendingPayouts,
 }: {
   pathname: string;
   pendingArtistRequests: number;
+  pendingPayouts: number;
 }) {
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
@@ -142,8 +152,13 @@ function SidebarContent({
           {menus.map(({ href, label, icon: Icon }) => {
             const isActive =
               pathname === href || (href !== "/" && pathname.startsWith(href));
-            const showPendingBadge =
-              href === "/artist-requests" && pendingArtistRequests > 0;
+            const badgeCount =
+              href === "/artist-requests"
+                ? pendingArtistRequests
+                : href === "/payouts"
+                  ? pendingPayouts
+                  : 0;
+            const showPendingBadge = badgeCount > 0;
 
             return (
               <Link
@@ -173,7 +188,7 @@ function SidebarContent({
                     <div className="flex items-center gap-2">
                       {showPendingBadge && (
                         <span className="rounded-full border border-primary/30 bg-primary/15 px-2 py-0.5 text-[10px] font-bold text-primary">
-                          {pendingArtistRequests}
+                          {badgeCount}
                         </span>
                       )}
                       {isActive && (
@@ -218,6 +233,19 @@ export function AdminShell({ children }: AdminShellProps) {
   const pendingArtistRequests =
     artistRequestsMetaQuery.data?.meta?.total ?? 0;
 
+  const payoutsStatsQuery = useQuery({
+    queryKey: ["payouts-pending-meta"],
+    queryFn: async () => {
+      const response = await apiClient.get<{ pending: number }>(
+        "/payouts/stats",
+      );
+      return response.data;
+    },
+    refetchInterval: 30_000,
+  });
+
+  const pendingPayouts = payoutsStatsQuery.data?.pending ?? 0;
+
   return (
     <div className="min-h-screen bg-[var(--app-bg)] text-foreground">
       <div className="flex min-h-screen">
@@ -225,6 +253,7 @@ export function AdminShell({ children }: AdminShellProps) {
           <SidebarContent
             pathname={pathname}
             pendingArtistRequests={pendingArtistRequests}
+            pendingPayouts={pendingPayouts}
           />
         </aside>
 
@@ -260,6 +289,7 @@ export function AdminShell({ children }: AdminShellProps) {
                     <SidebarContent
                       pathname={pathname}
                       pendingArtistRequests={pendingArtistRequests}
+                      pendingPayouts={pendingPayouts}
                     />
                   </SheetContent>
                 </Sheet>

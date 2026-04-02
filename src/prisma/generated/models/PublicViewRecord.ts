@@ -317,6 +317,16 @@ export type PublicViewRecordUncheckedUpdateManyInput = {
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+export type PublicViewRecordListRelationFilter = {
+  every?: Prisma.PublicViewRecordWhereInput
+  some?: Prisma.PublicViewRecordWhereInput
+  none?: Prisma.PublicViewRecordWhereInput
+}
+
+export type PublicViewRecordOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type PublicViewRecordOrderByRelevanceInput = {
   fields: Prisma.PublicViewRecordOrderByRelevanceFieldEnum | Prisma.PublicViewRecordOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
@@ -353,16 +363,6 @@ export type PublicViewRecordMinOrderByAggregateInput = {
 
 export type PublicViewRecordSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-}
-
-export type PublicViewRecordListRelationFilter = {
-  every?: Prisma.PublicViewRecordWhereInput
-  some?: Prisma.PublicViewRecordWhereInput
-  none?: Prisma.PublicViewRecordWhereInput
-}
-
-export type PublicViewRecordOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type PublicViewRecordCreateNestedManyWithoutShowcaseItemInput = {
