@@ -4,6 +4,7 @@ import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 import prisma from "@/lib/prisma";
+import { getUserFinanceSummaries } from "@/lib/user-finance";
 
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
@@ -27,10 +28,6 @@ function parseCursor(value: string | null) {
   if (!Number.isFinite(parsed) || parsed <= 0) return null;
 
   return parsed;
-}
-
-async function resolveAvatar(path?: string | null) {
-  return minio.getFile(path, MINIO_BUCKET_NAME);
 }
 
 export async function GET(req: NextRequest) {
@@ -118,12 +115,10 @@ export async function GET(req: NextRequest) {
     const hasNextPage = rows.length > limit;
     const slice = hasNextPage ? rows.slice(0, limit) : rows;
 
-    const data = await Promise.all(
-      slice.map(async (user) => ({
-        ...user,
-        avatar: await resolveAvatar(user.avatar),
-      })),
-    );
+    const [data, financeByUserId] = await Promise.all([
+      minio.enrichUsersMedia(slice, MINIO_BUCKET_NAME),
+      getUserFinanceSummaries(slice.map((user) => user.id)),
+    ]);
 
     const nextCursor = hasNextPage
       ? String(slice[slice.length - 1]?.id ?? "")
@@ -136,7 +131,10 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json({
-      data,
+      data: data.map((user) => ({
+        ...user,
+        finance: financeByUserId.get(user.id),
+      })),
       meta: {
         limit,
         hasNextPage,

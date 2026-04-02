@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 import {
   AlertTriangle,
+  ArrowDownRight,
+  ArrowUpRight,
+  BarChart3,
   BadgeCheck,
   Clock3,
   CheckCircle2,
@@ -19,6 +22,7 @@ import {
   Trash2,
   UserRound,
   Users,
+  Wallet,
   X,
   XCircle,
 } from "lucide-react";
@@ -33,7 +37,6 @@ import { toast } from "sonner";
 import { apiClient } from "@/lib/api/client";
 import { sanitizeImageSource } from "@/lib/security/url-safety";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -75,6 +78,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type {
+  FinanceCurrencyBreakdown,
+  RecentPaymentActivity,
+  RecentPayoutActivity,
+  UserFinanceSummary,
+} from "@/lib/user-finance.types";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -95,6 +104,9 @@ type UserItem = {
   bio?: string | null;
   country?: string | null;
   moderations?: UserModerationItem[];
+  finance?: UserFinanceSummary;
+  recentPayments?: RecentPaymentActivity[];
+  recentPayouts?: RecentPayoutActivity[];
 };
 
 type ModerationAction = "BAN" | "UNBAN" | "SUSPEND" | "UNSUSPEND";
@@ -207,6 +219,38 @@ function formatDate(dateStr: string, withTime = false) {
   });
 }
 
+function formatMoney(amount: string, currency: string) {
+  const numeric = Number(amount);
+
+  if (!Number.isFinite(numeric)) {
+    return `${currency} ${amount}`;
+  }
+
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numeric);
+}
+
+function getPrimaryFinance(summary?: UserFinanceSummary | null) {
+  return summary?.currencies[0] ?? null;
+}
+
+function getFinancePreview(summary?: UserFinanceSummary | null) {
+  const primary = getPrimaryFinance(summary);
+  if (!primary) return null;
+
+  return {
+    earned: formatMoney(primary.grossEarnings, primary.currency),
+    withdrawn: formatMoney(primary.withdrawnTotal, primary.currency),
+    available: formatMoney(primary.availableBalance, primary.currency),
+    pending: formatMoney(primary.pendingWithdrawals, primary.currency),
+    hasMixedCurrencies: summary?.hasMixedCurrencies ?? false,
+  };
+}
+
 function isUserSuspended(user: Pick<UserItem, "suspendedUntil">) {
   if (!user.suspendedUntil) return false;
   return new Date(user.suspendedUntil) > new Date();
@@ -284,6 +328,13 @@ type UserStatsData = {
   verifiedArtistCount: number;
   adminCount: number;
   bannedCount: number;
+  finance: {
+    artistsWithEarnings: number;
+    artistsWithWithdrawals: number;
+    completedPayments: number;
+    processedPayouts: number;
+    currencies: FinanceCurrencyBreakdown[];
+  };
 };
 
 type UserStatsResponse = {
@@ -300,6 +351,10 @@ function StatsCards() {
     staleTime: 15_000,
     refetchInterval: 30_000,
   });
+
+  const primaryFinance = data?.finance.currencies[0] ?? null;
+  const hasMixedCurrencies =
+    (data?.finance.currencies.length ?? 0) > 1;
 
   const stats = [
     {
@@ -334,10 +389,44 @@ function StatsCards() {
       color: "text-amber-600",
       bgColor: "bg-amber-50",
     },
+    {
+      label: "Gross Earnings",
+      value: primaryFinance
+        ? formatMoney(primaryFinance.grossEarnings, primaryFinance.currency)
+        : "—",
+      detail: hasMixedCurrencies
+        ? `${data?.finance.currencies.length ?? 0} currencies tracked`
+        : `${data?.finance.artistsWithEarnings ?? 0} artists with earnings`,
+      icon: ArrowUpRight,
+      color: "text-emerald-600",
+      bgColor: "bg-emerald-50",
+    },
+    {
+      label: "Withdrawn",
+      value: primaryFinance
+        ? formatMoney(primaryFinance.withdrawnTotal, primaryFinance.currency)
+        : "—",
+      detail: `${data?.finance.artistsWithWithdrawals ?? 0} artists have withdrawn`,
+      icon: ArrowDownRight,
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
+    },
+    {
+      label: "Available Balance",
+      value: primaryFinance
+        ? formatMoney(primaryFinance.availableBalance, primaryFinance.currency)
+        : "—",
+      detail: primaryFinance
+        ? `Pending withdraw ${formatMoney(primaryFinance.pendingWithdrawals, primaryFinance.currency)}`
+        : `${data?.finance.completedPayments ?? 0} completed payments`,
+      icon: Wallet,
+      color: "text-sky-600",
+      bgColor: "bg-sky-50",
+    },
   ];
 
   return (
-    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
       {stats.map(({ label, value, detail, icon: Icon, color, bgColor }) => (
         <Card
           key={label}
@@ -912,6 +1001,9 @@ export default function UsersPage() {
                       <TableHead className="hidden px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500 sm:table-cell">
                         Verification
                       </TableHead>
+                      <TableHead className="hidden px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500 lg:table-cell">
+                        Finance
+                      </TableHead>
                       <TableHead className="hidden px-5 py-3.5 text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-500 md:table-cell">
                         Joined
                       </TableHead>
@@ -925,6 +1017,7 @@ export default function UsersPage() {
                     {users.map((user) => {
                       const roleConfig = getRoleConfig(user.role);
                       const suspended = isUserSuspended(user);
+                      const financePreview = getFinancePreview(user.finance);
                       return (
                         <TableRow
                           key={user.id}
@@ -959,6 +1052,13 @@ export default function UsersPage() {
                                     <span className="ml-1 text-zinc-400">{user.country}</span>
                                   )}
                                 </p>
+                                {financePreview && (
+                                  <p className="mt-1 truncate text-[11px] text-zinc-500">
+                                    Earned {financePreview.earned}
+                                    <span className="mx-1 text-zinc-300">·</span>
+                                    Available {financePreview.available}
+                                  </p>
+                                )}
                               </div>
                             </div>
                           </TableCell>
@@ -1018,6 +1118,31 @@ export default function UsersPage() {
                                 </span>
                               )}
                             </div>
+                          </TableCell>
+
+                          <TableCell className="hidden px-5 py-3.5 lg:table-cell">
+                            {financePreview ? (
+                              <div className="space-y-1 text-xs">
+                                <p className="font-semibold text-zinc-900">
+                                  {financePreview.earned}
+                                </p>
+                                <p className="text-zinc-500">
+                                  Withdrawn {financePreview.withdrawn}
+                                </p>
+                                <p className="text-zinc-500">
+                                  Pending {financePreview.pending}
+                                </p>
+                                {financePreview.hasMixedCurrencies && (
+                                  <p className="text-amber-600">
+                                    Multi-currency
+                                  </p>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="text-xs text-zinc-400">
+                                No earnings yet
+                              </span>
+                            )}
                           </TableCell>
 
                           {/* Joined date */}
@@ -1204,7 +1329,7 @@ export default function UsersPage() {
         }}
       >
         <DialogContent
-          className="flex max-h-[90dvh] w-full max-w-[calc(100%-2rem)] flex-col overflow-hidden rounded-[28px] border border-zinc-200 bg-white p-0 sm:max-w-lg"
+          className="flex max-h-[90dvh] w-full max-w-[calc(100%-2rem)] flex-col overflow-hidden rounded-[28px] border border-zinc-200 bg-white p-0 sm:max-w-4xl"
           showCloseButton={false}
         >
           {/* Header */}
@@ -1229,6 +1354,47 @@ export default function UsersPage() {
               </div>
             ) : activeDetail ? (
               <div className="space-y-5">
+                {(() => {
+                  const financePreview = getFinancePreview(activeDetail.finance);
+
+                  return financePreview ? (
+                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                      <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-600">
+                          Gross Earnings
+                        </p>
+                        <p className="mt-2 text-sm font-semibold text-emerald-900">
+                          {financePreview.earned}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">
+                          Withdrawn
+                        </p>
+                        <p className="mt-2 text-sm font-semibold text-orange-900">
+                          {financePreview.withdrawn}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-amber-100 bg-amber-50 p-4">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-600">
+                          Pending Withdraw
+                        </p>
+                        <p className="mt-2 text-sm font-semibold text-amber-900">
+                          {financePreview.pending}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-sky-100 bg-sky-50 p-4">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-sky-600">
+                          Available Balance
+                        </p>
+                        <p className="mt-2 text-sm font-semibold text-sky-900">
+                          {financePreview.available}
+                        </p>
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
+
                 {/* Profile card */}
                 <div className="flex flex-col gap-4 rounded-3xl border border-zinc-200 bg-zinc-50/50 p-5 sm:flex-row sm:items-start">
                   <UserAvatar user={activeDetail} size="lg" />
@@ -1323,6 +1489,152 @@ export default function UsersPage() {
                     </div>
                   ))}
                 </div>
+
+                {activeDetail.finance && (
+                  <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                    <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+                      <div className="flex items-center gap-2">
+                        <BarChart3 className="size-4 text-zinc-500" />
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                          Finance Analytics
+                        </p>
+                      </div>
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        <div className="rounded-2xl border border-zinc-100 bg-zinc-50 p-3">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+                            Total Orders
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-zinc-900">
+                            {activeDetail.finance.totalOrders.toLocaleString("id-ID")}
+                          </p>
+                        </div>
+                        <div className="rounded-2xl border border-zinc-100 bg-zinc-50 p-3">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+                            Completed Orders
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-zinc-900">
+                            {activeDetail.finance.completedOrders.toLocaleString("id-ID")}
+                          </p>
+                        </div>
+                        <div className="rounded-2xl border border-zinc-100 bg-zinc-50 p-3">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+                            Completed Payments
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-zinc-900">
+                            {activeDetail.finance.completedPayments.toLocaleString("id-ID")}
+                          </p>
+                        </div>
+                        <div className="rounded-2xl border border-zinc-100 bg-zinc-50 p-3">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+                            Sent Payouts
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-zinc-900">
+                            {activeDetail.finance.sentPayouts.toLocaleString("id-ID")}
+                          </p>
+                        </div>
+                      </div>
+
+                      {activeDetail.finance.currencies.length > 0 && (
+                        <div className="mt-4 space-y-2">
+                          {activeDetail.finance.currencies.map((item) => (
+                            <div
+                              key={item.currency}
+                              className="rounded-2xl border border-zinc-100 bg-zinc-50 px-4 py-3"
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <p className="text-sm font-semibold text-zinc-900">
+                                  {item.currency}
+                                </p>
+                                <p className="text-xs text-zinc-500">
+                                  Available {formatMoney(item.availableBalance, item.currency)}
+                                </p>
+                              </div>
+                              <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                                <p className="text-xs text-zinc-500">
+                                  Earned {formatMoney(item.grossEarnings, item.currency)}
+                                </p>
+                                <p className="text-xs text-zinc-500">
+                                  Withdrawn {formatMoney(item.withdrawnTotal, item.currency)}
+                                </p>
+                                <p className="text-xs text-zinc-500">
+                                  Pending {formatMoney(item.pendingWithdrawals, item.currency)}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+                        <div className="flex items-center gap-2">
+                          <ArrowUpRight className="size-4 text-emerald-600" />
+                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                            Recent Payments
+                          </p>
+                        </div>
+                        {activeDetail.recentPayments && activeDetail.recentPayments.length > 0 ? (
+                          <div className="mt-3 space-y-2">
+                            {activeDetail.recentPayments.map((item) => (
+                              <div
+                                key={item.id}
+                                className="rounded-xl border border-zinc-100 bg-zinc-50 px-3 py-2"
+                              >
+                                <p className="text-sm font-semibold text-zinc-900">
+                                  {formatMoney(item.amount, item.currency)}
+                                </p>
+                                <p className="text-xs text-zinc-500">
+                                  Order #{item.orderId.slice(0, 8)} · {item.status}
+                                </p>
+                                <p className="mt-1 text-xs text-zinc-400">
+                                  {formatDate(item.paidAt ?? item.createdAt, true)}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="mt-3 text-sm italic text-zinc-400">
+                            No payment history yet.
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+                        <div className="flex items-center gap-2">
+                          <ArrowDownRight className="size-4 text-orange-600" />
+                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+                            Recent Withdrawals
+                          </p>
+                        </div>
+                        {activeDetail.recentPayouts && activeDetail.recentPayouts.length > 0 ? (
+                          <div className="mt-3 space-y-2">
+                            {activeDetail.recentPayouts.map((item) => (
+                              <div
+                                key={item.id}
+                                className="rounded-xl border border-zinc-100 bg-zinc-50 px-3 py-2"
+                              >
+                                <p className="text-sm font-semibold text-zinc-900">
+                                  {formatMoney(item.amount, item.currency)}
+                                </p>
+                                <p className="text-xs text-zinc-500">
+                                  {item.status} · {item.paypalEmail}
+                                </p>
+                                <p className="mt-1 text-xs text-zinc-400">
+                                  {formatDate(item.reviewedAt ?? item.createdAt, true)}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="mt-3 text-sm italic text-zinc-400">
+                            No withdrawal history yet.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Bio */}
                 <div className="rounded-2xl border border-zinc-200 bg-white p-4">

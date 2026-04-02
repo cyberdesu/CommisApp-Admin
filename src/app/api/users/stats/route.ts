@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
+import { getPlatformFinanceStats } from "@/lib/user-finance";
 
 export async function GET(req: NextRequest) {
   const logger = createRequestLogger(req, {
@@ -16,13 +17,20 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const [totalUsers, verifiedCount, verifiedArtistCount, adminCount, bannedCount] =
-      await Promise.all([
+    const [
+      totalUsers,
+      verifiedCount,
+      verifiedArtistCount,
+      adminCount,
+      bannedCount,
+      finance,
+    ] = await Promise.all([
         prisma.user.count(),
         prisma.user.count({ where: { verified: true } }),
         prisma.user.count({ where: { verifiedArtists: true } }),
         prisma.user.count({ where: { role: "admin" } }),
         prisma.user.count({ where: { isBanned: true } }),
+        getPlatformFinanceStats(),
       ]);
 
     logger.info("Fetched user stats", {
@@ -32,6 +40,8 @@ export async function GET(req: NextRequest) {
       verifiedArtistCount,
       adminCount,
       bannedCount,
+      artistsWithEarnings: finance.artistsWithEarnings,
+      currencies: finance.currencies.length,
     });
 
     return NextResponse.json({
@@ -41,6 +51,7 @@ export async function GET(req: NextRequest) {
         verifiedArtistCount,
         adminCount,
         bannedCount,
+        finance,
       },
     });
   } catch (error) {

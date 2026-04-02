@@ -5,6 +5,7 @@ import { getSessionAdmin } from "@/lib/auth/session";
 import { isAllowedOrigin } from "@/lib/auth/origin";
 import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
+import { getUserFinanceDetail } from "@/lib/user-finance";
 
 type RouteContext = {
   params: Promise<{
@@ -36,25 +37,6 @@ function normalizeOptionalMediaPath(value: unknown) {
   if (trimmed.length === 0) return null;
 
   return trimmed;
-}
-
-async function resolveMediaUrl(path?: string | null) {
-  return minio.getFile(path, MINIO_BUCKET_NAME)
-}
-
-async function enrichUserMedia<
-  T extends { avatar?: string | null; banner?: string | null },
->(user: T): Promise<T> {
-  const [avatar, banner] = await Promise.all([
-    resolveMediaUrl(user.avatar),
-    resolveMediaUrl(user.banner),
-  ]);
-
-  return {
-    ...user,
-    avatar,
-    banner,
-  };
 }
 
 export async function GET(req: NextRequest, context: RouteContext) {
@@ -129,11 +111,22 @@ export async function GET(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    const enrichedUser = await enrichUserMedia(user);
+    const [enrichedUser, finance] = await Promise.all([
+      minio.enrichUserMedia(user, MINIO_BUCKET_NAME),
+      getUserFinanceDetail(id),
+    ]);
 
     requestLogger.info("Fetched user detail");
 
-    return NextResponse.json({ data: enrichedUser });
+    return NextResponse.json({
+      data: {
+        ...user,
+        ...enrichedUser,
+        finance: finance.summary,
+        recentPayments: finance.recentPayments,
+        recentPayouts: finance.recentPayouts,
+      },
+    });
   } catch (error) {
     logger.error("Failed to fetch user detail", { error });
     return NextResponse.json(
@@ -355,7 +348,8 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       return updated;
     });
 
-    const enrichedUser = await enrichUserMedia(updatedUser);
+    const enrichedUser =
+      await minio.enrichUserMedia(updatedUser, MINIO_BUCKET_NAME);
 
     requestLogger.info("Updated user successfully", {
       promotedToArtist: shouldApproveArtist,
@@ -365,7 +359,10 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       message: shouldApproveArtist
         ? "Artist approved successfully"
         : "User updated successfully",
-      data: enrichedUser,
+      data: {
+        ...updatedUser,
+        ...enrichedUser,
+      },
     });
   } catch (error) {
     logger.error("Failed to update user", { error });
