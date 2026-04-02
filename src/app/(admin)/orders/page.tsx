@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock3,
+  MessageSquare,
   Search,
   ShieldCheck,
   Sparkles,
@@ -53,6 +54,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type {
+  AdminOrderAnalytics,
   AdminOrderStats,
   AdminOrderStatus,
   UserOrderOverview,
@@ -98,6 +100,17 @@ const ADMIN_ORDER_STATUS_OPTIONS: AdminOrderStatus[] = [
   "CANCELLED",
   "REJECTED",
 ];
+
+function formatVolumeSummary(
+  volumes: Array<{ currency: string; amount: string }>,
+) {
+  if (volumes.length === 0) return "No volume";
+
+  return volumes
+    .slice(0, 2)
+    .map((item) => `${item.currency} ${item.amount}`)
+    .join(" · ");
+}
 
 function formatDate(value: string, withTime = true) {
   return new Date(value).toLocaleString("id-ID", {
@@ -276,6 +289,22 @@ export default function OrdersPage() {
     refetchInterval: 30_000,
   });
 
+  const analyticsQuery = useQuery({
+    queryKey: ["orders-analytics", { scopedUserId }],
+    queryFn: async () => {
+      const response = await apiClient.get<AdminOrderAnalytics>(
+        "/orders/analytics",
+        {
+          params: {
+            ...(scopedUserId ? { userId: scopedUserId } : {}),
+          },
+        },
+      );
+      return response.data;
+    },
+    refetchInterval: 60_000,
+  });
+
   const interventionMutation = useMutation({
     mutationFn: async (payload: {
       id: string;
@@ -314,6 +343,7 @@ export default function OrdersPage() {
   const hasNextPage = meta?.hasNextPage ?? false;
   const nextCursor = meta?.nextCursor ?? null;
   const stats = statsQuery.data;
+  const analytics = analyticsQuery.data;
 
   function submitSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -327,6 +357,10 @@ export default function OrdersPage() {
     setInterventionStatus("UNCHANGED");
     setInterventionRevisionsUsed(String(order.revisionsUsed));
     setInterventionNote("");
+  }
+
+  function openOrderChat(conversationId: string) {
+    router.push(`/chats?conversationId=${encodeURIComponent(conversationId)}`);
   }
 
   function submitIntervention() {
@@ -427,6 +461,219 @@ export default function OrdersPage() {
           )}
         </div>
       </section>
+
+      {analytics && (
+        <section className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+          <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-bold text-zinc-900">
+                Top Artist-Client Pairs
+              </CardTitle>
+              <CardDescription>
+                Pairing yang paling sering repeat order.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {analytics.topPairs.length > 0 ? (
+                analytics.topPairs.map((item) => (
+                  <div
+                    key={`${item.artist.id}-${item.client.id}`}
+                    className="rounded-2xl border border-zinc-100 bg-zinc-50 p-3"
+                  >
+                    <p className="text-sm font-semibold text-zinc-900">
+                      @{item.client.username} → @{item.artist.username}
+                    </p>
+                    <p className="mt-1 text-xs text-zinc-500">
+                      {item.orderCount} orders
+                    </p>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      {formatVolumeSummary(item.grossVolume)}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-zinc-400">No pair data yet.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-bold text-zinc-900">
+                Top Artists
+              </CardTitle>
+              <CardDescription>
+                Artist dengan order volume paling tinggi.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {analytics.topArtists.length > 0 ? (
+                analytics.topArtists.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-zinc-100 bg-zinc-50 p-3"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-900">
+                        @{item.username}
+                      </p>
+                      <p className="mt-1 text-xs text-zinc-500">
+                        {item.orderCount} orders
+                      </p>
+                    </div>
+                    <p className="text-xs text-zinc-400">
+                      {formatVolumeSummary(item.grossVolume)}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-zinc-400">No artist data yet.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-bold text-zinc-900">
+                Top Clients
+              </CardTitle>
+              <CardDescription>
+                Client dengan jumlah order paling banyak.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {analytics.topClients.length > 0 ? (
+                analytics.topClients.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-zinc-100 bg-zinc-50 p-3"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-900">
+                        @{item.username}
+                      </p>
+                      <p className="mt-1 text-xs text-zinc-500">
+                        {item.orderCount} orders
+                      </p>
+                    </div>
+                    <p className="text-xs text-zinc-400">
+                      {formatVolumeSummary(item.grossVolume)}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-zinc-400">No client data yet.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-bold text-zinc-900">
+                Top Services
+              </CardTitle>
+              <CardDescription>
+                Jasa yang paling sering dipakai admin scope saat ini.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {analytics.topServices.length > 0 ? (
+                analytics.topServices.map((item) => (
+                  <div
+                    key={item.id}
+                    className="rounded-2xl border border-zinc-100 bg-zinc-50 p-3"
+                  >
+                    <p className="text-sm font-semibold text-zinc-900">
+                      {item.title}
+                    </p>
+                    <p className="mt-1 text-xs text-zinc-500">
+                      by @{item.artist.username} · {item.orderCount} orders
+                    </p>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      {item.categories.join(", ")}
+                    </p>
+                    <p className="mt-1 text-xs text-zinc-400">
+                      {formatVolumeSummary(item.grossVolume)}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-zinc-400">No service data yet.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-bold text-zinc-900">
+                Popular Categories
+              </CardTitle>
+              <CardDescription>
+                Kategori layanan yang paling banyak dipakai.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {analytics.topCategories.length > 0 ? (
+                analytics.topCategories.map((item) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-zinc-100 bg-zinc-50 p-3"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-900">
+                        {item.name}
+                      </p>
+                      <p className="mt-1 text-xs text-zinc-500">
+                        {item.orderCount} orders · {item.serviceCount} services
+                      </p>
+                    </div>
+                    <p className="text-xs text-zinc-400">
+                      {formatVolumeSummary(item.grossVolume)}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-zinc-400">No category data yet.</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-bold text-zinc-900">
+                Order Types
+              </CardTitle>
+              <CardDescription>
+                Distribusi source order saat ini.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {analytics.sources.length > 0 ? (
+                analytics.sources.map((item) => (
+                  <div
+                    key={item.source}
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-zinc-100 bg-zinc-50 p-3"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-zinc-900">
+                        {item.source}
+                      </p>
+                      <p className="mt-1 text-xs text-zinc-500">
+                        {item.orderCount} orders
+                      </p>
+                    </div>
+                    <p className="text-xs text-zinc-400">
+                      {formatVolumeSummary(item.grossVolume)}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-zinc-400">No source data yet.</p>
+              )}
+            </CardContent>
+          </Card>
+        </section>
+      )}
 
       <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
         <CardHeader className="flex flex-col gap-4 border-b border-zinc-100 pb-5 lg:flex-row lg:items-center lg:justify-between">
@@ -647,13 +894,28 @@ export default function OrdersPage() {
                           {formatDate(order.latestActivityAt)}
                         </TableCell>
                         <TableCell className="px-5 py-3.5 text-right">
-                          <Button
-                            variant="outline"
-                            className="rounded-xl border-zinc-200 bg-white text-sm"
-                            onClick={() => openOrder(order)}
-                          >
-                            Review
-                          </Button>
+                          <div className="flex justify-end gap-2">
+                            {order.conversationId ? (
+                              <Button
+                                variant="outline"
+                                className="rounded-xl border-zinc-200 bg-white text-sm"
+                                onClick={() => {
+                                  if (!order.conversationId) return;
+                                  openOrderChat(order.conversationId);
+                                }}
+                              >
+                                <MessageSquare className="mr-1.5 size-4" />
+                                Chat
+                              </Button>
+                            ) : null}
+                            <Button
+                              variant="outline"
+                              className="rounded-xl border-zinc-200 bg-white text-sm"
+                              onClick={() => openOrder(order)}
+                            >
+                              Review
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -764,6 +1026,26 @@ export default function OrdersPage() {
                       >
                         {formatMoney(selectedOrder.amount, selectedOrder.currency)}
                       </Badge>
+                      {selectedOrder.conversationId ? (
+                        <Button
+                          variant="outline"
+                          className="rounded-full border-zinc-200 bg-white text-zinc-700"
+                          onClick={() => {
+                            if (!selectedOrder.conversationId) return;
+                            openOrderChat(selectedOrder.conversationId);
+                          }}
+                        >
+                          <MessageSquare className="mr-1.5 size-4" />
+                          Open Chat
+                        </Button>
+                      ) : (
+                        <Badge
+                          variant="outline"
+                          className="rounded-full border-zinc-200 bg-white text-zinc-500"
+                        >
+                          Chat not created
+                        </Badge>
+                      )}
                       {selectedOrder.paymentCaptured && (
                         <Badge className="rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700">
                           Payment captured

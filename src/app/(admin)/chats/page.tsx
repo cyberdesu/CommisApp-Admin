@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   ChevronDown,
@@ -27,9 +28,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -70,7 +68,7 @@ type LatestMessage = {
 
 type ConversationItem = {
   id: string;
-  type: "DIRECT" | "GROUP";
+  type: "DIRECT" | "GROUP" | "ORDER";
   name: string | null;
   createdAt: string;
   updatedAt: string;
@@ -117,7 +115,7 @@ type MessageItem = {
 
 type ConversationDetail = {
   id: string;
-  type: "DIRECT" | "GROUP";
+  type: "DIRECT" | "GROUP" | "ORDER";
   name: string | null;
   createdAt: string;
   updatedAt: string;
@@ -205,6 +203,17 @@ function getConversationDisplayName(conv: ConversationItem): string {
     .slice(0, 3)
     .map((p) => p.username)
     .join(", ");
+}
+
+function getConversationTypeLabel(type: ConversationItem["type"]) {
+  switch (type) {
+    case "DIRECT":
+      return "DM";
+    case "GROUP":
+      return "Group";
+    case "ORDER":
+      return "Order";
+  }
 }
 
 // ─── Avatar ──────────────────────────────────────────────────────────────────
@@ -314,9 +323,9 @@ function ConversationList({
   onSelect: (id: string) => void;
 }) {
   const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState<"ALL" | "DIRECT" | "GROUP">(
-    "ALL",
-  );
+  const [typeFilter, setTypeFilter] = useState<
+    "ALL" | "DIRECT" | "GROUP" | "ORDER"
+  >("ALL");
   const debouncedSearch = useDebounce(search, 300);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -387,7 +396,7 @@ function ConversationList({
         <Select
           value={typeFilter}
           onValueChange={(v) =>
-            setTypeFilter(v as "ALL" | "DIRECT" | "GROUP")
+            setTypeFilter(v as "ALL" | "DIRECT" | "GROUP" | "ORDER")
           }
         >
           <SelectTrigger className="w-full">
@@ -397,6 +406,7 @@ function ConversationList({
             <SelectItem value="ALL">All Conversations</SelectItem>
             <SelectItem value="DIRECT">Direct Messages</SelectItem>
             <SelectItem value="GROUP">Group Chats</SelectItem>
+            <SelectItem value="ORDER">Order Chats</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -483,7 +493,7 @@ function ConversationList({
                         variant="outline"
                         className="px-1.5 py-0 text-[10px]"
                       >
-                        {conv.type === "DIRECT" ? "DM" : "Group"}
+                        {getConversationTypeLabel(conv.type)}
                       </Badge>
                       <span className="text-[10px] text-muted-foreground">
                         {conv.messageCount.toLocaleString()} msgs
@@ -643,7 +653,7 @@ function MessageView({
             </h3>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
-                {conversation.type === "DIRECT" ? "DM" : "Group"}
+                {getConversationTypeLabel(conversation.type)}
               </Badge>
               <span>
                 {conversation.participantCount} participants
@@ -849,9 +859,48 @@ function MessageView({
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
 export default function ChatsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const deepLinkedConversationId = useMemo(() => {
+    const value = searchParams.get("conversationId");
+    return value?.trim() || null;
+  }, [searchParams]);
   const [selectedConversation, setSelectedConversation] = useState<
     string | null
-  >(null);
+  >(deepLinkedConversationId);
+
+  useEffect(() => {
+    setSelectedConversation(deepLinkedConversationId);
+  }, [deepLinkedConversationId]);
+
+  const syncConversationQuery = useCallback(
+    (conversationId: string | null) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (conversationId) {
+        params.set("conversationId", conversationId);
+      } else {
+        params.delete("conversationId");
+      }
+
+      const nextUrl = params.toString() ? `/chats?${params.toString()}` : "/chats";
+      router.replace(nextUrl);
+    },
+    [router, searchParams],
+  );
+
+  const handleSelectConversation = useCallback(
+    (conversationId: string) => {
+      setSelectedConversation(conversationId);
+      syncConversationQuery(conversationId);
+    },
+    [syncConversationQuery],
+  );
+
+  const handleBack = useCallback(() => {
+    setSelectedConversation(null);
+    syncConversationQuery(null);
+  }, [syncConversationQuery]);
 
   return (
     <div className="space-y-6">
@@ -876,7 +925,7 @@ export default function ChatsPage() {
           >
             <ConversationList
               selectedId={selectedConversation}
-              onSelect={setSelectedConversation}
+              onSelect={handleSelectConversation}
             />
           </div>
 
@@ -892,7 +941,7 @@ export default function ChatsPage() {
               <MessageView
                 key={selectedConversation}
                 conversationId={selectedConversation}
-                onBack={() => setSelectedConversation(null)}
+                onBack={handleBack}
               />
             ) : (
               <div className="flex h-full flex-col items-center justify-center gap-3 text-muted-foreground">

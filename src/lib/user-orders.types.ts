@@ -36,6 +36,7 @@ export type UserOrderTimelineItem = {
 
 export type UserOrderOverview = {
   id: string;
+  conversationId: string | null;
   participantRole: UserOrderParticipantRole;
   status: AdminOrderStatus;
   source: "SERVICE" | "CUSTOM_REQUEST";
@@ -102,4 +103,67 @@ export type AdminOrderStats = {
   delivered: number;
   completed: number;
   attention: number;
+};
+
+export type OrderAnalyticsParty = {
+  id: number;
+  name: string | null;
+  username: string;
+  orderCount: number;
+  grossVolume: OrderAnalyticsVolume[];
+};
+
+export type OrderAnalyticsPair = {
+  artist: {
+    id: number;
+    name: string | null;
+    username: string;
+  };
+  client: {
+    id: number;
+    name: string | null;
+    username: string;
+  };
+  orderCount: number;
+  grossVolume: OrderAnalyticsVolume[];
+};
+
+export type OrderAnalyticsService = {
+  id: string;
+  title: string;
+  orderCount: number;
+  grossVolume: OrderAnalyticsVolume[];
+  artist: {
+    id: number;
+    name: string | null;
+    username: string;
+  };
+  categories: string[];
+};
+
+export type OrderAnalyticsCategory = {
+  name: string;
+  orderCount: number;
+  grossVolume: OrderAnalyticsVolume[];
+  serviceCount: number;
+};
+
+export type OrderAnalyticsSource = {
+  source: "SERVICE" | "CUSTOM_REQUEST";
+  orderCount: number;
+  grossVolume: OrderAnalyticsVolume[];
+};
+
+export type OrderAnalyticsVolume = {
+  currency: string;
+  amount: string;
+};
+
+export type AdminOrderAnalytics = {
+  topPairs: OrderAnalyticsPair[];
+  topArtists: OrderAnalyticsParty[];
+  topClients: OrderAnalyticsParty[];
+  topServices: OrderAnalyticsService[];
+  topCategories: OrderAnalyticsCategory[];
+  sources: OrderAnalyticsSource[];
 };

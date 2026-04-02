@@ -15,7 +15,7 @@ type ConversationsCursor = {
   id: string;
 };
 
-type ConversationTypeFilter = "ALL" | "DIRECT" | "GROUP";
+type ConversationTypeFilter = "ALL" | "DIRECT" | "GROUP" | "ORDER";
 
 function parsePositiveInt(value: string | null, fallback: number) {
   const parsed = Number.parseInt(value ?? "", 10);
@@ -55,7 +55,13 @@ function parseCursor(value: string | null): ConversationsCursor | null {
 function parseConversationType(value: string | null): ConversationTypeFilter {
   if (!value) return "ALL";
   const normalized = value.trim().toUpperCase();
-  if (normalized === "DIRECT" || normalized === "GROUP") return normalized;
+  if (
+    normalized === "DIRECT" ||
+    normalized === "GROUP" ||
+    normalized === "ORDER"
+  ) {
+    return normalized;
+  }
   return "ALL";
 }
 
