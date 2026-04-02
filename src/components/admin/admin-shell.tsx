@@ -49,6 +49,12 @@ const menus = [
     icon: Users,
   },
   {
+    href: "/orders",
+    label: "Orders",
+    description: "Monitor order progress",
+    icon: Bell,
+  },
+  {
     href: "/showcases",
     label: "Showcases",
     description: "Manage app showcases",
@@ -83,6 +89,7 @@ const menus = [
 function getPageTitle(pathname: string) {
   if (pathname.startsWith("/dashboard")) return "Dashboard Overview";
   if (pathname.startsWith("/users")) return "Users Management";
+  if (pathname.startsWith("/orders")) return "Order Oversight";
   if (pathname.startsWith("/showcases")) return "Showcases Management";
   if (pathname.startsWith("/chats")) return "Chat Monitoring";
   if (pathname.startsWith("/artist-requests")) return "Artist Verification";

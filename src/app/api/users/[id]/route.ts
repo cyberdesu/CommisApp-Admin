@@ -6,6 +6,7 @@ import { isAllowedOrigin } from "@/lib/auth/origin";
 import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 import { getUserFinanceDetail } from "@/lib/user-finance";
+import { getUserOrdersDetail } from "@/lib/user-orders";
 
 type RouteContext = {
   params: Promise<{
@@ -111,9 +112,10 @@ export async function GET(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    const [enrichedUser, finance] = await Promise.all([
+    const [enrichedUser, finance, orders] = await Promise.all([
       minio.enrichUserMedia(user, MINIO_BUCKET_NAME),
       getUserFinanceDetail(id),
+      getUserOrdersDetail(id),
     ]);
 
     requestLogger.info("Fetched user detail");
@@ -125,6 +127,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
         finance: finance.summary,
         recentPayments: finance.recentPayments,
         recentPayouts: finance.recentPayouts,
+        orders,
       },
     });
   } catch (error) {
