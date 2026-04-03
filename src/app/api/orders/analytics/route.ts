@@ -4,6 +4,13 @@ import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { getAdminOrderAnalytics } from "@/lib/user-orders";
 
+const RESPONSE_HEADERS = {
+  "Cache-Control": "private, no-store",
+  Pragma: "no-cache",
+  Expires: "0",
+  "X-Content-Type-Options": "nosniff",
+} as const;
+
 function parseOptionalUserId(value: string | null) {
   if (!value) return null;
   const parsed = Number.parseInt(value, 10);
@@ -21,7 +28,10 @@ export async function GET(req: NextRequest) {
       logger.warn(
         "Rejected order analytics request due to missing admin session",
       );
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401, headers: RESPONSE_HEADERS },
+      );
     }
 
     const { searchParams } = new URL(req.url);
@@ -40,12 +50,12 @@ export async function GET(req: NextRequest) {
       sources: analytics.sources.length,
     });
 
-    return NextResponse.json(analytics);
+    return NextResponse.json(analytics, { headers: RESPONSE_HEADERS });
   } catch (error) {
     logger.error("Failed to fetch admin order analytics", { error });
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 },
+      { status: 500, headers: RESPONSE_HEADERS },
     );
   }
 }

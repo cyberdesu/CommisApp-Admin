@@ -1,5 +1,13 @@
 type AppEnv = "dev" | "prod";
 
+function assertServerRuntime(context: string) {
+  if (typeof window !== "undefined") {
+    throw new Error(
+      `${context} must not run in the browser. Import the server-only env wrapper instead.`,
+    );
+  }
+}
+
 function normalizeAppEnv(input?: string): AppEnv | null {
   if (!input) return null;
 
@@ -11,6 +19,8 @@ function normalizeAppEnv(input?: string): AppEnv | null {
 }
 
 export function resolveAppEnv(): AppEnv {
+  assertServerRuntime("resolveAppEnv");
+
   const explicitEnv = normalizeAppEnv(process.env.APP_ENV);
   if (explicitEnv) return explicitEnv;
 
@@ -19,6 +29,8 @@ export function resolveAppEnv(): AppEnv {
 }
 
 export function getDatabaseUrl(): string | undefined {
+  assertServerRuntime("getDatabaseUrl");
+
   if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
 
   const appEnv = resolveAppEnv();
@@ -30,6 +42,8 @@ export function getDatabaseUrl(): string | undefined {
 }
 
 export function getDirectUrl(): string | undefined {
+  assertServerRuntime("getDirectUrl");
+
   if (process.env.DIRECT_URL) return process.env.DIRECT_URL;
 
   const appEnv = resolveAppEnv();
@@ -41,6 +55,8 @@ export function getDirectUrl(): string | undefined {
 }
 
 export function requireDatabaseUrl(context = "database"): string {
+  assertServerRuntime("requireDatabaseUrl");
+
   const url = getDatabaseUrl();
   if (!url) {
     throw new Error(
@@ -52,6 +68,8 @@ export function requireDatabaseUrl(context = "database"): string {
 }
 
 export function requireDirectUrl(context = "database"): string {
+  assertServerRuntime("requireDirectUrl");
+
   const url = getDirectUrl();
   if (!url) {
     throw new Error(

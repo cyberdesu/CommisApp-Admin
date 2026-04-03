@@ -5,6 +5,13 @@ import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 import { getPlatformFinanceStats } from "@/lib/user-finance";
 
+const RESPONSE_HEADERS = {
+  "Cache-Control": "private, no-store",
+  Pragma: "no-cache",
+  Expires: "0",
+  "X-Content-Type-Options": "nosniff",
+} as const;
+
 export async function GET(req: NextRequest) {
   const logger = createRequestLogger(req, {
     route: "api.users.stats",
@@ -14,7 +21,10 @@ export async function GET(req: NextRequest) {
     const admin = await getSessionAdmin(req);
     if (!admin) {
       logger.warn("Rejected user stats request due to missing admin session");
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401, headers: RESPONSE_HEADERS },
+      );
     }
 
     const [
@@ -44,21 +54,24 @@ export async function GET(req: NextRequest) {
       currencies: finance.currencies.length,
     });
 
-    return NextResponse.json({
-      data: {
-        totalUsers,
-        verifiedCount,
-        verifiedArtistCount,
-        adminCount,
-        bannedCount,
-        finance,
+    return NextResponse.json(
+      {
+        data: {
+          totalUsers,
+          verifiedCount,
+          verifiedArtistCount,
+          adminCount,
+          bannedCount,
+          finance,
+        },
       },
-    });
+      { headers: RESPONSE_HEADERS },
+    );
   } catch (error) {
     logger.error("Failed to fetch user stats", { error });
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 },
+      { status: 500, headers: RESPONSE_HEADERS },
     );
   }
 }

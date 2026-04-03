@@ -13,6 +13,15 @@ export const dynamic = "force-dynamic";
 
 const encoder = new TextEncoder();
 const HEARTBEAT_INTERVAL_MS = 15_000;
+const SSE_HEADERS = {
+  "Content-Type": "text/event-stream; charset=utf-8",
+  "Cache-Control": "private, no-store, no-transform",
+  Connection: "keep-alive",
+  "Pragma": "no-cache",
+  Expires: "0",
+  "X-Accel-Buffering": "no",
+  "X-Content-Type-Options": "nosniff",
+} as const;
 
 function encodeSseMessage(event: string, data: unknown) {
   return encoder.encode(
@@ -87,11 +96,6 @@ export async function GET(req: NextRequest) {
   });
 
   return new NextResponse(stream, {
-    headers: {
-      "Content-Type": "text/event-stream; charset=utf-8",
-      "Cache-Control": "no-cache, no-transform",
-      Connection: "keep-alive",
-      "X-Accel-Buffering": "no",
-    },
+    headers: SSE_HEADERS,
   });
 }
