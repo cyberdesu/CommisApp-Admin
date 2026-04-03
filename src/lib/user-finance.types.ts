@@ -25,6 +25,12 @@ export type RecentPaymentActivity = {
   amount: string;
   platformFee: string;
   artistNet: string;
+  paypalFee: string;
+  paypalFeeCurrency: string | null;
+  paypalNetAmount: string;
+  paypalNetCurrency: string | null;
+  adminNetRevenue: string;
+  paypalFeeSyncedAt: string | null;
   currency: string;
   status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED";
   paidAt: string | null;
@@ -46,13 +52,19 @@ export type PlatformRevenueCurrencyBreakdown = {
   currency: string;
   grossVolume: string;
   platformFees: string;
+  paypalFees: string;
+  adminNetRevenue: string;
   artistPayouts: string;
+  syncedPayments: number;
+  pendingFeeSyncPayments: number;
 };
 
 export type PlatformFinanceStats = {
   artistsWithEarnings: number;
   artistsWithWithdrawals: number;
   completedPayments: number;
+  syncedPaypalFeePayments: number;
+  pendingPaypalFeeSyncPayments: number;
   processedPayouts: number;
   currencies: FinanceCurrencyBreakdown[];
   revenue: PlatformRevenueCurrencyBreakdown[];

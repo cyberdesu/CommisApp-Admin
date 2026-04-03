@@ -597,6 +597,11 @@ model Payment {
   amount          Decimal         @db.Decimal(10, 2)
   platformFee     Decimal         @db.Decimal(10, 2) @default(0)
   artistNet       Decimal         @db.Decimal(10, 2) @default(0)
+  paypalFee       Decimal         @db.Decimal(10, 2) @default(0)
+  paypalFeeCurrency String?
+  paypalNetAmount Decimal         @db.Decimal(10, 2) @default(0)
+  paypalNetCurrency String?
+  paypalFeeSyncedAt DateTime?
   currency        String          @default("USD")
 
   paidAt          DateTime?

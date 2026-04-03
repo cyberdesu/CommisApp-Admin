@@ -30,12 +30,16 @@ export type PaymentAvgAggregateOutputType = {
   amount: runtime.Decimal | null
   platformFee: runtime.Decimal | null
   artistNet: runtime.Decimal | null
+  paypalFee: runtime.Decimal | null
+  paypalNetAmount: runtime.Decimal | null
 }
 
 export type PaymentSumAggregateOutputType = {
   amount: runtime.Decimal | null
   platformFee: runtime.Decimal | null
   artistNet: runtime.Decimal | null
+  paypalFee: runtime.Decimal | null
+  paypalNetAmount: runtime.Decimal | null
 }
 
 export type PaymentMinAggregateOutputType = {
@@ -48,6 +52,11 @@ export type PaymentMinAggregateOutputType = {
   amount: runtime.Decimal | null
   platformFee: runtime.Decimal | null
   artistNet: runtime.Decimal | null
+  paypalFee: runtime.Decimal | null
+  paypalFeeCurrency: string | null
+  paypalNetAmount: runtime.Decimal | null
+  paypalNetCurrency: string | null
+  paypalFeeSyncedAt: Date | null
   currency: string | null
   paidAt: Date | null
   createdAt: Date | null
@@ -64,6 +73,11 @@ export type PaymentMaxAggregateOutputType = {
   amount: runtime.Decimal | null
   platformFee: runtime.Decimal | null
   artistNet: runtime.Decimal | null
+  paypalFee: runtime.Decimal | null
+  paypalFeeCurrency: string | null
+  paypalNetAmount: runtime.Decimal | null
+  paypalNetCurrency: string | null
+  paypalFeeSyncedAt: Date | null
   currency: string | null
   paidAt: Date | null
   createdAt: Date | null
@@ -80,6 +94,11 @@ export type PaymentCountAggregateOutputType = {
   amount: number
   platformFee: number
   artistNet: number
+  paypalFee: number
+  paypalFeeCurrency: number
+  paypalNetAmount: number
+  paypalNetCurrency: number
+  paypalFeeSyncedAt: number
   currency: number
   paidAt: number
   createdAt: number
@@ -92,12 +111,16 @@ export type PaymentAvgAggregateInputType = {
   amount?: true
   platformFee?: true
   artistNet?: true
+  paypalFee?: true
+  paypalNetAmount?: true
 }
 
 export type PaymentSumAggregateInputType = {
   amount?: true
   platformFee?: true
   artistNet?: true
+  paypalFee?: true
+  paypalNetAmount?: true
 }
 
 export type PaymentMinAggregateInputType = {
@@ -110,6 +133,11 @@ export type PaymentMinAggregateInputType = {
   amount?: true
   platformFee?: true
   artistNet?: true
+  paypalFee?: true
+  paypalFeeCurrency?: true
+  paypalNetAmount?: true
+  paypalNetCurrency?: true
+  paypalFeeSyncedAt?: true
   currency?: true
   paidAt?: true
   createdAt?: true
@@ -126,6 +154,11 @@ export type PaymentMaxAggregateInputType = {
   amount?: true
   platformFee?: true
   artistNet?: true
+  paypalFee?: true
+  paypalFeeCurrency?: true
+  paypalNetAmount?: true
+  paypalNetCurrency?: true
+  paypalFeeSyncedAt?: true
   currency?: true
   paidAt?: true
   createdAt?: true
@@ -142,6 +175,11 @@ export type PaymentCountAggregateInputType = {
   amount?: true
   platformFee?: true
   artistNet?: true
+  paypalFee?: true
+  paypalFeeCurrency?: true
+  paypalNetAmount?: true
+  paypalNetCurrency?: true
+  paypalFeeSyncedAt?: true
   currency?: true
   paidAt?: true
   createdAt?: true
@@ -245,6 +283,11 @@ export type PaymentGroupByOutputType = {
   amount: runtime.Decimal
   platformFee: runtime.Decimal
   artistNet: runtime.Decimal
+  paypalFee: runtime.Decimal
+  paypalFeeCurrency: string | null
+  paypalNetAmount: runtime.Decimal
+  paypalNetCurrency: string | null
+  paypalFeeSyncedAt: Date | null
   currency: string
   paidAt: Date | null
   createdAt: Date
@@ -284,6 +327,11 @@ export type PaymentWhereInput = {
   amount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.StringNullableFilter<"Payment"> | string | null
+  paypalNetAmount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.StringNullableFilter<"Payment"> | string | null
+  paypalFeeSyncedAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   currency?: Prisma.StringFilter<"Payment"> | string
   paidAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -301,6 +349,11 @@ export type PaymentOrderByWithRelationInput = {
   amount?: Prisma.SortOrder
   platformFee?: Prisma.SortOrder
   artistNet?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalNetAmount?: Prisma.SortOrder
+  paypalNetCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -322,6 +375,11 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.StringNullableFilter<"Payment"> | string | null
+  paypalNetAmount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.StringNullableFilter<"Payment"> | string | null
+  paypalFeeSyncedAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   currency?: Prisma.StringFilter<"Payment"> | string
   paidAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -339,6 +397,11 @@ export type PaymentOrderByWithAggregationInput = {
   amount?: Prisma.SortOrder
   platformFee?: Prisma.SortOrder
   artistNet?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalNetAmount?: Prisma.SortOrder
+  paypalNetCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -363,6 +426,11 @@ export type PaymentScalarWhereWithAggregatesInput = {
   amount?: Prisma.DecimalWithAggregatesFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalWithAggregatesFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalWithAggregatesFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalWithAggregatesFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  paypalNetAmount?: Prisma.DecimalWithAggregatesFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  paypalFeeSyncedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
   currency?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
@@ -378,6 +446,11 @@ export type PaymentCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalNetAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   currency?: string
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -395,6 +468,11 @@ export type PaymentUncheckedCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalNetAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   currency?: string
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -410,6 +488,11 @@ export type PaymentUpdateInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalNetAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -427,6 +510,11 @@ export type PaymentUncheckedUpdateInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalNetAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -443,6 +531,11 @@ export type PaymentCreateManyInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalNetAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   currency?: string
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -458,6 +551,11 @@ export type PaymentUpdateManyMutationInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalNetAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -474,6 +572,11 @@ export type PaymentUncheckedUpdateManyInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalNetAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -506,6 +609,11 @@ export type PaymentCountOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   platformFee?: Prisma.SortOrder
   artistNet?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrder
+  paypalNetAmount?: Prisma.SortOrder
+  paypalNetCurrency?: Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -516,6 +624,8 @@ export type PaymentAvgOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   platformFee?: Prisma.SortOrder
   artistNet?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalNetAmount?: Prisma.SortOrder
 }
 
 export type PaymentMaxOrderByAggregateInput = {
@@ -528,6 +638,11 @@ export type PaymentMaxOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   platformFee?: Prisma.SortOrder
   artistNet?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrder
+  paypalNetAmount?: Prisma.SortOrder
+  paypalNetCurrency?: Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -544,6 +659,11 @@ export type PaymentMinOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   platformFee?: Prisma.SortOrder
   artistNet?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrder
+  paypalNetAmount?: Prisma.SortOrder
+  paypalNetCurrency?: Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -554,6 +674,8 @@ export type PaymentSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   platformFee?: Prisma.SortOrder
   artistNet?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalNetAmount?: Prisma.SortOrder
 }
 
 export type PaymentCreateNestedManyWithoutOrderInput = {
@@ -615,6 +737,11 @@ export type PaymentCreateWithoutOrderInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalNetAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   currency?: string
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -630,6 +757,11 @@ export type PaymentUncheckedCreateWithoutOrderInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalNetAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   currency?: string
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -675,6 +807,11 @@ export type PaymentScalarWhereInput = {
   amount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.StringNullableFilter<"Payment"> | string | null
+  paypalNetAmount?: Prisma.DecimalFilter<"Payment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.StringNullableFilter<"Payment"> | string | null
+  paypalFeeSyncedAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   currency?: Prisma.StringFilter<"Payment"> | string
   paidAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -690,6 +827,11 @@ export type PaymentCreateManyOrderInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalNetAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   currency?: string
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -705,6 +847,11 @@ export type PaymentUpdateWithoutOrderInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalNetAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -720,6 +867,11 @@ export type PaymentUncheckedUpdateWithoutOrderInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalNetAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -735,6 +887,11 @@ export type PaymentUncheckedUpdateManyWithoutOrderInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   platformFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   artistNet?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalNetAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalNetCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -753,6 +910,11 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   amount?: boolean
   platformFee?: boolean
   artistNet?: boolean
+  paypalFee?: boolean
+  paypalFeeCurrency?: boolean
+  paypalNetAmount?: boolean
+  paypalNetCurrency?: boolean
+  paypalFeeSyncedAt?: boolean
   currency?: boolean
   paidAt?: boolean
   createdAt?: boolean
@@ -770,6 +932,11 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   amount?: boolean
   platformFee?: boolean
   artistNet?: boolean
+  paypalFee?: boolean
+  paypalFeeCurrency?: boolean
+  paypalNetAmount?: boolean
+  paypalNetCurrency?: boolean
+  paypalFeeSyncedAt?: boolean
   currency?: boolean
   paidAt?: boolean
   createdAt?: boolean
@@ -787,6 +954,11 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   amount?: boolean
   platformFee?: boolean
   artistNet?: boolean
+  paypalFee?: boolean
+  paypalFeeCurrency?: boolean
+  paypalNetAmount?: boolean
+  paypalNetCurrency?: boolean
+  paypalFeeSyncedAt?: boolean
   currency?: boolean
   paidAt?: boolean
   createdAt?: boolean
@@ -804,13 +976,18 @@ export type PaymentSelectScalar = {
   amount?: boolean
   platformFee?: boolean
   artistNet?: boolean
+  paypalFee?: boolean
+  paypalFeeCurrency?: boolean
+  paypalNetAmount?: boolean
+  paypalNetCurrency?: boolean
+  paypalFeeSyncedAt?: boolean
   currency?: boolean
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "provider" | "status" | "paypalOrderId" | "paypalCaptureId" | "amount" | "platformFee" | "artistNet" | "currency" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "provider" | "status" | "paypalOrderId" | "paypalCaptureId" | "amount" | "platformFee" | "artistNet" | "paypalFee" | "paypalFeeCurrency" | "paypalNetAmount" | "paypalNetCurrency" | "paypalFeeSyncedAt" | "currency" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
@@ -836,6 +1013,11 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     amount: runtime.Decimal
     platformFee: runtime.Decimal
     artistNet: runtime.Decimal
+    paypalFee: runtime.Decimal
+    paypalFeeCurrency: string | null
+    paypalNetAmount: runtime.Decimal
+    paypalNetCurrency: string | null
+    paypalFeeSyncedAt: Date | null
     currency: string
     paidAt: Date | null
     createdAt: Date
@@ -1273,6 +1455,11 @@ export interface PaymentFieldRefs {
   readonly amount: Prisma.FieldRef<"Payment", 'Decimal'>
   readonly platformFee: Prisma.FieldRef<"Payment", 'Decimal'>
   readonly artistNet: Prisma.FieldRef<"Payment", 'Decimal'>
+  readonly paypalFee: Prisma.FieldRef<"Payment", 'Decimal'>
+  readonly paypalFeeCurrency: Prisma.FieldRef<"Payment", 'String'>
+  readonly paypalNetAmount: Prisma.FieldRef<"Payment", 'Decimal'>
+  readonly paypalNetCurrency: Prisma.FieldRef<"Payment", 'String'>
+  readonly paypalFeeSyncedAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly currency: Prisma.FieldRef<"Payment", 'String'>
   readonly paidAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Payment", 'DateTime'>

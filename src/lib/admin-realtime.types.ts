@@ -1,4 +1,4 @@
-export type AdminRealtimeTopic = "orders" | "chats";
+export type AdminRealtimeTopic = "orders" | "chats" | "finance";
 
 export type AdminRealtimeEvent = {
   topic: AdminRealtimeTopic;

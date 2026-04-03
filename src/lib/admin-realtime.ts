@@ -45,6 +45,10 @@ async function fetchSnapshot(): Promise<AdminRealtimeSnapshot> {
   const [
     ordersCount,
     latestOrder,
+    paymentsCount,
+    latestPayment,
+    payoutsCount,
+    latestPayout,
     conversationsCount,
     latestConversation,
     messagesCount,
@@ -52,6 +56,18 @@ async function fetchSnapshot(): Promise<AdminRealtimeSnapshot> {
   ] = await Promise.all([
     prisma.order.count(),
     prisma.order.aggregate({
+      _max: {
+        updatedAt: true,
+      },
+    }),
+    prisma.payment.count(),
+    prisma.payment.aggregate({
+      _max: {
+        updatedAt: true,
+      },
+    }),
+    prisma.payout.count(),
+    prisma.payout.aggregate({
       _max: {
         updatedAt: true,
       },
@@ -80,6 +96,12 @@ async function fetchSnapshot(): Promise<AdminRealtimeSnapshot> {
       latestConversation._max.updatedAt?.toISOString(),
       messagesCount,
       latestMessage._max.updatedAt?.toISOString(),
+    ]),
+    finance: buildFingerprint([
+      paymentsCount,
+      latestPayment._max.updatedAt?.toISOString(),
+      payoutsCount,
+      latestPayout._max.updatedAt?.toISOString(),
     ]),
   };
 }

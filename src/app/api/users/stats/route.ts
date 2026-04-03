@@ -51,6 +51,8 @@ export async function GET(req: NextRequest) {
       adminCount,
       bannedCount,
       artistsWithEarnings: finance.artistsWithEarnings,
+      syncedPaypalFeePayments: finance.syncedPaypalFeePayments,
+      pendingPaypalFeeSyncPayments: finance.pendingPaypalFeeSyncPayments,
       currencies: finance.currencies.length,
     });
 

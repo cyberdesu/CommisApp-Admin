@@ -3616,6 +3616,11 @@ export const PaymentScalarFieldEnum = {
   amount: 'amount',
   platformFee: 'platformFee',
   artistNet: 'artistNet',
+  paypalFee: 'paypalFee',
+  paypalFeeCurrency: 'paypalFeeCurrency',
+  paypalNetAmount: 'paypalNetAmount',
+  paypalNetCurrency: 'paypalNetCurrency',
+  paypalFeeSyncedAt: 'paypalFeeSyncedAt',
   currency: 'currency',
   paidAt: 'paidAt',
   createdAt: 'createdAt',
@@ -4080,6 +4085,8 @@ export const PaymentOrderByRelevanceFieldEnum = {
   orderId: 'orderId',
   paypalOrderId: 'paypalOrderId',
   paypalCaptureId: 'paypalCaptureId',
+  paypalFeeCurrency: 'paypalFeeCurrency',
+  paypalNetCurrency: 'paypalNetCurrency',
   currency: 'currency'
 } as const
 

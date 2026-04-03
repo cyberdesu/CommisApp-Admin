@@ -1,17 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowRightLeft,
   BarChart3,
   Coins,
   Landmark,
   Layers3,
+  RefreshCcw,
   Receipt,
   Sparkles,
   Users,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useAdminRealtime } from "@/hooks/use-admin-realtime";
 import { apiClient } from "@/lib/api/client";
@@ -25,6 +27,7 @@ import type {
 } from "@/lib/user-orders.types";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -37,6 +40,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 type FinanceStatsResponse = {
   data: {
     finance: PlatformFinanceStats;
+  };
+};
+
+type SyncPaypalFeesResponse = {
+  message: string;
+  data: {
+    scanned: number;
+    synced: number;
+    failed: number;
   };
 };
 
@@ -97,21 +109,61 @@ function RevenueCard({
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="rounded-2xl border border-amber-100 bg-amber-50/80 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700">
-              Platform Fees
-            </p>
-            <p className="mt-1 text-sm font-semibold text-amber-950">
-              {formatMoney(item.platformFees, item.currency)}
-            </p>
-          </div>
-          <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-700">
-              Artist Payouts
-            </p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700">
+            Platform Fees
+          </p>
+          <p className="mt-1 text-sm font-semibold text-amber-950">
+            {formatMoney(item.platformFees, item.currency)}
+          </p>
+          <p className="mt-1 text-[11px] text-amber-900/70">
+            Gross website fee before PayPal charges
+          </p>
+        </div>
+        <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-4">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-700">
+            Artist Payouts
+          </p>
             <p className="mt-1 text-sm font-semibold text-sky-950">
               {formatMoney(item.artistPayouts, item.currency)}
             </p>
           </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-2xl border border-rose-100 bg-rose-50/80 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
+              PayPal Fees
+            </p>
+            <p className="mt-1 text-sm font-semibold text-rose-950">
+              {formatMoney(item.paypalFees, item.currency)}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-emerald-100 bg-emerald-50/90 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">
+              Admin Net Balance
+            </p>
+            <p className="mt-1 text-sm font-semibold text-emerald-950">
+              {formatMoney(item.adminNetRevenue, item.currency)}
+            </p>
+            <p className="mt-1 text-[11px] text-emerald-900/70">
+              Platform fee minus actual PayPal processing fee
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Badge className="rounded-full border border-zinc-200 bg-white text-zinc-700">
+            Synced {item.syncedPayments}
+          </Badge>
+          {item.pendingFeeSyncPayments > 0 ? (
+            <Badge className="rounded-full border border-amber-200 bg-amber-50 text-amber-700">
+              Pending sync {item.pendingFeeSyncPayments}
+            </Badge>
+          ) : (
+            <Badge className="rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700">
+              All fee records synced
+            </Badge>
+          )}
         </div>
       </CardContent>
     </Card>
@@ -248,8 +300,33 @@ export default function AnalyticsPage() {
     refetchInterval: 60_000,
   });
 
+  const syncPaypalFeesMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiClient.post<SyncPaypalFeesResponse>(
+        "/finance/paypal-fees/sync",
+        {
+          limit: 50,
+        },
+      );
+      return response.data;
+    },
+    onSuccess: (response) => {
+      toast.success(response.message);
+      void queryClient.invalidateQueries({ queryKey: ["platform-finance-stats"] });
+      void queryClient.invalidateQueries({ queryKey: ["platform-order-analytics"] });
+    },
+    onError: (error) => {
+      if (axios.isAxiosError<{ message?: string }>(error)) {
+        toast.error(error.response?.data?.message ?? "Failed to sync PayPal fees");
+        return;
+      }
+
+      toast.error("Failed to sync PayPal fees");
+    },
+  });
+
   useAdminRealtime({
-    topics: ["orders"],
+    topics: ["orders", "finance"],
     onEvent: () => {
       void queryClient.invalidateQueries({ queryKey: ["platform-order-analytics"] });
       void queryClient.invalidateQueries({ queryKey: ["platform-finance-stats"] });
@@ -259,39 +336,51 @@ export default function AnalyticsPage() {
   const finance = financeQuery.data;
   const analytics = analyticsQuery.data;
 
-  const highlightCards = useMemo(
-    () => [
-      {
-        label: "Currencies",
-        value: formatNumber(finance?.revenue.length ?? 0),
-        detail: "revenue buckets tracked",
-        icon: Layers3,
-        tone: "text-violet-700 bg-violet-50 border-violet-200",
-      },
-      {
-        label: "Completed Payments",
-        value: formatNumber(finance?.completedPayments ?? 0),
-        detail: "payment records included",
-        icon: Receipt,
-        tone: "text-emerald-700 bg-emerald-50 border-emerald-200",
-      },
-      {
-        label: "Processed Payouts",
-        value: formatNumber(finance?.processedPayouts ?? 0),
-        detail: "artist withdrawals already processed",
-        icon: Landmark,
-        tone: "text-sky-700 bg-sky-50 border-sky-200",
-      },
-      {
-        label: "Top Artist Pairs",
-        value: formatNumber(analytics?.topPairs.length ?? 0),
-        detail: "repeat order relationships visible",
-        icon: ArrowRightLeft,
-        tone: "text-amber-700 bg-amber-50 border-amber-200",
-      },
-    ],
-    [analytics?.topPairs.length, finance?.completedPayments, finance?.processedPayouts, finance?.revenue.length],
-  );
+  const highlightCards = [
+    {
+      label: "Currencies",
+      value: formatNumber(finance?.revenue.length ?? 0),
+      detail: "revenue buckets tracked",
+      icon: Layers3,
+      tone: "text-violet-700 bg-violet-50 border-violet-200",
+    },
+    {
+      label: "Completed Payments",
+      value: formatNumber(finance?.completedPayments ?? 0),
+      detail: "payment records included",
+      icon: Receipt,
+      tone: "text-emerald-700 bg-emerald-50 border-emerald-200",
+    },
+    {
+      label: "Processed Payouts",
+      value: formatNumber(finance?.processedPayouts ?? 0),
+      detail: "artist withdrawals already processed",
+      icon: Landmark,
+      tone: "text-sky-700 bg-sky-50 border-sky-200",
+    },
+    {
+      label: "Net Admin Revenue",
+      value: finance?.revenue[0]
+        ? formatMoney(
+            finance.revenue[0].adminNetRevenue,
+            finance.revenue[0].currency,
+          )
+        : "—",
+      detail:
+        finance?.pendingPaypalFeeSyncPayments
+          ? `${formatNumber(finance.pendingPaypalFeeSyncPayments)} payment(s) still need fee sync`
+          : "clean admin revenue after actual PayPal fees",
+      icon: Coins,
+      tone: "text-emerald-700 bg-emerald-50 border-emerald-200",
+    },
+    {
+      label: "Top Artist Pairs",
+      value: formatNumber(analytics?.topPairs.length ?? 0),
+      detail: "repeat order relationships visible",
+      icon: ArrowRightLeft,
+      tone: "text-amber-700 bg-amber-50 border-amber-200",
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -306,10 +395,10 @@ export default function AnalyticsPage() {
               Revenue Intelligence
             </div>
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-              Platform Revenue & Order Analytics
+              Admin Balance & Order Analytics
             </h1>
             <p className="max-w-2xl text-sm leading-relaxed text-slate-300 md:text-base">
-              Review gross volume, website fees, artist payouts, and the order segments that generate the most value across the platform.
+              Review gross volume, website fees, actual PayPal costs, clean admin revenue, and the order segments that generate the most value across the platform.
             </p>
           </div>
 
@@ -340,13 +429,32 @@ export default function AnalyticsPage() {
       </section>
 
       <section className="space-y-4">
-        <div>
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <h2 className="text-lg font-semibold tracking-tight text-zinc-950">
-            Platform Revenue
+            Admin Balance
           </h2>
-          <p className="text-sm text-zinc-500">
-            Live per-currency summary from `finance.revenue`.
-          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-sm text-zinc-500">
+              Net admin revenue is calculated from platform fees minus actual PayPal capture fees.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl border-zinc-200 bg-white"
+              onClick={() => syncPaypalFeesMutation.mutate()}
+              disabled={syncPaypalFeesMutation.isPending}
+            >
+              <RefreshCcw
+                className={cn(
+                  "mr-1.5 size-4",
+                  syncPaypalFeesMutation.isPending && "animate-spin",
+                )}
+              />
+              {syncPaypalFeesMutation.isPending
+                ? "Syncing PayPal Fees"
+                : "Sync PayPal Fees"}
+            </Button>
+          </div>
         </div>
 
         {financeQuery.isLoading ? (
@@ -364,10 +472,10 @@ export default function AnalyticsPage() {
                 <Coins className="size-5" />
               </div>
               <p className="mt-4 text-base font-semibold text-zinc-900">
-                No revenue captured yet
+                No admin balance data yet
               </p>
               <p className="mt-1 max-w-md text-sm text-zinc-500">
-                Revenue cards will populate once completed payments are available in the platform ledger.
+                Revenue cards will populate once completed payments and PayPal fee sync data are available.
               </p>
             </CardContent>
           </Card>
