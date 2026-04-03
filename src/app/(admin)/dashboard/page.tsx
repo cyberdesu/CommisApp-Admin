@@ -3,8 +3,6 @@ import { Activity, ArrowUpRight, Sparkles } from "lucide-react";
 
 import { DashboardOverview } from "@/components/admin/dashboard-overview";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   return (
@@ -87,10 +85,7 @@ export default function DashboardPage() {
 
         <Link
           href="/analytics"
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "rounded-lg border-border bg-card text-foreground hover:border-primary/35 hover:bg-primary/10 shadow-sm transition-colors",
-          )}
+          className="inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-sm font-medium whitespace-nowrap text-foreground shadow-sm transition-all outline-none select-none hover:border-primary/35 hover:bg-primary/10"
         >
           Open Revenue Analytics
         </Link>
