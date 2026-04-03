@@ -429,6 +429,8 @@ export const PaymentScalarFieldEnum = {
   paypalOrderId: 'paypalOrderId',
   paypalCaptureId: 'paypalCaptureId',
   amount: 'amount',
+  platformFee: 'platformFee',
+  artistNet: 'artistNet',
   currency: 'currency',
   paidAt: 'paidAt',
   createdAt: 'createdAt',

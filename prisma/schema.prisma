@@ -595,6 +595,8 @@ model Payment {
   paypalCaptureId String?
 
   amount          Decimal         @db.Decimal(10, 2)
+  platformFee     Decimal         @db.Decimal(10, 2) @default(0)
+  artistNet       Decimal         @db.Decimal(10, 2) @default(0)
   currency        String          @default("USD")
 
   paidAt          DateTime?

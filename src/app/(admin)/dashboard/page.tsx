@@ -1,8 +1,10 @@
+import Link from "next/link";
 import { Activity, ArrowUpRight, Sparkles } from "lucide-react";
 
 import { DashboardOverview } from "@/components/admin/dashboard-overview";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   return (
@@ -83,12 +85,15 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          className="rounded-lg border-border bg-card text-foreground hover:border-primary/35 hover:bg-primary/10 shadow-sm transition-colors"
+        <Link
+          href="/analytics"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "rounded-lg border-border bg-card text-foreground hover:border-primary/35 hover:bg-primary/10 shadow-sm transition-colors",
+          )}
         >
-          Export report
-        </Button>
+          Open Revenue Analytics
+        </Link>
       </div>
 
       <DashboardOverview />

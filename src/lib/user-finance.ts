@@ -5,6 +5,7 @@ import { Prisma } from "@/prisma/generated/client";
 import type {
   FinanceCurrencyBreakdown,
   PlatformFinanceStats,
+  PlatformRevenueCurrencyBreakdown,
   UserFinanceSummary,
 } from "@/lib/user-finance.types";
 
@@ -163,7 +164,7 @@ export async function getUserFinanceSummaries(userIds: number[]) {
         },
       },
       select: {
-        amount: true,
+        artistNet: true,
         currency: true,
         paidAt: true,
         order: {
@@ -203,7 +204,7 @@ export async function getUserFinanceSummaries(userIds: number[]) {
     const totals = getOrCreateCurrencyTotals(finance, currency);
 
     finance.completedPayments += 1;
-    totals.grossEarnings = totals.grossEarnings.add(payment.amount);
+    totals.grossEarnings = totals.grossEarnings.add(payment.artistNet);
     finance.lastPaidAt = updateLatestDate(finance.lastPaidAt, payment.paidAt);
   }
 
@@ -252,6 +253,8 @@ export async function getUserFinanceDetail(userId: number) {
         id: true,
         orderId: true,
         amount: true,
+        platformFee: true,
+        artistNet: true,
         currency: true,
         status: true,
         paidAt: true,
@@ -283,6 +286,8 @@ export async function getUserFinanceDetail(userId: number) {
       id: payment.id,
       orderId: payment.orderId,
       amount: payment.amount.toFixed(2),
+      platformFee: payment.platformFee.toFixed(2),
+      artistNet: payment.artistNet.toFixed(2),
       currency: normalizeCurrency(payment.currency),
       status: payment.status,
       paidAt: payment.paidAt?.toISOString() ?? null,
@@ -318,6 +323,8 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
       },
       _sum: {
         amount: true,
+        platformFee: true,
+        artistNet: true,
       },
     }),
     prisma.payout.groupBy({
@@ -353,6 +360,10 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
   ]);
 
   const currencyMap = new Map<string, MutableCurrencyTotals>();
+  const revenueMap = new Map<
+    string,
+    { grossVolume: Prisma.Decimal; platformFees: Prisma.Decimal; artistPayouts: Prisma.Decimal }
+  >();
 
   for (const payment of paymentGroups) {
     const currency = normalizeCurrency(payment.currency);
@@ -366,6 +377,16 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
 
     totals.grossEarnings = totals.grossEarnings.add(payment._sum.amount ?? ZERO);
     currencyMap.set(currency, totals);
+
+    const rev = revenueMap.get(currency) ?? {
+      grossVolume: ZERO,
+      platformFees: ZERO,
+      artistPayouts: ZERO,
+    };
+    rev.grossVolume = rev.grossVolume.add(payment._sum.amount ?? ZERO);
+    rev.platformFees = rev.platformFees.add(payment._sum.platformFee ?? ZERO);
+    rev.artistPayouts = rev.artistPayouts.add(payment._sum.artistNet ?? ZERO);
+    revenueMap.set(currency, rev);
   }
 
   let processedPayouts = 0;
@@ -394,6 +415,15 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
     currencyMap.set(currency, totals);
   }
 
+  const revenue: PlatformRevenueCurrencyBreakdown[] = [...revenueMap.entries()]
+    .map(([currency, rev]) => ({
+      currency,
+      grossVolume: rev.grossVolume.toFixed(2),
+      platformFees: rev.platformFees.toFixed(2),
+      artistPayouts: rev.artistPayouts.toFixed(2),
+    }))
+    .sort((left, right) => left.currency.localeCompare(right.currency));
+
   return {
     artistsWithEarnings: earningArtistGroups.length,
     artistsWithWithdrawals: withdrawnArtistGroups.length,
@@ -405,5 +435,6 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
     currencies: [...currencyMap.entries()]
       .map(([currency, totals]) => serializeCurrencyTotals(currency, totals))
       .sort((left, right) => left.currency.localeCompare(right.currency)),
+    revenue,
   };
 }

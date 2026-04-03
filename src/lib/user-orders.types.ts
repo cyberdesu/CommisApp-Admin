@@ -157,6 +157,8 @@ export type OrderAnalyticsSource = {
 export type OrderAnalyticsVolume = {
   currency: string;
   amount: string;
+  platformFees: string;
+  netVolume: string;
 };
 
 export type AdminOrderAnalytics = {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
+  BarChart3,
   Bell,
   ChevronRight,
   LayoutDashboard,
@@ -41,6 +42,12 @@ const menus = [
     label: "Dashboard",
     description: "Overview & performance",
     icon: LayoutDashboard,
+  },
+  {
+    href: "/analytics",
+    label: "Analytics",
+    description: "Revenue & order insights",
+    icon: BarChart3,
   },
   {
     href: "/users",
@@ -88,6 +95,7 @@ const menus = [
 
 function getPageTitle(pathname: string) {
   if (pathname.startsWith("/dashboard")) return "Dashboard Overview";
+  if (pathname.startsWith("/analytics")) return "Revenue & Analytics";
   if (pathname.startsWith("/users")) return "Users Management";
   if (pathname.startsWith("/orders")) return "Order Oversight";
   if (pathname.startsWith("/showcases")) return "Showcases Management";

@@ -23,6 +23,8 @@ export type RecentPaymentActivity = {
   id: string;
   orderId: string;
   amount: string;
+  platformFee: string;
+  artistNet: string;
   currency: string;
   status: "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED";
   paidAt: string | null;
@@ -40,10 +42,18 @@ export type RecentPayoutActivity = {
   reviewedAt: string | null;
 };
 
+export type PlatformRevenueCurrencyBreakdown = {
+  currency: string;
+  grossVolume: string;
+  platformFees: string;
+  artistPayouts: string;
+};
+
 export type PlatformFinanceStats = {
   artistsWithEarnings: number;
   artistsWithWithdrawals: number;
   completedPayments: number;
   processedPayouts: number;
   currencies: FinanceCurrencyBreakdown[];
+  revenue: PlatformRevenueCurrencyBreakdown[];
 };

@@ -101,13 +101,21 @@ function decimalOrZero(value: Prisma.Decimal | null | undefined) {
   return value ?? ZERO;
 }
 
+/** Must stay in sync with PLATFORM_FEE_RATE in orders.service.ts */
+const PLATFORM_FEE_RATE = new Prisma.Decimal("0.10");
+
 function serializeVolumeMap(volumeMap: Map<string, Prisma.Decimal>) {
   return [...volumeMap.entries()]
     .sort(([left], [right]) => left.localeCompare(right))
-    .map(([currency, amount]) => ({
-      currency,
-      amount: amount.toFixed(2),
-    }));
+    .map(([currency, amount]) => {
+      const fees = amount.mul(PLATFORM_FEE_RATE).toDecimalPlaces(2);
+      return {
+        currency,
+        amount: amount.toFixed(2),
+        platformFees: fees.toFixed(2),
+        netVolume: amount.sub(fees).toFixed(2),
+      };
+    });
 }
 
 function isObjectRecord(

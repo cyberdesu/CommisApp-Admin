@@ -2,7 +2,7 @@ import { Prisma, PrismaClient } from '../src/prisma/generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
-import { requireDatabaseUrl } from '../src/lib/env/database-url';
+import { requireDatabaseUrl } from '../src/lib/env/database-url-core';
 
 dotenv.config();
 
