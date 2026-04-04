@@ -16,6 +16,7 @@ import {
   Users,
   Wallet,
   Image as ImageIcon,
+  ScrollText,
 } from "lucide-react";
 
 import { LogoutButton } from "@/components/admin/logout-button";
@@ -86,6 +87,12 @@ const menus = [
     icon: Wallet,
   },
   {
+    href: "/transactions",
+    label: "Transactions",
+    description: "Track money movement",
+    icon: ScrollText,
+  },
+  {
     href: "/settings",
     label: "Settings",
     description: "Control preferences",
@@ -102,6 +109,7 @@ function getPageTitle(pathname: string) {
   if (pathname.startsWith("/chats")) return "Chat Monitoring";
   if (pathname.startsWith("/artist-requests")) return "Artist Verification";
   if (pathname.startsWith("/payouts")) return "Payout Management";
+  if (pathname.startsWith("/transactions")) return "Transaction Ledger";
   if (pathname.startsWith("/settings")) return "System Settings";
 
   return "Admin Panel";
