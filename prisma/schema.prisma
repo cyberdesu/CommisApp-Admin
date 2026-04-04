@@ -624,6 +624,13 @@ model Payout {
 
   status            PayoutStatus @default(PENDING)
   paypalEmail       String
+  paypalBatchId     String?
+  paypalItemId      String?
+  paypalBatchStatus String?
+  paypalItemStatus  String?
+  paypalFee         Decimal      @db.Decimal(10, 2) @default(0)
+  paypalFeeCurrency String?
+  paypalFeeSyncedAt DateTime?
 
   reviewedAt        DateTime?
   reviewedByAdminId Int?

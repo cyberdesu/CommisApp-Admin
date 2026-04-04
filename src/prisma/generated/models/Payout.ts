@@ -29,12 +29,14 @@ export type AggregatePayout = {
 export type PayoutAvgAggregateOutputType = {
   artistId: number | null
   amount: runtime.Decimal | null
+  paypalFee: runtime.Decimal | null
   reviewedByAdminId: number | null
 }
 
 export type PayoutSumAggregateOutputType = {
   artistId: number | null
   amount: runtime.Decimal | null
+  paypalFee: runtime.Decimal | null
   reviewedByAdminId: number | null
 }
 
@@ -45,6 +47,13 @@ export type PayoutMinAggregateOutputType = {
   currency: string | null
   status: $Enums.PayoutStatus | null
   paypalEmail: string | null
+  paypalBatchId: string | null
+  paypalItemId: string | null
+  paypalBatchStatus: string | null
+  paypalItemStatus: string | null
+  paypalFee: runtime.Decimal | null
+  paypalFeeCurrency: string | null
+  paypalFeeSyncedAt: Date | null
   reviewedAt: Date | null
   reviewedByAdminId: number | null
   reviewNote: string | null
@@ -59,6 +68,13 @@ export type PayoutMaxAggregateOutputType = {
   currency: string | null
   status: $Enums.PayoutStatus | null
   paypalEmail: string | null
+  paypalBatchId: string | null
+  paypalItemId: string | null
+  paypalBatchStatus: string | null
+  paypalItemStatus: string | null
+  paypalFee: runtime.Decimal | null
+  paypalFeeCurrency: string | null
+  paypalFeeSyncedAt: Date | null
   reviewedAt: Date | null
   reviewedByAdminId: number | null
   reviewNote: string | null
@@ -73,6 +89,13 @@ export type PayoutCountAggregateOutputType = {
   currency: number
   status: number
   paypalEmail: number
+  paypalBatchId: number
+  paypalItemId: number
+  paypalBatchStatus: number
+  paypalItemStatus: number
+  paypalFee: number
+  paypalFeeCurrency: number
+  paypalFeeSyncedAt: number
   reviewedAt: number
   reviewedByAdminId: number
   reviewNote: number
@@ -85,12 +108,14 @@ export type PayoutCountAggregateOutputType = {
 export type PayoutAvgAggregateInputType = {
   artistId?: true
   amount?: true
+  paypalFee?: true
   reviewedByAdminId?: true
 }
 
 export type PayoutSumAggregateInputType = {
   artistId?: true
   amount?: true
+  paypalFee?: true
   reviewedByAdminId?: true
 }
 
@@ -101,6 +126,13 @@ export type PayoutMinAggregateInputType = {
   currency?: true
   status?: true
   paypalEmail?: true
+  paypalBatchId?: true
+  paypalItemId?: true
+  paypalBatchStatus?: true
+  paypalItemStatus?: true
+  paypalFee?: true
+  paypalFeeCurrency?: true
+  paypalFeeSyncedAt?: true
   reviewedAt?: true
   reviewedByAdminId?: true
   reviewNote?: true
@@ -115,6 +147,13 @@ export type PayoutMaxAggregateInputType = {
   currency?: true
   status?: true
   paypalEmail?: true
+  paypalBatchId?: true
+  paypalItemId?: true
+  paypalBatchStatus?: true
+  paypalItemStatus?: true
+  paypalFee?: true
+  paypalFeeCurrency?: true
+  paypalFeeSyncedAt?: true
   reviewedAt?: true
   reviewedByAdminId?: true
   reviewNote?: true
@@ -129,6 +168,13 @@ export type PayoutCountAggregateInputType = {
   currency?: true
   status?: true
   paypalEmail?: true
+  paypalBatchId?: true
+  paypalItemId?: true
+  paypalBatchStatus?: true
+  paypalItemStatus?: true
+  paypalFee?: true
+  paypalFeeCurrency?: true
+  paypalFeeSyncedAt?: true
   reviewedAt?: true
   reviewedByAdminId?: true
   reviewNote?: true
@@ -230,6 +276,13 @@ export type PayoutGroupByOutputType = {
   currency: string
   status: $Enums.PayoutStatus
   paypalEmail: string
+  paypalBatchId: string | null
+  paypalItemId: string | null
+  paypalBatchStatus: string | null
+  paypalItemStatus: string | null
+  paypalFee: runtime.Decimal
+  paypalFeeCurrency: string | null
+  paypalFeeSyncedAt: Date | null
   reviewedAt: Date | null
   reviewedByAdminId: number | null
   reviewNote: string | null
@@ -267,6 +320,13 @@ export type PayoutWhereInput = {
   currency?: Prisma.StringFilter<"Payout"> | string
   status?: Prisma.EnumPayoutStatusFilter<"Payout"> | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFilter<"Payout"> | string
+  paypalBatchId?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalItemId?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalBatchStatus?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalItemStatus?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalFee?: Prisma.DecimalFilter<"Payout"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalFeeSyncedAt?: Prisma.DateTimeNullableFilter<"Payout"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"Payout"> | Date | string | null
   reviewedByAdminId?: Prisma.IntNullableFilter<"Payout"> | number | null
   reviewNote?: Prisma.StringNullableFilter<"Payout"> | string | null
@@ -282,6 +342,13 @@ export type PayoutOrderByWithRelationInput = {
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paypalEmail?: Prisma.SortOrder
+  paypalBatchId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalItemId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalBatchStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalItemStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedByAdminId?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewNote?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -301,6 +368,13 @@ export type PayoutWhereUniqueInput = Prisma.AtLeast<{
   currency?: Prisma.StringFilter<"Payout"> | string
   status?: Prisma.EnumPayoutStatusFilter<"Payout"> | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFilter<"Payout"> | string
+  paypalBatchId?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalItemId?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalBatchStatus?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalItemStatus?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalFee?: Prisma.DecimalFilter<"Payout"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalFeeSyncedAt?: Prisma.DateTimeNullableFilter<"Payout"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"Payout"> | Date | string | null
   reviewedByAdminId?: Prisma.IntNullableFilter<"Payout"> | number | null
   reviewNote?: Prisma.StringNullableFilter<"Payout"> | string | null
@@ -316,6 +390,13 @@ export type PayoutOrderByWithAggregationInput = {
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paypalEmail?: Prisma.SortOrder
+  paypalBatchId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalItemId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalBatchStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalItemStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedByAdminId?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewNote?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -338,6 +419,13 @@ export type PayoutScalarWhereWithAggregatesInput = {
   currency?: Prisma.StringWithAggregatesFilter<"Payout"> | string
   status?: Prisma.EnumPayoutStatusWithAggregatesFilter<"Payout"> | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringWithAggregatesFilter<"Payout"> | string
+  paypalBatchId?: Prisma.StringNullableWithAggregatesFilter<"Payout"> | string | null
+  paypalItemId?: Prisma.StringNullableWithAggregatesFilter<"Payout"> | string | null
+  paypalBatchStatus?: Prisma.StringNullableWithAggregatesFilter<"Payout"> | string | null
+  paypalItemStatus?: Prisma.StringNullableWithAggregatesFilter<"Payout"> | string | null
+  paypalFee?: Prisma.DecimalWithAggregatesFilter<"Payout"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.StringNullableWithAggregatesFilter<"Payout"> | string | null
+  paypalFeeSyncedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payout"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payout"> | Date | string | null
   reviewedByAdminId?: Prisma.IntNullableWithAggregatesFilter<"Payout"> | number | null
   reviewNote?: Prisma.StringNullableWithAggregatesFilter<"Payout"> | string | null
@@ -351,6 +439,13 @@ export type PayoutCreateInput = {
   currency?: string
   status?: $Enums.PayoutStatus
   paypalEmail: string
+  paypalBatchId?: string | null
+  paypalItemId?: string | null
+  paypalBatchStatus?: string | null
+  paypalItemStatus?: string | null
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   reviewedAt?: Date | string | null
   reviewedByAdminId?: number | null
   reviewNote?: string | null
@@ -366,6 +461,13 @@ export type PayoutUncheckedCreateInput = {
   currency?: string
   status?: $Enums.PayoutStatus
   paypalEmail: string
+  paypalBatchId?: string | null
+  paypalItemId?: string | null
+  paypalBatchStatus?: string | null
+  paypalItemStatus?: string | null
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   reviewedAt?: Date | string | null
   reviewedByAdminId?: number | null
   reviewNote?: string | null
@@ -379,6 +481,13 @@ export type PayoutUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  paypalBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalBatchStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedByAdminId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -394,6 +503,13 @@ export type PayoutUncheckedUpdateInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  paypalBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalBatchStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedByAdminId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -408,6 +524,13 @@ export type PayoutCreateManyInput = {
   currency?: string
   status?: $Enums.PayoutStatus
   paypalEmail: string
+  paypalBatchId?: string | null
+  paypalItemId?: string | null
+  paypalBatchStatus?: string | null
+  paypalItemStatus?: string | null
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   reviewedAt?: Date | string | null
   reviewedByAdminId?: number | null
   reviewNote?: string | null
@@ -421,6 +544,13 @@ export type PayoutUpdateManyMutationInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  paypalBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalBatchStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedByAdminId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -435,6 +565,13 @@ export type PayoutUncheckedUpdateManyInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  paypalBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalBatchStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedByAdminId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -465,6 +602,13 @@ export type PayoutCountOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paypalEmail?: Prisma.SortOrder
+  paypalBatchId?: Prisma.SortOrder
+  paypalItemId?: Prisma.SortOrder
+  paypalBatchStatus?: Prisma.SortOrder
+  paypalItemStatus?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   reviewedByAdminId?: Prisma.SortOrder
   reviewNote?: Prisma.SortOrder
@@ -475,6 +619,7 @@ export type PayoutCountOrderByAggregateInput = {
 export type PayoutAvgOrderByAggregateInput = {
   artistId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
   reviewedByAdminId?: Prisma.SortOrder
 }
 
@@ -485,6 +630,13 @@ export type PayoutMaxOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paypalEmail?: Prisma.SortOrder
+  paypalBatchId?: Prisma.SortOrder
+  paypalItemId?: Prisma.SortOrder
+  paypalBatchStatus?: Prisma.SortOrder
+  paypalItemStatus?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   reviewedByAdminId?: Prisma.SortOrder
   reviewNote?: Prisma.SortOrder
@@ -499,6 +651,13 @@ export type PayoutMinOrderByAggregateInput = {
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paypalEmail?: Prisma.SortOrder
+  paypalBatchId?: Prisma.SortOrder
+  paypalItemId?: Prisma.SortOrder
+  paypalBatchStatus?: Prisma.SortOrder
+  paypalItemStatus?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
+  paypalFeeCurrency?: Prisma.SortOrder
+  paypalFeeSyncedAt?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   reviewedByAdminId?: Prisma.SortOrder
   reviewNote?: Prisma.SortOrder
@@ -509,6 +668,7 @@ export type PayoutMinOrderByAggregateInput = {
 export type PayoutSumOrderByAggregateInput = {
   artistId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  paypalFee?: Prisma.SortOrder
   reviewedByAdminId?: Prisma.SortOrder
 }
 
@@ -564,6 +724,13 @@ export type PayoutCreateWithoutArtistInput = {
   currency?: string
   status?: $Enums.PayoutStatus
   paypalEmail: string
+  paypalBatchId?: string | null
+  paypalItemId?: string | null
+  paypalBatchStatus?: string | null
+  paypalItemStatus?: string | null
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   reviewedAt?: Date | string | null
   reviewedByAdminId?: number | null
   reviewNote?: string | null
@@ -577,6 +744,13 @@ export type PayoutUncheckedCreateWithoutArtistInput = {
   currency?: string
   status?: $Enums.PayoutStatus
   paypalEmail: string
+  paypalBatchId?: string | null
+  paypalItemId?: string | null
+  paypalBatchStatus?: string | null
+  paypalItemStatus?: string | null
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   reviewedAt?: Date | string | null
   reviewedByAdminId?: number | null
   reviewNote?: string | null
@@ -620,6 +794,13 @@ export type PayoutScalarWhereInput = {
   currency?: Prisma.StringFilter<"Payout"> | string
   status?: Prisma.EnumPayoutStatusFilter<"Payout"> | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFilter<"Payout"> | string
+  paypalBatchId?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalItemId?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalBatchStatus?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalItemStatus?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalFee?: Prisma.DecimalFilter<"Payout"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.StringNullableFilter<"Payout"> | string | null
+  paypalFeeSyncedAt?: Prisma.DateTimeNullableFilter<"Payout"> | Date | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"Payout"> | Date | string | null
   reviewedByAdminId?: Prisma.IntNullableFilter<"Payout"> | number | null
   reviewNote?: Prisma.StringNullableFilter<"Payout"> | string | null
@@ -633,6 +814,13 @@ export type PayoutCreateManyArtistInput = {
   currency?: string
   status?: $Enums.PayoutStatus
   paypalEmail: string
+  paypalBatchId?: string | null
+  paypalItemId?: string | null
+  paypalBatchStatus?: string | null
+  paypalItemStatus?: string | null
+  paypalFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: string | null
+  paypalFeeSyncedAt?: Date | string | null
   reviewedAt?: Date | string | null
   reviewedByAdminId?: number | null
   reviewNote?: string | null
@@ -646,6 +834,13 @@ export type PayoutUpdateWithoutArtistInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  paypalBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalBatchStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedByAdminId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -659,6 +854,13 @@ export type PayoutUncheckedUpdateWithoutArtistInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  paypalBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalBatchStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedByAdminId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -672,6 +874,13 @@ export type PayoutUncheckedUpdateManyWithoutArtistInput = {
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPayoutStatusFieldUpdateOperationsInput | $Enums.PayoutStatus
   paypalEmail?: Prisma.StringFieldUpdateOperationsInput | string
+  paypalBatchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalBatchStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalItemStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paypalFeeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paypalFeeSyncedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   reviewedByAdminId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -688,6 +897,13 @@ export type PayoutSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   currency?: boolean
   status?: boolean
   paypalEmail?: boolean
+  paypalBatchId?: boolean
+  paypalItemId?: boolean
+  paypalBatchStatus?: boolean
+  paypalItemStatus?: boolean
+  paypalFee?: boolean
+  paypalFeeCurrency?: boolean
+  paypalFeeSyncedAt?: boolean
   reviewedAt?: boolean
   reviewedByAdminId?: boolean
   reviewNote?: boolean
@@ -703,6 +919,13 @@ export type PayoutSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   currency?: boolean
   status?: boolean
   paypalEmail?: boolean
+  paypalBatchId?: boolean
+  paypalItemId?: boolean
+  paypalBatchStatus?: boolean
+  paypalItemStatus?: boolean
+  paypalFee?: boolean
+  paypalFeeCurrency?: boolean
+  paypalFeeSyncedAt?: boolean
   reviewedAt?: boolean
   reviewedByAdminId?: boolean
   reviewNote?: boolean
@@ -718,6 +941,13 @@ export type PayoutSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   currency?: boolean
   status?: boolean
   paypalEmail?: boolean
+  paypalBatchId?: boolean
+  paypalItemId?: boolean
+  paypalBatchStatus?: boolean
+  paypalItemStatus?: boolean
+  paypalFee?: boolean
+  paypalFeeCurrency?: boolean
+  paypalFeeSyncedAt?: boolean
   reviewedAt?: boolean
   reviewedByAdminId?: boolean
   reviewNote?: boolean
@@ -733,6 +963,13 @@ export type PayoutSelectScalar = {
   currency?: boolean
   status?: boolean
   paypalEmail?: boolean
+  paypalBatchId?: boolean
+  paypalItemId?: boolean
+  paypalBatchStatus?: boolean
+  paypalItemStatus?: boolean
+  paypalFee?: boolean
+  paypalFeeCurrency?: boolean
+  paypalFeeSyncedAt?: boolean
   reviewedAt?: boolean
   reviewedByAdminId?: boolean
   reviewNote?: boolean
@@ -740,7 +977,7 @@ export type PayoutSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PayoutOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "artistId" | "amount" | "currency" | "status" | "paypalEmail" | "reviewedAt" | "reviewedByAdminId" | "reviewNote" | "createdAt" | "updatedAt", ExtArgs["result"]["payout"]>
+export type PayoutOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "artistId" | "amount" | "currency" | "status" | "paypalEmail" | "paypalBatchId" | "paypalItemId" | "paypalBatchStatus" | "paypalItemStatus" | "paypalFee" | "paypalFeeCurrency" | "paypalFeeSyncedAt" | "reviewedAt" | "reviewedByAdminId" | "reviewNote" | "createdAt" | "updatedAt", ExtArgs["result"]["payout"]>
 export type PayoutInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   artist?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -763,6 +1000,13 @@ export type $PayoutPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     currency: string
     status: $Enums.PayoutStatus
     paypalEmail: string
+    paypalBatchId: string | null
+    paypalItemId: string | null
+    paypalBatchStatus: string | null
+    paypalItemStatus: string | null
+    paypalFee: runtime.Decimal
+    paypalFeeCurrency: string | null
+    paypalFeeSyncedAt: Date | null
     reviewedAt: Date | null
     reviewedByAdminId: number | null
     reviewNote: string | null
@@ -1198,6 +1442,13 @@ export interface PayoutFieldRefs {
   readonly currency: Prisma.FieldRef<"Payout", 'String'>
   readonly status: Prisma.FieldRef<"Payout", 'PayoutStatus'>
   readonly paypalEmail: Prisma.FieldRef<"Payout", 'String'>
+  readonly paypalBatchId: Prisma.FieldRef<"Payout", 'String'>
+  readonly paypalItemId: Prisma.FieldRef<"Payout", 'String'>
+  readonly paypalBatchStatus: Prisma.FieldRef<"Payout", 'String'>
+  readonly paypalItemStatus: Prisma.FieldRef<"Payout", 'String'>
+  readonly paypalFee: Prisma.FieldRef<"Payout", 'Decimal'>
+  readonly paypalFeeCurrency: Prisma.FieldRef<"Payout", 'String'>
+  readonly paypalFeeSyncedAt: Prisma.FieldRef<"Payout", 'DateTime'>
   readonly reviewedAt: Prisma.FieldRef<"Payout", 'DateTime'>
   readonly reviewedByAdminId: Prisma.FieldRef<"Payout", 'Int'>
   readonly reviewNote: Prisma.FieldRef<"Payout", 'String'>

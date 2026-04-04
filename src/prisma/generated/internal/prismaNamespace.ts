@@ -3637,6 +3637,13 @@ export const PayoutScalarFieldEnum = {
   currency: 'currency',
   status: 'status',
   paypalEmail: 'paypalEmail',
+  paypalBatchId: 'paypalBatchId',
+  paypalItemId: 'paypalItemId',
+  paypalBatchStatus: 'paypalBatchStatus',
+  paypalItemStatus: 'paypalItemStatus',
+  paypalFee: 'paypalFee',
+  paypalFeeCurrency: 'paypalFeeCurrency',
+  paypalFeeSyncedAt: 'paypalFeeSyncedAt',
   reviewedAt: 'reviewedAt',
   reviewedByAdminId: 'reviewedByAdminId',
   reviewNote: 'reviewNote',
@@ -4097,6 +4104,11 @@ export const PayoutOrderByRelevanceFieldEnum = {
   id: 'id',
   currency: 'currency',
   paypalEmail: 'paypalEmail',
+  paypalBatchId: 'paypalBatchId',
+  paypalItemId: 'paypalItemId',
+  paypalBatchStatus: 'paypalBatchStatus',
+  paypalItemStatus: 'paypalItemStatus',
+  paypalFeeCurrency: 'paypalFeeCurrency',
   reviewNote: 'reviewNote'
 } as const
 

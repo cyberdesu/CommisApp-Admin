@@ -20,11 +20,12 @@ type MutableCurrencyTotals = {
 type MutablePlatformRevenueTotals = {
   grossVolume: Prisma.Decimal;
   platformFees: Prisma.Decimal;
-  paypalFees: Prisma.Decimal;
-  adminNetRevenue: Prisma.Decimal;
+  paymentPaypalFees: Prisma.Decimal;
+  payoutPaypalFees: Prisma.Decimal;
+  adminNetProfit: Prisma.Decimal;
   artistPayouts: Prisma.Decimal;
-  syncedPayments: number;
-  pendingFeeSyncPayments: number;
+  syncedPaymentFeePayments: number;
+  pendingPaymentFeeSyncPayments: number;
 };
 
 type MutableUserFinance = {
@@ -91,10 +92,6 @@ function updateLatestDate(current: Date | null, incoming?: Date | null) {
   if (!incoming) return current;
   if (!current || incoming > current) return incoming;
   return current;
-}
-
-function decimalMax(value: Prisma.Decimal, minimum = ZERO) {
-  return value.greaterThan(minimum) ? value : minimum;
 }
 
 function serializeCurrencyTotals(
@@ -297,6 +294,13 @@ export async function getUserFinanceDetail(userId: number) {
         currency: true,
         status: true,
         paypalEmail: true,
+        paypalBatchId: true,
+        paypalItemId: true,
+        paypalBatchStatus: true,
+        paypalItemStatus: true,
+        paypalFee: true,
+        paypalFeeCurrency: true,
+        paypalFeeSyncedAt: true,
         reviewNote: true,
         createdAt: true,
         reviewedAt: true,
@@ -320,9 +324,7 @@ export async function getUserFinanceDetail(userId: number) {
       paypalNetCurrency: payment.paypalNetCurrency
         ? normalizeCurrency(payment.paypalNetCurrency)
         : null,
-      adminNetRevenue: decimalMax(
-        payment.platformFee.sub(payment.paypalFee),
-      ).toFixed(2),
+      adminNetRevenue: payment.platformFee.sub(payment.paypalFee).toFixed(2),
       paypalFeeSyncedAt: payment.paypalFeeSyncedAt?.toISOString() ?? null,
       currency: normalizeCurrency(payment.currency),
       status: payment.status,
@@ -335,6 +337,15 @@ export async function getUserFinanceDetail(userId: number) {
       currency: normalizeCurrency(payout.currency),
       status: payout.status,
       paypalEmail: payout.paypalEmail,
+      paypalBatchId: payout.paypalBatchId,
+      paypalItemId: payout.paypalItemId,
+      paypalBatchStatus: payout.paypalBatchStatus,
+      paypalItemStatus: payout.paypalItemStatus,
+      paypalFee: payout.paypalFee.toFixed(2),
+      paypalFeeCurrency: payout.paypalFeeCurrency
+        ? normalizeCurrency(payout.paypalFeeCurrency)
+        : null,
+      paypalFeeSyncedAt: payout.paypalFeeSyncedAt?.toISOString() ?? null,
       reviewNote: payout.reviewNote,
       createdAt: payout.createdAt.toISOString(),
       reviewedAt: payout.reviewedAt?.toISOString() ?? null,
@@ -348,6 +359,8 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
     syncedPaymentGroups,
     pendingFeeSyncGroups,
     payoutGroups,
+    payoutFeeRows,
+    pendingPayoutFeeSyncPayouts,
     earningArtistGroups,
     withdrawnArtistGroups,
   ] = await Promise.all([
@@ -405,6 +418,28 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
         amount: true,
       },
     }),
+    prisma.payout.findMany({
+      where: {
+        status: "SENT",
+        paypalFeeSyncedAt: {
+          not: null,
+        },
+      },
+      select: {
+        paypalFee: true,
+        paypalFeeCurrency: true,
+        currency: true,
+      },
+    }),
+    prisma.payout.count({
+      where: {
+        status: "SENT",
+        paypalBatchId: {
+          not: null,
+        },
+        paypalFeeSyncedAt: null,
+      },
+    }),
     prisma.order.groupBy({
       by: ["artistId"],
       where: {
@@ -454,23 +489,42 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
     const rev = revenueMap.get(currency) ?? {
       grossVolume: ZERO,
       platformFees: ZERO,
-      paypalFees: ZERO,
-      adminNetRevenue: ZERO,
+      paymentPaypalFees: ZERO,
+      payoutPaypalFees: ZERO,
+      adminNetProfit: ZERO,
       artistPayouts: ZERO,
-      syncedPayments: 0,
-      pendingFeeSyncPayments: 0,
+      syncedPaymentFeePayments: 0,
+      pendingPaymentFeeSyncPayments: 0,
     };
     rev.grossVolume = rev.grossVolume.add(payment._sum.amount ?? ZERO);
     rev.platformFees = rev.platformFees.add(payment._sum.platformFee ?? ZERO);
-    rev.paypalFees = rev.paypalFees.add(payment._sum.paypalFee ?? ZERO);
-    rev.adminNetRevenue = rev.adminNetRevenue.add(
-      decimalMax(
-        (payment._sum.platformFee ?? ZERO).sub(payment._sum.paypalFee ?? ZERO),
-      ),
+    rev.paymentPaypalFees = rev.paymentPaypalFees.add(payment._sum.paypalFee ?? ZERO);
+    rev.adminNetProfit = rev.adminNetProfit.add(
+      (payment._sum.platformFee ?? ZERO).sub(payment._sum.paypalFee ?? ZERO),
     );
     rev.artistPayouts = rev.artistPayouts.add(payment._sum.artistNet ?? ZERO);
-    rev.syncedPayments = syncedCountsByCurrency.get(currency) ?? 0;
-    rev.pendingFeeSyncPayments = pendingCountsByCurrency.get(currency) ?? 0;
+    rev.syncedPaymentFeePayments = syncedCountsByCurrency.get(currency) ?? 0;
+    rev.pendingPaymentFeeSyncPayments = pendingCountsByCurrency.get(currency) ?? 0;
+    revenueMap.set(currency, rev);
+  }
+
+  for (const payoutFeeRow of payoutFeeRows) {
+    const currency = normalizeCurrency(
+      payoutFeeRow.paypalFeeCurrency ?? payoutFeeRow.currency,
+    );
+    const rev = revenueMap.get(currency) ?? {
+      grossVolume: ZERO,
+      platformFees: ZERO,
+      paymentPaypalFees: ZERO,
+      payoutPaypalFees: ZERO,
+      adminNetProfit: ZERO,
+      artistPayouts: ZERO,
+      syncedPaymentFeePayments: 0,
+      pendingPaymentFeeSyncPayments: 0,
+    };
+
+    rev.payoutPaypalFees = rev.payoutPaypalFees.add(payoutFeeRow.paypalFee);
+    rev.adminNetProfit = rev.adminNetProfit.sub(payoutFeeRow.paypalFee);
     revenueMap.set(currency, rev);
   }
 
@@ -505,11 +559,12 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
       currency,
       grossVolume: rev.grossVolume.toFixed(2),
       platformFees: rev.platformFees.toFixed(2),
-      paypalFees: rev.paypalFees.toFixed(2),
-      adminNetRevenue: rev.adminNetRevenue.toFixed(2),
+      paymentPaypalFees: rev.paymentPaypalFees.toFixed(2),
+      payoutPaypalFees: rev.payoutPaypalFees.toFixed(2),
+      adminNetProfit: rev.adminNetProfit.toFixed(2),
       artistPayouts: rev.artistPayouts.toFixed(2),
-      syncedPayments: rev.syncedPayments,
-      pendingFeeSyncPayments: rev.pendingFeeSyncPayments,
+      syncedPaymentFeePayments: rev.syncedPaymentFeePayments,
+      pendingPaymentFeeSyncPayments: rev.pendingPaymentFeeSyncPayments,
     }))
     .sort((left, right) => left.currency.localeCompare(right.currency));
 
@@ -520,15 +575,17 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
       (sum, group) => sum + group._count._all,
       0,
     ),
-    syncedPaypalFeePayments: revenue.reduce(
-      (sum, item) => sum + item.syncedPayments,
+    syncedPaymentFeePayments: revenue.reduce(
+      (sum, item) => sum + item.syncedPaymentFeePayments,
       0,
     ),
-    pendingPaypalFeeSyncPayments: revenue.reduce(
-      (sum, item) => sum + item.pendingFeeSyncPayments,
+    pendingPaymentFeeSyncPayments: revenue.reduce(
+      (sum, item) => sum + item.pendingPaymentFeeSyncPayments,
       0,
     ),
     processedPayouts,
+    syncedPayoutFeePayouts: payoutFeeRows.length,
+    pendingPayoutFeeSyncPayouts,
     currencies: [...currencyMap.entries()]
       .map(([currency, totals]) => serializeCurrencyTotals(currency, totals))
       .sort((left, right) => left.currency.localeCompare(right.currency)),

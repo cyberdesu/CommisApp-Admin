@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { isAllowedOrigin } from "@/lib/auth/origin";
+import { broadcastAdminRealtimeTopics } from "@/lib/admin-realtime";
 import { createRequestLogger } from "@/lib/logger";
 import {
   PaypalPayoutError,
@@ -126,6 +127,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
               payoutBatchId: string | null;
               batchStatus: string | null;
               payoutItemId: string | null;
+              itemStatus: string | null;
               wasRecoveredFromDuplicate: boolean;
             }
           | null = null;
@@ -155,6 +157,14 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
             reviewedAt: new Date(),
             reviewedByAdminId: admin.id,
             reviewNote: note,
+            ...(payload.data.action === "approve"
+              ? {
+                  paypalBatchId: paypalResult?.payoutBatchId ?? null,
+                  paypalItemId: paypalResult?.payoutItemId ?? null,
+                  paypalBatchStatus: paypalResult?.batchStatus ?? null,
+                  paypalItemStatus: paypalResult?.itemStatus ?? null,
+                }
+              : {}),
           },
         });
 
@@ -185,6 +195,7 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
     requestLogger.info("Payout update completed successfully", {
       paypal: result.paypal,
     });
+    broadcastAdminRealtimeTopics(["finance"], "direct");
     return NextResponse.json(result);
   } catch (error) {
     if (error instanceof PayoutRouteError) {

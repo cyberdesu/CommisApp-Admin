@@ -56,7 +56,33 @@ type PaypalCreatePayoutResponse = {
 
 type PaypalMoneyAmount = {
   currency_code?: string;
+  currency?: string;
   value?: string;
+};
+
+type PaypalPayoutBatchDetailsResponse = {
+  batch_header?: {
+    payout_batch_id?: string;
+    batch_status?: string;
+  };
+  items?: Array<{
+    payout_item_id?: string;
+    transaction_status?: string;
+    payout_item?: {
+      sender_item_id?: string;
+      amount?: PaypalMoneyAmount;
+    };
+  }>;
+};
+
+type PaypalPayoutItemDetailsResponse = {
+  payout_item_id?: string;
+  transaction_status?: string;
+  payout_item_fee?: PaypalMoneyAmount;
+  payout_item?: {
+    sender_item_id?: string;
+    amount?: PaypalMoneyAmount;
+  };
 };
 
 type PaypalCaptureDetailsResponse = {
@@ -87,6 +113,18 @@ function isPaypalCaptureDetailsResponse(
   payload: PaypalCaptureDetailsResponse | PaypalErrorResponse | null,
 ): payload is PaypalCaptureDetailsResponse {
   return Boolean(payload && ("seller_receivable_breakdown" in payload || "status" in payload));
+}
+
+function isPaypalPayoutBatchDetailsResponse(
+  payload: PaypalPayoutBatchDetailsResponse | PaypalErrorResponse | null,
+): payload is PaypalPayoutBatchDetailsResponse {
+  return Boolean(payload && ("batch_header" in payload || "items" in payload));
+}
+
+function isPaypalPayoutItemDetailsResponse(
+  payload: PaypalPayoutItemDetailsResponse | PaypalErrorResponse | null,
+): payload is PaypalPayoutItemDetailsResponse {
+  return Boolean(payload && ("payout_item_id" in payload || "transaction_status" in payload));
 }
 
 export class PaypalPayoutError extends Error {
@@ -325,7 +363,7 @@ function buildPayoutMessage(note?: string | null) {
 
 function normalizeMoneyAmount(value: PaypalMoneyAmount | undefined) {
   const amount = value?.value?.trim();
-  const currency = value?.currency_code?.trim().toUpperCase();
+  const currency = (value?.currency_code ?? value?.currency)?.trim().toUpperCase();
 
   if (!amount || !currency) {
     return null;
@@ -335,6 +373,98 @@ function normalizeMoneyAmount(value: PaypalMoneyAmount | undefined) {
     amount,
     currency,
   };
+}
+
+async function fetchPaypalPayoutBatchDetails(options: {
+  payoutBatchId: string;
+  accessToken: string;
+  apiBaseUrl: string;
+}) {
+  const response = await fetch(
+    `${options.apiBaseUrl}/v1/payments/payouts/${encodeURIComponent(options.payoutBatchId)}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${options.accessToken}`,
+        Accept: "application/json",
+      },
+      cache: "no-store",
+      signal: AbortSignal.timeout(PAYPAL_PAYOUT_TIMEOUT_MS),
+    },
+  );
+
+  const raw = (await response.json().catch(() => null)) as
+    | PaypalPayoutBatchDetailsResponse
+    | PaypalErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new PaypalPayoutError(
+      formatPaypalErrorMessage(
+        raw as PaypalErrorResponse | null,
+        "Failed to fetch PayPal payout batch details.",
+      ),
+      {
+        status: response.status,
+        details: (raw as PaypalErrorResponse | null) ?? null,
+      },
+    );
+  }
+
+  if (!isPaypalPayoutBatchDetailsResponse(raw)) {
+    throw new PaypalPayoutError(
+      "PayPal payout batch details response is malformed.",
+      { status: 502 },
+    );
+  }
+
+  return raw;
+}
+
+async function fetchPaypalPayoutItemDetails(options: {
+  payoutItemId: string;
+  accessToken: string;
+  apiBaseUrl: string;
+}) {
+  const response = await fetch(
+    `${options.apiBaseUrl}/v1/payments/payouts-item/${encodeURIComponent(options.payoutItemId)}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${options.accessToken}`,
+        Accept: "application/json",
+      },
+      cache: "no-store",
+      signal: AbortSignal.timeout(PAYPAL_PAYOUT_TIMEOUT_MS),
+    },
+  );
+
+  const raw = (await response.json().catch(() => null)) as
+    | PaypalPayoutItemDetailsResponse
+    | PaypalErrorResponse
+    | null;
+
+  if (!response.ok) {
+    throw new PaypalPayoutError(
+      formatPaypalErrorMessage(
+        raw as PaypalErrorResponse | null,
+        "Failed to fetch PayPal payout item details.",
+      ),
+      {
+        status: response.status,
+        details: (raw as PaypalErrorResponse | null) ?? null,
+      },
+    );
+  }
+
+  if (!isPaypalPayoutItemDetailsResponse(raw)) {
+    throw new PaypalPayoutError(
+      "PayPal payout item details response is malformed.",
+      { status: 502 },
+    );
+  }
+
+  return raw;
 }
 
 export async function getPaypalCaptureFinancials(options: {
@@ -423,6 +553,102 @@ export async function getPaypalCaptureFinancials(options: {
     grossAmount,
     paypalFee,
     netAmount,
+  };
+}
+
+export async function getPaypalPayoutFinancials(options: {
+  payoutId: string;
+  payoutBatchId: string;
+  payoutItemId?: string | null;
+  logger?: AppLogger;
+}) {
+  const payoutId = options.payoutId.trim();
+  const payoutBatchId = options.payoutBatchId.trim();
+
+  if (!payoutId || !payoutBatchId) {
+    throw new PaypalPayoutError(
+      "PayPal payout sync requires both payout id and payout batch id.",
+      { status: 400 },
+    );
+  }
+
+  const logger = options.logger?.child({
+    component: "paypal",
+    payoutId,
+    payoutBatchId,
+  }) ?? createLogger({
+    component: "paypal",
+    payoutId,
+    payoutBatchId,
+  });
+
+  const config = getPaypalConfig();
+  const accessToken = await getAccessToken(config);
+
+  logger.info("Fetching PayPal payout financial breakdown");
+
+  let payoutItemId = options.payoutItemId?.trim() || null;
+  let batchStatus: string | null = null;
+  let itemStatus: string | null = null;
+
+  if (!payoutItemId) {
+    const batchDetails = await fetchPaypalPayoutBatchDetails({
+      payoutBatchId,
+      accessToken,
+      apiBaseUrl: config.apiBaseUrl,
+    });
+
+    batchStatus = batchDetails.batch_header?.batch_status ?? null;
+    const matchedItem =
+      batchDetails.items?.find(
+        (item) => item.payout_item?.sender_item_id === payoutId,
+      ) ??
+      batchDetails.items?.[0] ??
+      null;
+
+    payoutItemId = matchedItem?.payout_item_id ?? null;
+    itemStatus = matchedItem?.transaction_status ?? null;
+  }
+
+  if (!payoutItemId) {
+    logger.warn("PayPal payout item id is not available yet");
+    return {
+      payoutBatchId,
+      payoutItemId: null,
+      batchStatus,
+      itemStatus,
+      payoutFee: null,
+      payoutAmount: null,
+    };
+  }
+
+  const itemDetails = await fetchPaypalPayoutItemDetails({
+    payoutItemId,
+    accessToken,
+    apiBaseUrl: config.apiBaseUrl,
+  });
+
+  const payoutFee = normalizeMoneyAmount(itemDetails.payout_item_fee);
+  const payoutAmount = normalizeMoneyAmount(itemDetails.payout_item?.amount);
+  itemStatus = itemDetails.transaction_status ?? itemStatus;
+
+  logger.info("Fetched PayPal payout financial breakdown", {
+    payoutItemId,
+    batchStatus,
+    itemStatus,
+    payoutFee: payoutFee?.amount ?? null,
+    payoutFeeCurrency: payoutFee?.currency ?? null,
+    payoutAmount: payoutAmount?.amount ?? null,
+    payoutAmountCurrency: payoutAmount?.currency ?? null,
+  });
+
+  return {
+    payoutBatchId,
+    payoutItemId,
+    batchStatus,
+    itemStatus,
+    payoutFee,
+    payoutAmount,
   };
 }
 
@@ -526,6 +752,9 @@ export async function createPaypalPayout(options: {
         payoutBatchId: recoveredBatchId,
         batchStatus: recoveredBatchStatus,
         payoutItemId: recoveredPayoutItemId,
+        itemStatus: isPaypalCreatePayoutResponse(recovered)
+          ? recovered.items?.[0]?.transaction_status ?? null
+          : null,
         wasRecoveredFromDuplicate: true,
       };
     }
@@ -564,6 +793,9 @@ export async function createPaypalPayout(options: {
     payoutBatchId,
     batchStatus,
     payoutItemId,
+    itemStatus: isPaypalCreatePayoutResponse(raw)
+      ? raw.items?.[0]?.transaction_status ?? null
+      : null,
     wasRecoveredFromDuplicate: false,
   };
 }

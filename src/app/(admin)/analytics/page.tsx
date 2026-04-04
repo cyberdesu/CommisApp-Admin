@@ -52,6 +52,16 @@ type SyncPaypalFeesResponse = {
   };
 };
 
+type SyncPaypalPayoutFeesResponse = {
+  message: string;
+  data: {
+    scanned: number;
+    synced: number;
+    pending: number;
+    failed: number;
+  };
+};
+
 function formatMoney(amount: string, currency: string) {
   const numeric = Number(amount);
 
@@ -109,59 +119,73 @@ function RevenueCard({
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="rounded-2xl border border-amber-100 bg-amber-50/80 p-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700">
-            Platform Fees
-          </p>
-          <p className="mt-1 text-sm font-semibold text-amber-950">
-            {formatMoney(item.platformFees, item.currency)}
-          </p>
-          <p className="mt-1 text-[11px] text-amber-900/70">
-            Gross website fee before PayPal charges
-          </p>
-        </div>
-        <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-700">
-            Artist Payouts
-          </p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700">
+              Platform Fees
+            </p>
+            <p className="mt-1 text-sm font-semibold text-amber-950">
+              {formatMoney(item.platformFees, item.currency)}
+            </p>
+            <p className="mt-1 text-[11px] text-amber-900/70">
+              Gross website fee before any PayPal costs
+            </p>
+          </div>
+          <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-700">
+              Artist Payouts
+            </p>
             <p className="mt-1 text-sm font-semibold text-sky-950">
               {formatMoney(item.artistPayouts, item.currency)}
             </p>
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 lg:grid-cols-3">
           <div className="rounded-2xl border border-rose-100 bg-rose-50/80 p-4">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
-              PayPal Fees
+              Payment Fees
             </p>
             <p className="mt-1 text-sm font-semibold text-rose-950">
-              {formatMoney(item.paypalFees, item.currency)}
+              {formatMoney(item.paymentPaypalFees, item.currency)}
+            </p>
+            <p className="mt-1 text-[11px] text-rose-900/70">
+              Incoming PayPal fees when clients pay
+            </p>
+          </div>
+          <div className="rounded-2xl border border-orange-100 bg-orange-50/90 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-orange-700">
+              Payout Fees
+            </p>
+            <p className="mt-1 text-sm font-semibold text-orange-950">
+              {formatMoney(item.payoutPaypalFees, item.currency)}
+            </p>
+            <p className="mt-1 text-[11px] text-orange-900/70">
+              Outgoing PayPal fees when admin pays artists
             </p>
           </div>
           <div className="rounded-2xl border border-emerald-100 bg-emerald-50/90 p-4">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">
-              Admin Net Balance
+              Net Admin Profit
             </p>
             <p className="mt-1 text-sm font-semibold text-emerald-950">
-              {formatMoney(item.adminNetRevenue, item.currency)}
+              {formatMoney(item.adminNetProfit, item.currency)}
             </p>
             <p className="mt-1 text-[11px] text-emerald-900/70">
-              Platform fee minus actual PayPal processing fee
+              Platform fees minus incoming and outgoing PayPal fees
             </p>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-2">
           <Badge className="rounded-full border border-zinc-200 bg-white text-zinc-700">
-            Synced {item.syncedPayments}
+            Payment Sync {item.syncedPaymentFeePayments}
           </Badge>
-          {item.pendingFeeSyncPayments > 0 ? (
+          {item.pendingPaymentFeeSyncPayments > 0 ? (
             <Badge className="rounded-full border border-amber-200 bg-amber-50 text-amber-700">
-              Pending sync {item.pendingFeeSyncPayments}
+              Pending payment sync {item.pendingPaymentFeeSyncPayments}
             </Badge>
           ) : (
             <Badge className="rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700">
-              All fee records synced
+              Payment fees synced
             </Badge>
           )}
         </div>
@@ -325,6 +349,33 @@ export default function AnalyticsPage() {
     },
   });
 
+  const syncPaypalPayoutFeesMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiClient.post<SyncPaypalPayoutFeesResponse>(
+        "/finance/paypal-payout-fees/sync",
+        {
+          limit: 50,
+        },
+      );
+      return response.data;
+    },
+    onSuccess: (response) => {
+      toast.success(response.message);
+      void queryClient.invalidateQueries({ queryKey: ["platform-finance-stats"] });
+      void queryClient.invalidateQueries({ queryKey: ["platform-order-analytics"] });
+    },
+    onError: (error) => {
+      if (axios.isAxiosError<{ message?: string }>(error)) {
+        toast.error(
+          error.response?.data?.message ?? "Failed to sync PayPal payout fees",
+        );
+        return;
+      }
+
+      toast.error("Failed to sync PayPal payout fees");
+    },
+  });
+
   useAdminRealtime({
     topics: ["orders", "finance"],
     onEvent: () => {
@@ -359,17 +410,18 @@ export default function AnalyticsPage() {
       tone: "text-sky-700 bg-sky-50 border-sky-200",
     },
     {
-      label: "Net Admin Revenue",
+      label: "Net Admin Profit",
       value: finance?.revenue[0]
         ? formatMoney(
-            finance.revenue[0].adminNetRevenue,
+            finance.revenue[0].adminNetProfit,
             finance.revenue[0].currency,
           )
         : "—",
       detail:
-        finance?.pendingPaypalFeeSyncPayments
-          ? `${formatNumber(finance.pendingPaypalFeeSyncPayments)} payment(s) still need fee sync`
-          : "clean admin revenue after actual PayPal fees",
+        (finance?.pendingPaymentFeeSyncPayments ?? 0) > 0 ||
+        (finance?.pendingPayoutFeeSyncPayouts ?? 0) > 0
+          ? `${formatNumber(finance?.pendingPaymentFeeSyncPayments ?? 0)} payment sync pending, ${formatNumber(finance?.pendingPayoutFeeSyncPayouts ?? 0)} payout sync pending`
+          : "clean admin profit after incoming and outgoing PayPal fees",
       icon: Coins,
       tone: "text-emerald-700 bg-emerald-50 border-emerald-200",
     },
@@ -435,7 +487,7 @@ export default function AnalyticsPage() {
           </h2>
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-sm text-zinc-500">
-              Net admin revenue is calculated from platform fees minus actual PayPal capture fees.
+              Net admin profit is calculated from platform fees minus incoming payment fees and outgoing payout fees.
             </p>
             <Button
               type="button"
@@ -451,8 +503,25 @@ export default function AnalyticsPage() {
                 )}
               />
               {syncPaypalFeesMutation.isPending
-                ? "Syncing PayPal Fees"
-                : "Sync PayPal Fees"}
+                ? "Syncing Payment Fees"
+                : "Sync Payment Fees"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl border-zinc-200 bg-white"
+              onClick={() => syncPaypalPayoutFeesMutation.mutate()}
+              disabled={syncPaypalPayoutFeesMutation.isPending}
+            >
+              <RefreshCcw
+                className={cn(
+                  "mr-1.5 size-4",
+                  syncPaypalPayoutFeesMutation.isPending && "animate-spin",
+                )}
+              />
+              {syncPaypalPayoutFeesMutation.isPending
+                ? "Syncing Payout Fees"
+                : "Sync Payout Fees"}
             </Button>
           </div>
         </div>

@@ -43,6 +43,13 @@ export type RecentPayoutActivity = {
   currency: string;
   status: "PENDING" | "SENT" | "FRAUD";
   paypalEmail: string;
+  paypalBatchId: string | null;
+  paypalItemId: string | null;
+  paypalBatchStatus: string | null;
+  paypalItemStatus: string | null;
+  paypalFee: string;
+  paypalFeeCurrency: string | null;
+  paypalFeeSyncedAt: string | null;
   reviewNote: string | null;
   createdAt: string;
   reviewedAt: string | null;
@@ -52,20 +59,23 @@ export type PlatformRevenueCurrencyBreakdown = {
   currency: string;
   grossVolume: string;
   platformFees: string;
-  paypalFees: string;
-  adminNetRevenue: string;
+  paymentPaypalFees: string;
+  payoutPaypalFees: string;
+  adminNetProfit: string;
   artistPayouts: string;
-  syncedPayments: number;
-  pendingFeeSyncPayments: number;
+  syncedPaymentFeePayments: number;
+  pendingPaymentFeeSyncPayments: number;
 };
 
 export type PlatformFinanceStats = {
   artistsWithEarnings: number;
   artistsWithWithdrawals: number;
   completedPayments: number;
-  syncedPaypalFeePayments: number;
-  pendingPaypalFeeSyncPayments: number;
+  syncedPaymentFeePayments: number;
+  pendingPaymentFeeSyncPayments: number;
   processedPayouts: number;
+  syncedPayoutFeePayouts: number;
+  pendingPayoutFeeSyncPayouts: number;
   currencies: FinanceCurrencyBreakdown[];
   revenue: PlatformRevenueCurrencyBreakdown[];
 };
