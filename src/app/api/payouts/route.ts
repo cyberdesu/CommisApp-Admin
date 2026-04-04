@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import {
+  ADMIN_PRIVATE_RESPONSE_HEADERS,
+  normalizeAdminSearch,
+  parsePositiveInt,
+} from "@/lib/admin-api";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
@@ -10,11 +15,6 @@ const MAX_LIMIT = 50;
 
 const VALID_STATUSES = ["PENDING", "SENT", "FRAUD", "ALL"] as const;
 type StatusFilter = (typeof VALID_STATUSES)[number];
-
-function parsePositiveInt(value: string | null, fallback: number) {
-  const parsed = Number.parseInt(value ?? "", 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
-}
 
 function isValidStatus(value: string): value is StatusFilter {
   return (VALID_STATUSES as readonly string[]).includes(value);
@@ -29,7 +29,10 @@ export async function GET(req: NextRequest) {
     const admin = await getSessionAdmin(req);
     if (!admin) {
       logger.warn("Rejected payouts list request due to missing admin session");
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401, headers: ADMIN_PRIVATE_RESPONSE_HEADERS },
+      );
     }
 
     const { searchParams } = new URL(req.url);
@@ -47,7 +50,7 @@ export async function GET(req: NextRequest) {
       ? statusRaw
       : "PENDING";
 
-    const search = (searchParams.get("search") || "").trim();
+    const search = normalizeAdminSearch(searchParams.get("search"));
     const summaryOnly = searchParams.get("summary") === "1";
     const requestLogger = logger.child({
       adminId: admin.id,
@@ -92,7 +95,7 @@ export async function GET(req: NextRequest) {
         data: [],
         meta: { total },
         filters: { status, search },
-      });
+      }, { headers: ADMIN_PRIVATE_RESPONSE_HEADERS });
     }
 
     const payouts = await prisma.payout.findMany({
@@ -154,14 +157,14 @@ export async function GET(req: NextRequest) {
         cursor,
       },
       filters: { status, search },
-    });
+    }, { headers: ADMIN_PRIVATE_RESPONSE_HEADERS });
   } catch (error) {
     logger.error("Failed to fetch payouts", {
       error,
     });
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 },
+      { status: 500, headers: ADMIN_PRIVATE_RESPONSE_HEADERS },
     );
   }
 }

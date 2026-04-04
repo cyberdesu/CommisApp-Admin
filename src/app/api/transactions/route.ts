@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import {
+  ADMIN_PRIVATE_RESPONSE_HEADERS,
+  normalizeAdminSearch,
+  parsePositiveInt,
+} from "@/lib/admin-api";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { getAdminTransactionsList } from "@/lib/transaction-log";
-
-const RESPONSE_HEADERS = {
-  "Cache-Control": "private, no-store",
-  Pragma: "no-cache",
-  Expires: "0",
-  "X-Content-Type-Options": "nosniff",
-} as const;
 
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 50;
@@ -30,11 +28,6 @@ type TransactionTypeFilter = (typeof VALID_TYPES)[number];
 type TransactionStatusFilter = (typeof VALID_STATUSES)[number];
 type TransactionSyncFilter = (typeof VALID_SYNC)[number];
 
-function parsePositiveInt(value: string | null, fallback: number) {
-  const parsed = Number.parseInt(value ?? "", 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
-}
-
 function isOneOf<T extends readonly string[]>(
   value: string,
   allowed: T,
@@ -53,7 +46,7 @@ export async function GET(req: NextRequest) {
       logger.warn("Rejected transactions list request due to missing admin session");
       return NextResponse.json(
         { message: "Unauthorized" },
-        { status: 401, headers: RESPONSE_HEADERS },
+        { status: 401, headers: ADMIN_PRIVATE_RESPONSE_HEADERS },
       );
     }
 
@@ -64,7 +57,7 @@ export async function GET(req: NextRequest) {
     );
     const limit = Math.min(requestedLimit, MAX_LIMIT);
     const page = parsePositiveInt(searchParams.get("page"), 1);
-    const search = (searchParams.get("search") || "").trim();
+    const search = normalizeAdminSearch(searchParams.get("search"));
 
     const typeRaw = (searchParams.get("type") || "ALL").trim().toUpperCase();
     const type: TransactionTypeFilter = isOneOf(typeRaw, VALID_TYPES)
@@ -122,13 +115,13 @@ export async function GET(req: NextRequest) {
           feeSync,
         },
       },
-      { headers: RESPONSE_HEADERS },
+      { headers: ADMIN_PRIVATE_RESPONSE_HEADERS },
     );
   } catch (error) {
     logger.error("Failed to fetch admin transactions", { error });
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500, headers: RESPONSE_HEADERS },
+      { status: 500, headers: ADMIN_PRIVATE_RESPONSE_HEADERS },
     );
   }
 }

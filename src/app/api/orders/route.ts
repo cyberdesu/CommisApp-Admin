@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import {
+  ADMIN_PRIVATE_RESPONSE_HEADERS,
+  normalizeAdminSearch,
+  parsePositiveInt,
+} from "@/lib/admin-api";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { getAdminOrdersList } from "@/lib/user-orders";
@@ -25,11 +30,6 @@ type StatusFilter = (typeof VALID_STATUSES)[number];
 type SourceFilter = (typeof VALID_SOURCES)[number];
 type AttentionFilter = (typeof VALID_ATTENTION)[number];
 
-function parsePositiveInt(value: string | null, fallback: number) {
-  const parsed = Number.parseInt(value ?? "", 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
-}
-
 function parseOptionalUserId(value: string | null) {
   if (!value) return null;
   const parsed = Number.parseInt(value, 10);
@@ -52,7 +52,10 @@ export async function GET(req: NextRequest) {
     const admin = await getSessionAdmin(req);
     if (!admin) {
       logger.warn("Rejected orders list request due to missing admin session");
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401, headers: ADMIN_PRIVATE_RESPONSE_HEADERS },
+      );
     }
 
     const { searchParams } = new URL(req.url);
@@ -62,7 +65,7 @@ export async function GET(req: NextRequest) {
     );
     const limit = Math.min(requestedLimit, MAX_LIMIT);
     const cursor = searchParams.get("cursor") || null;
-    const search = (searchParams.get("search") || "").trim();
+    const search = normalizeAdminSearch(searchParams.get("search"));
     const userId = parseOptionalUserId(searchParams.get("userId"));
 
     const statusRaw = (searchParams.get("status") || "ALL")
@@ -132,12 +135,12 @@ export async function GET(req: NextRequest) {
         attention,
         userId,
       },
-    });
+    }, { headers: ADMIN_PRIVATE_RESPONSE_HEADERS });
   } catch (error) {
     logger.error("Failed to fetch admin orders", { error });
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 },
+      { status: 500, headers: ADMIN_PRIVATE_RESPONSE_HEADERS },
     );
   }
 }

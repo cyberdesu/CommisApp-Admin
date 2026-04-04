@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import {
+  ADMIN_PRIVATE_RESPONSE_HEADERS,
+  normalizeAdminSearch,
+} from "@/lib/admin-api";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { getAdminTransactionStats } from "@/lib/transaction-log";
-
-const RESPONSE_HEADERS = {
-  "Cache-Control": "private, no-store",
-  Pragma: "no-cache",
-  Expires: "0",
-  "X-Content-Type-Options": "nosniff",
-} as const;
 
 const VALID_TYPES = ["ALL", "PAYMENT", "PAYOUT"] as const;
 const VALID_STATUSES = [
@@ -45,12 +42,12 @@ export async function GET(req: NextRequest) {
       logger.warn("Rejected transaction stats request due to missing admin session");
       return NextResponse.json(
         { message: "Unauthorized" },
-        { status: 401, headers: RESPONSE_HEADERS },
+        { status: 401, headers: ADMIN_PRIVATE_RESPONSE_HEADERS },
       );
     }
 
     const { searchParams } = new URL(req.url);
-    const search = (searchParams.get("search") || "").trim();
+    const search = normalizeAdminSearch(searchParams.get("search"));
 
     const typeRaw = (searchParams.get("type") || "ALL").trim().toUpperCase();
     const type: TransactionTypeFilter = isOneOf(typeRaw, VALID_TYPES)
@@ -84,12 +81,12 @@ export async function GET(req: NextRequest) {
       pendingFeeSyncRows: stats.pendingFeeSyncRows,
     });
 
-    return NextResponse.json(stats, { headers: RESPONSE_HEADERS });
+    return NextResponse.json(stats, { headers: ADMIN_PRIVATE_RESPONSE_HEADERS });
   } catch (error) {
     logger.error("Failed to fetch admin transaction stats", { error });
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500, headers: RESPONSE_HEADERS },
+      { status: 500, headers: ADMIN_PRIVATE_RESPONSE_HEADERS },
     );
   }
 }

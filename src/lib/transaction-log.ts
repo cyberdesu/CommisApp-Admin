@@ -1,5 +1,6 @@
 import "server-only";
 
+import { escapeSqlLikePattern } from "@/lib/admin-api";
 import { Prisma } from "@/prisma/generated/client";
 import prisma from "@/lib/prisma";
 import type {
@@ -101,20 +102,20 @@ function buildPaymentConditions(options: GetAdminTransactionsOptions) {
   }
 
   if (options.search) {
-    const search = `%${options.search}%`;
+    const search = `%${escapeSqlLikePattern(options.search)}%`;
     conditions.push(
       Prisma.sql`(
-        p.id ILIKE ${search}
-        OR COALESCE(p."paypalOrderId", '') ILIKE ${search}
-        OR COALESCE(p."paypalCaptureId", '') ILIKE ${search}
-        OR o.id ILIKE ${search}
-        OR COALESCE(o."titleSnapshot", '') ILIKE ${search}
-        OR artist.username ILIKE ${search}
-        OR artist.email ILIKE ${search}
-        OR COALESCE(artist.name, '') ILIKE ${search}
-        OR COALESCE(client.username, '') ILIKE ${search}
-        OR COALESCE(client.email, '') ILIKE ${search}
-        OR COALESCE(client.name, '') ILIKE ${search}
+        p.id ILIKE ${search} ESCAPE '\'
+        OR COALESCE(p."paypalOrderId", '') ILIKE ${search} ESCAPE '\'
+        OR COALESCE(p."paypalCaptureId", '') ILIKE ${search} ESCAPE '\'
+        OR o.id ILIKE ${search} ESCAPE '\'
+        OR COALESCE(o."titleSnapshot", '') ILIKE ${search} ESCAPE '\'
+        OR artist.username ILIKE ${search} ESCAPE '\'
+        OR artist.email ILIKE ${search} ESCAPE '\'
+        OR COALESCE(artist.name, '') ILIKE ${search} ESCAPE '\'
+        OR COALESCE(client.username, '') ILIKE ${search} ESCAPE '\'
+        OR COALESCE(client.email, '') ILIKE ${search} ESCAPE '\'
+        OR COALESCE(client.name, '') ILIKE ${search} ESCAPE '\'
       )`,
     );
   }
@@ -153,16 +154,16 @@ function buildPayoutConditions(options: GetAdminTransactionsOptions) {
   }
 
   if (options.search) {
-    const search = `%${options.search}%`;
+    const search = `%${escapeSqlLikePattern(options.search)}%`;
     conditions.push(
       Prisma.sql`(
-        po.id ILIKE ${search}
-        OR COALESCE(po."paypalEmail", '') ILIKE ${search}
-        OR COALESCE(po."paypalBatchId", '') ILIKE ${search}
-        OR COALESCE(po."paypalItemId", '') ILIKE ${search}
-        OR artist.username ILIKE ${search}
-        OR artist.email ILIKE ${search}
-        OR COALESCE(artist.name, '') ILIKE ${search}
+        po.id ILIKE ${search} ESCAPE '\'
+        OR COALESCE(po."paypalEmail", '') ILIKE ${search} ESCAPE '\'
+        OR COALESCE(po."paypalBatchId", '') ILIKE ${search} ESCAPE '\'
+        OR COALESCE(po."paypalItemId", '') ILIKE ${search} ESCAPE '\'
+        OR artist.username ILIKE ${search} ESCAPE '\'
+        OR artist.email ILIKE ${search} ESCAPE '\'
+        OR COALESCE(artist.name, '') ILIKE ${search} ESCAPE '\'
       )`,
     );
   }
