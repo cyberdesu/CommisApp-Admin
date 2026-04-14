@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Loader2, RefreshCw } from "lucide-react";
+import { AlertTriangle, Loader2, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,21 @@ type ReindexResponse = {
     durationMs: number;
   };
 };
+
+type DeleteResult = { deleted: boolean };
+type DeleteResponse = {
+  data: {
+    services: DeleteResult;
+    showcases: DeleteResult;
+    profiles: DeleteResult;
+    durationMs: number;
+  };
+};
+
+type PanelState =
+  | { mode: "reindex"; data: ReindexResponse["data"] }
+  | { mode: "delete"; data: DeleteResponse["data"] }
+  | null;
 
 const INDICES: {
   key: "services" | "showcases" | "profiles";
@@ -47,24 +62,36 @@ const INDICES: {
 ];
 
 export function ReindexPanel() {
-  const [isRunning, setIsRunning] = useState(false);
-  const [result, setResult] = useState<ReindexResponse["data"] | null>(null);
+  const [isReindexing, setIsReindexing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [result, setResult] = useState<PanelState>(null);
+
+  function getIndexStatus(key: (typeof INDICES)[number]["key"]): string {
+    if (!result) return "—";
+
+    if (result.mode === "reindex") {
+      const stats = result.data[key];
+      return `${stats.indexed}/${stats.total}`;
+    }
+
+    return result.data[key].deleted ? "Deleted" : "Missing";
+  }
 
   async function handleReindex() {
-    if (isRunning) return;
+    if (isReindexing || isDeleting) return;
     const confirmed = window.confirm(
       "Rebuild all Elasticsearch indices from Postgres? This may take a few minutes on large datasets and will temporarily increase load.",
     );
     if (!confirmed) return;
 
-    setIsRunning(true);
+    setIsReindexing(true);
     setResult(null);
 
     try {
       const { data } = await apiClient.post<ReindexResponse>(
         "/admin/search/reindex",
       );
-      setResult(data.data);
+      setResult({ mode: "reindex", data: data.data });
       toast.success("Reindex completed", {
         description: `Finished in ${Math.round(data.data.durationMs / 1000)}s`,
       });
@@ -73,7 +100,34 @@ export function ReindexPanel() {
         error instanceof Error ? error.message : "Unknown error";
       toast.error("Reindex failed", { description: message });
     } finally {
-      setIsRunning(false);
+      setIsReindexing(false);
+    }
+  }
+
+  async function handleDeleteIndices() {
+    if (isReindexing || isDeleting) return;
+    const confirmed = window.confirm(
+      "Delete all Elasticsearch search indices? Search and autocomplete will return empty results until you rebuild them again.",
+    );
+    if (!confirmed) return;
+
+    setIsDeleting(true);
+    setResult(null);
+
+    try {
+      const { data } = await apiClient.post<DeleteResponse>(
+        "/admin/search/delete",
+      );
+      setResult({ mode: "delete", data: data.data });
+      toast.success("Indices deleted", {
+        description: `Finished in ${Math.round(data.data.durationMs / 1000)}s`,
+      });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unknown error";
+      toast.error("Delete indices failed", { description: message });
+    } finally {
+      setIsDeleting(false);
     }
   }
 
@@ -107,7 +161,6 @@ export function ReindexPanel() {
 
         <div className="grid gap-3 sm:grid-cols-3">
           {INDICES.map((idx) => {
-            const r = result?.[idx.key];
             return (
               <div
                 key={idx.key}
@@ -117,7 +170,7 @@ export function ReindexPanel() {
                   {idx.label}
                 </p>
                 <p className="mt-2 text-2xl font-bold text-foreground">
-                  {r ? `${r.indexed}/${r.total}` : "—"}
+                  {getIndexStatus(idx.key)}
                 </p>
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                   {idx.description}
@@ -128,26 +181,47 @@ export function ReindexPanel() {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <Button
-            onClick={handleReindex}
-            disabled={isRunning}
-            className="sm:w-auto"
-          >
-            {isRunning ? (
-              <>
-                <Loader2 className="mr-2 size-4 animate-spin" />
-                Reindexing…
-              </>
-            ) : (
-              <>
-                <RefreshCw className="mr-2 size-4" />
-                Rebuild All Indices
-              </>
-            )}
-          </Button>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Button
+              onClick={handleReindex}
+              disabled={isReindexing || isDeleting}
+              className="sm:w-auto"
+            >
+              {isReindexing ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  Reindexing…
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="mr-2 size-4" />
+                  Rebuild All Indices
+                </>
+              )}
+            </Button>
+            <Button
+              onClick={handleDeleteIndices}
+              disabled={isReindexing || isDeleting}
+              variant="destructive"
+              className="sm:w-auto"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  Deleting…
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 size-4" />
+                  Delete All Indices
+                </>
+              )}
+            </Button>
+          </div>
           {result && (
             <p className="text-xs text-muted-foreground">
-              Last run: {Math.round(result.durationMs / 1000)}s
+              Last {result.mode === "reindex" ? "reindex" : "delete"} run:{" "}
+              {Math.round(result.data.durationMs / 1000)}s
             </p>
           )}
         </div>

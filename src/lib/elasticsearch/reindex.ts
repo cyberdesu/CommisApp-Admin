@@ -1,6 +1,6 @@
 import "server-only";
 import prisma from "@/lib/prisma";
-import { bulkIndex, ensureIndex } from "./client";
+import { bulkIndex, deleteIndex, ensureIndex } from "./client";
 import {
   BULK_BATCH_SIZE,
   ES_INDEX_PROFILES,
@@ -18,6 +18,12 @@ export type ReindexResult = {
   services: { indexed: number; total: number };
   showcases: { indexed: number; total: number };
   profiles: { indexed: number; total: number };
+};
+
+export type DeleteIndicesResult = {
+  services: { deleted: boolean };
+  showcases: { deleted: boolean };
+  profiles: { deleted: boolean };
 };
 
 async function ensureAllIndices() {
@@ -57,6 +63,7 @@ async function reindexServices() {
     return {
       id: s.id,
       body: {
+        id: s.id,
         title: s.title,
         shortDescription: s.shortDescription,
         canDo: s.canDo,
@@ -98,6 +105,7 @@ async function reindexShowcases() {
   const docs = items.map((item) => ({
     id: item.id,
     body: {
+      id: item.id,
       title: item.title,
       tags: item.tags.map((t) => t.nameTag),
       likeCount: item.likeCount,
@@ -139,6 +147,7 @@ async function reindexProfiles() {
   const docs = users.map((u) => ({
     id: String(u.id),
     body: {
+      id: String(u.id),
       username: u.username,
       name: u.name,
       bio: u.bio,
@@ -165,4 +174,18 @@ export async function reindexAll(): Promise<ReindexResult> {
     reindexProfiles(),
   ]);
   return { services, showcases, profiles };
+}
+
+export async function deleteAllIndices(): Promise<DeleteIndicesResult> {
+  const [services, showcases, profiles] = await Promise.all([
+    deleteIndex(ES_INDEX_SERVICES),
+    deleteIndex(ES_INDEX_SHOWCASES),
+    deleteIndex(ES_INDEX_PROFILES),
+  ]);
+
+  return {
+    services: { deleted: services },
+    showcases: { deleted: showcases },
+    profiles: { deleted: profiles },
+  };
 }

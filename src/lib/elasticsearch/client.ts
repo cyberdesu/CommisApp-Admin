@@ -35,11 +35,19 @@ export async function ensureIndex(
   mappings: Record<string, unknown>,
 ): Promise<void> {
   const exists = await esClient.indices.exists({ index });
-  if (exists) return;
-  await esClient.indices.create({
+  if (!exists) {
+    await esClient.indices.create({
+      index,
+      settings: settings as never,
+      mappings: mappings as never,
+    });
+    return;
+  }
+
+  const mappingBody = mappings as Record<string, unknown>;
+  await esClient.indices.putMapping({
     index,
-    settings: settings as never,
-    mappings: mappings as never,
+    ...mappingBody,
   });
 }
 
@@ -66,4 +74,12 @@ export async function bulkIndex(
     }
   }
   return indexed;
+}
+
+export async function deleteIndex(index: string): Promise<boolean> {
+  const exists = await esClient.indices.exists({ index });
+  if (!exists) return false;
+
+  await esClient.indices.delete({ index });
+  return true;
 }

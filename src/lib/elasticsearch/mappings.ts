@@ -27,6 +27,7 @@ export const sharedIndexSettings: Record<string, unknown> = {
 
 export const servicesMappings: Record<string, unknown> = {
   properties: {
+    id: { type: "keyword" },
     title: {
       type: "text",
       analyzer: "standard",
@@ -89,6 +90,7 @@ export const servicesMappings: Record<string, unknown> = {
 
 export const showcasesMappings: Record<string, unknown> = {
   properties: {
+    id: { type: "keyword" },
     title: {
       type: "text",
       analyzer: "standard",
@@ -124,6 +126,7 @@ export const showcasesMappings: Record<string, unknown> = {
 
 export const profilesMappings: Record<string, unknown> = {
   properties: {
+    id: { type: "keyword" },
     username: {
       type: "text",
       analyzer: "standard",
