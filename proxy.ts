@@ -55,6 +55,7 @@ export const config = {
     "/users/:path*",
     "/showcases/:path*",
     "/artist-requests/:path*",
+    "/search-indices/:path*",
     "/settings/:path*",
     "/api/:path*",
   ],

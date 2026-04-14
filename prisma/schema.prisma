@@ -172,6 +172,7 @@ enum NotificationType {
   SERVICE_PAUSED
   SERVICE_PUBLISHED
   ARTIST_VERIFIED
+  REVIEW_RECEIVED
 }
 
 // ======================================
@@ -218,6 +219,8 @@ model User {
   customRequestsMade  CustomRequest[]  @relation("CustomRequestClient")
   customRequestsRecv  CustomRequest[]  @relation("CustomRequestArtist")
   payouts             Payout[]         @relation("ArtistPayouts")
+  artistReviews       ServiceReview[]  @relation("ArtistReviews")
+  clientReviews       ServiceReview[]  @relation("ClientReviews")
 
   // Social graph
   following       Follow[]          @relation("Following")
@@ -436,6 +439,11 @@ model Service {
   canDo                 String?
   cannotDo              String?
 
+  // Denormalized review aggregates (updated atomically in createReview tx)
+  reviewCount           Int                @default(0)
+  ratingSum             Int                @default(0)
+  avgRating             Decimal?           @db.Decimal(3, 2)
+
   createdAt             DateTime           @default(now())
   updatedAt             DateTime           @updatedAt
 
@@ -445,6 +453,7 @@ model Service {
   samples               ServiceSample[]
   policies              ServicePolicy[]
   orders                Order[]
+  reviews               ServiceReview[]
 
   @@unique([userId, slug])
   @@index([userId, status])
@@ -574,6 +583,7 @@ model Order {
   notifications   Notification[] @relation("OrderNotifications")
   conversation    Conversation?  @relation("OrderConversation")
   events          OrderEvent[]
+  review          ServiceReview?
 
   @@index([artistId, status, createdAt(sort: Desc)])
   @@index([artistId, createdAt(sort: Desc), id(sort: Desc)], map: "Order_artistId_createdAt_id_desc_idx")
@@ -659,6 +669,40 @@ model OrderEvent {
 
   @@index([orderId, createdAt(sort: Desc)])
   @@map("order_events")
+}
+
+// ======================================
+// SERVICE REVIEWS
+// ======================================
+
+model ServiceReview {
+  id         String   @id @default(uuid())
+  orderId    String   @unique
+  serviceId  String
+  artistId   Int
+  reviewerId Int?
+
+  rating     Int
+  comment    String?
+  isVisible  Boolean  @default(true)
+
+  createdAt  DateTime @default(now())
+
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  service  Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  artist   User     @relation("ArtistReviews", fields: [artistId], references: [id], onDelete: Cascade)
+  reviewer User?    @relation("ClientReviews", fields: [reviewerId], references: [id], onDelete: SetNull)
+
+  // Hot path: list reviews for a service, chronological
+  @@index([serviceId, isVisible, createdAt(sort: Desc)])
+  // Hot path: "top review" per service (rating desc, createdAt desc)
+  @@index([serviceId, isVisible, rating(sort: Desc), createdAt(sort: Desc)], map: "ServiceReview_service_top_idx")
+  // Hot path: "top review" per artist (used by discover enrichment)
+  @@index([artistId, isVisible, rating(sort: Desc), createdAt(sort: Desc)], map: "ServiceReview_artist_top_idx")
+  // Artist studio list
+  @@index([artistId, isVisible, createdAt(sort: Desc)])
+
+  @@map("service_reviews")
 }
 
 // ======================================

@@ -34,6 +34,9 @@ export type ServiceAvgAggregateOutputType = {
   revisionsIncluded: number | null
   slotsTotal: number | null
   slotsUsed: number | null
+  reviewCount: number | null
+  ratingSum: number | null
+  avgRating: runtime.Decimal | null
 }
 
 export type ServiceSumAggregateOutputType = {
@@ -44,6 +47,9 @@ export type ServiceSumAggregateOutputType = {
   revisionsIncluded: number | null
   slotsTotal: number | null
   slotsUsed: number | null
+  reviewCount: number | null
+  ratingSum: number | null
+  avgRating: runtime.Decimal | null
 }
 
 export type ServiceMinAggregateOutputType = {
@@ -67,6 +73,9 @@ export type ServiceMinAggregateOutputType = {
   isCommercialAllowed: boolean | null
   canDo: string | null
   cannotDo: string | null
+  reviewCount: number | null
+  ratingSum: number | null
+  avgRating: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -92,6 +101,9 @@ export type ServiceMaxAggregateOutputType = {
   isCommercialAllowed: boolean | null
   canDo: string | null
   cannotDo: string | null
+  reviewCount: number | null
+  ratingSum: number | null
+  avgRating: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -118,6 +130,9 @@ export type ServiceCountAggregateOutputType = {
   isCommercialAllowed: number
   canDo: number
   cannotDo: number
+  reviewCount: number
+  ratingSum: number
+  avgRating: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -132,6 +147,9 @@ export type ServiceAvgAggregateInputType = {
   revisionsIncluded?: true
   slotsTotal?: true
   slotsUsed?: true
+  reviewCount?: true
+  ratingSum?: true
+  avgRating?: true
 }
 
 export type ServiceSumAggregateInputType = {
@@ -142,6 +160,9 @@ export type ServiceSumAggregateInputType = {
   revisionsIncluded?: true
   slotsTotal?: true
   slotsUsed?: true
+  reviewCount?: true
+  ratingSum?: true
+  avgRating?: true
 }
 
 export type ServiceMinAggregateInputType = {
@@ -165,6 +186,9 @@ export type ServiceMinAggregateInputType = {
   isCommercialAllowed?: true
   canDo?: true
   cannotDo?: true
+  reviewCount?: true
+  ratingSum?: true
+  avgRating?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -190,6 +214,9 @@ export type ServiceMaxAggregateInputType = {
   isCommercialAllowed?: true
   canDo?: true
   cannotDo?: true
+  reviewCount?: true
+  ratingSum?: true
+  avgRating?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -216,6 +243,9 @@ export type ServiceCountAggregateInputType = {
   isCommercialAllowed?: true
   canDo?: true
   cannotDo?: true
+  reviewCount?: true
+  ratingSum?: true
+  avgRating?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -329,6 +359,9 @@ export type ServiceGroupByOutputType = {
   isCommercialAllowed: boolean
   canDo: string | null
   cannotDo: string | null
+  reviewCount: number
+  ratingSum: number
+  avgRating: runtime.Decimal | null
   createdAt: Date
   updatedAt: Date
   _count: ServiceCountAggregateOutputType | null
@@ -378,6 +411,9 @@ export type ServiceWhereInput = {
   isCommercialAllowed?: Prisma.BoolFilter<"Service"> | boolean
   canDo?: Prisma.StringNullableFilter<"Service"> | string | null
   cannotDo?: Prisma.StringNullableFilter<"Service"> | string | null
+  reviewCount?: Prisma.IntFilter<"Service"> | number
+  ratingSum?: Prisma.IntFilter<"Service"> | number
+  avgRating?: Prisma.DecimalNullableFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -387,6 +423,7 @@ export type ServiceWhereInput = {
   samples?: Prisma.ServiceSampleListRelationFilter
   policies?: Prisma.ServicePolicyListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  reviews?: Prisma.ServiceReviewListRelationFilter
 }
 
 export type ServiceOrderByWithRelationInput = {
@@ -411,6 +448,9 @@ export type ServiceOrderByWithRelationInput = {
   isCommercialAllowed?: Prisma.SortOrder
   canDo?: Prisma.SortOrderInput | Prisma.SortOrder
   cannotDo?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -420,6 +460,7 @@ export type ServiceOrderByWithRelationInput = {
   samples?: Prisma.ServiceSampleOrderByRelationAggregateInput
   policies?: Prisma.ServicePolicyOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  reviews?: Prisma.ServiceReviewOrderByRelationAggregateInput
   _relevance?: Prisma.ServiceOrderByRelevanceInput
 }
 
@@ -449,6 +490,9 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   isCommercialAllowed?: Prisma.BoolFilter<"Service"> | boolean
   canDo?: Prisma.StringNullableFilter<"Service"> | string | null
   cannotDo?: Prisma.StringNullableFilter<"Service"> | string | null
+  reviewCount?: Prisma.IntFilter<"Service"> | number
+  ratingSum?: Prisma.IntFilter<"Service"> | number
+  avgRating?: Prisma.DecimalNullableFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -458,6 +502,7 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   samples?: Prisma.ServiceSampleListRelationFilter
   policies?: Prisma.ServicePolicyListRelationFilter
   orders?: Prisma.OrderListRelationFilter
+  reviews?: Prisma.ServiceReviewListRelationFilter
 }, "id" | "userId_slug">
 
 export type ServiceOrderByWithAggregationInput = {
@@ -482,6 +527,9 @@ export type ServiceOrderByWithAggregationInput = {
   isCommercialAllowed?: Prisma.SortOrder
   canDo?: Prisma.SortOrderInput | Prisma.SortOrder
   cannotDo?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ServiceCountOrderByAggregateInput
@@ -516,6 +564,9 @@ export type ServiceScalarWhereWithAggregatesInput = {
   isCommercialAllowed?: Prisma.BoolWithAggregatesFilter<"Service"> | boolean
   canDo?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
   cannotDo?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
+  reviewCount?: Prisma.IntWithAggregatesFilter<"Service"> | number
+  ratingSum?: Prisma.IntWithAggregatesFilter<"Service"> | number
+  avgRating?: Prisma.DecimalNullableWithAggregatesFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
 }
@@ -541,6 +592,9 @@ export type ServiceCreateInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutServicesInput
@@ -550,6 +604,7 @@ export type ServiceCreateInput = {
   samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateInput = {
@@ -574,6 +629,9 @@ export type ServiceUncheckedCreateInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
@@ -582,6 +640,7 @@ export type ServiceUncheckedCreateInput = {
   samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUpdateInput = {
@@ -605,6 +664,9 @@ export type ServiceUpdateInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
@@ -614,6 +676,7 @@ export type ServiceUpdateInput = {
   samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateInput = {
@@ -638,6 +701,9 @@ export type ServiceUncheckedUpdateInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
@@ -646,6 +712,7 @@ export type ServiceUncheckedUpdateInput = {
   samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceCreateManyInput = {
@@ -670,6 +737,9 @@ export type ServiceCreateManyInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -695,6 +765,9 @@ export type ServiceUpdateManyMutationInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -721,6 +794,9 @@ export type ServiceUncheckedUpdateManyInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -768,6 +844,9 @@ export type ServiceCountOrderByAggregateInput = {
   isCommercialAllowed?: Prisma.SortOrder
   canDo?: Prisma.SortOrder
   cannotDo?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -780,6 +859,9 @@ export type ServiceAvgOrderByAggregateInput = {
   revisionsIncluded?: Prisma.SortOrder
   slotsTotal?: Prisma.SortOrder
   slotsUsed?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
 }
 
 export type ServiceMaxOrderByAggregateInput = {
@@ -803,6 +885,9 @@ export type ServiceMaxOrderByAggregateInput = {
   isCommercialAllowed?: Prisma.SortOrder
   canDo?: Prisma.SortOrder
   cannotDo?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -828,6 +913,9 @@ export type ServiceMinOrderByAggregateInput = {
   isCommercialAllowed?: Prisma.SortOrder
   canDo?: Prisma.SortOrder
   cannotDo?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -840,6 +928,9 @@ export type ServiceSumOrderByAggregateInput = {
   revisionsIncluded?: Prisma.SortOrder
   slotsTotal?: Prisma.SortOrder
   slotsUsed?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
+  ratingSum?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
 }
 
 export type ServiceScalarRelationFilter = {
@@ -948,6 +1039,14 @@ export type EnumServiceStatusFieldUpdateOperationsInput = {
   set?: $Enums.ServiceStatus
 }
 
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type ServiceCreateNestedOneWithoutAddonsInput = {
   create?: Prisma.XOR<Prisma.ServiceCreateWithoutAddonsInput, Prisma.ServiceUncheckedCreateWithoutAddonsInput>
   connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutAddonsInput
@@ -1020,6 +1119,20 @@ export type ServiceUpdateOneWithoutOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutOrdersInput, Prisma.ServiceUpdateWithoutOrdersInput>, Prisma.ServiceUncheckedUpdateWithoutOrdersInput>
 }
 
+export type ServiceCreateNestedOneWithoutReviewsInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutReviewsInput, Prisma.ServiceUncheckedCreateWithoutReviewsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutReviewsInput
+  connect?: Prisma.ServiceWhereUniqueInput
+}
+
+export type ServiceUpdateOneRequiredWithoutReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutReviewsInput, Prisma.ServiceUncheckedCreateWithoutReviewsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutReviewsInput
+  upsert?: Prisma.ServiceUpsertWithoutReviewsInput
+  connect?: Prisma.ServiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutReviewsInput, Prisma.ServiceUpdateWithoutReviewsInput>, Prisma.ServiceUncheckedUpdateWithoutReviewsInput>
+}
+
 export type ServiceCreateWithoutUserInput = {
   id?: string
   title: string
@@ -1041,6 +1154,9 @@ export type ServiceCreateWithoutUserInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addons?: Prisma.ServiceAddonCreateNestedManyWithoutServiceInput
@@ -1049,6 +1165,7 @@ export type ServiceCreateWithoutUserInput = {
   samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutUserInput = {
@@ -1072,6 +1189,9 @@ export type ServiceUncheckedCreateWithoutUserInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
@@ -1080,6 +1200,7 @@ export type ServiceUncheckedCreateWithoutUserInput = {
   samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutUserInput = {
@@ -1133,6 +1254,9 @@ export type ServiceScalarWhereInput = {
   isCommercialAllowed?: Prisma.BoolFilter<"Service"> | boolean
   canDo?: Prisma.StringNullableFilter<"Service"> | string | null
   cannotDo?: Prisma.StringNullableFilter<"Service"> | string | null
+  reviewCount?: Prisma.IntFilter<"Service"> | number
+  ratingSum?: Prisma.IntFilter<"Service"> | number
+  avgRating?: Prisma.DecimalNullableFilter<"Service"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
 }
@@ -1158,6 +1282,9 @@ export type ServiceCreateWithoutCategoriesInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutServicesInput
@@ -1166,6 +1293,7 @@ export type ServiceCreateWithoutCategoriesInput = {
   samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutCategoriesInput = {
@@ -1190,6 +1318,9 @@ export type ServiceUncheckedCreateWithoutCategoriesInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
@@ -1197,6 +1328,7 @@ export type ServiceUncheckedCreateWithoutCategoriesInput = {
   samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutCategoriesInput = {
@@ -1241,6 +1373,9 @@ export type ServiceCreateWithoutAddonsInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutServicesInput
@@ -1249,6 +1384,7 @@ export type ServiceCreateWithoutAddonsInput = {
   samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutAddonsInput = {
@@ -1273,6 +1409,9 @@ export type ServiceUncheckedCreateWithoutAddonsInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   categories?: Prisma.TagUncheckedCreateNestedManyWithoutServicesInput
@@ -1280,6 +1419,7 @@ export type ServiceUncheckedCreateWithoutAddonsInput = {
   samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutAddonsInput = {
@@ -1319,6 +1459,9 @@ export type ServiceUpdateWithoutAddonsInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
@@ -1327,6 +1470,7 @@ export type ServiceUpdateWithoutAddonsInput = {
   samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutAddonsInput = {
@@ -1351,6 +1495,9 @@ export type ServiceUncheckedUpdateWithoutAddonsInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   categories?: Prisma.TagUncheckedUpdateManyWithoutServicesNestedInput
@@ -1358,6 +1505,7 @@ export type ServiceUncheckedUpdateWithoutAddonsInput = {
   samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceCreateWithoutQuestionsInput = {
@@ -1381,6 +1529,9 @@ export type ServiceCreateWithoutQuestionsInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutServicesInput
@@ -1389,6 +1540,7 @@ export type ServiceCreateWithoutQuestionsInput = {
   samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutQuestionsInput = {
@@ -1413,6 +1565,9 @@ export type ServiceUncheckedCreateWithoutQuestionsInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
@@ -1420,6 +1575,7 @@ export type ServiceUncheckedCreateWithoutQuestionsInput = {
   samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutQuestionsInput = {
@@ -1459,6 +1615,9 @@ export type ServiceUpdateWithoutQuestionsInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
@@ -1467,6 +1626,7 @@ export type ServiceUpdateWithoutQuestionsInput = {
   samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutQuestionsInput = {
@@ -1491,6 +1651,9 @@ export type ServiceUncheckedUpdateWithoutQuestionsInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
@@ -1498,6 +1661,7 @@ export type ServiceUncheckedUpdateWithoutQuestionsInput = {
   samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceCreateWithoutPoliciesInput = {
@@ -1521,6 +1685,9 @@ export type ServiceCreateWithoutPoliciesInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutServicesInput
@@ -1529,6 +1696,7 @@ export type ServiceCreateWithoutPoliciesInput = {
   questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
   samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutPoliciesInput = {
@@ -1553,6 +1721,9 @@ export type ServiceUncheckedCreateWithoutPoliciesInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
@@ -1560,6 +1731,7 @@ export type ServiceUncheckedCreateWithoutPoliciesInput = {
   questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
   samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutPoliciesInput = {
@@ -1599,6 +1771,9 @@ export type ServiceUpdateWithoutPoliciesInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
@@ -1607,6 +1782,7 @@ export type ServiceUpdateWithoutPoliciesInput = {
   questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
   samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutPoliciesInput = {
@@ -1631,6 +1807,9 @@ export type ServiceUncheckedUpdateWithoutPoliciesInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
@@ -1638,6 +1817,7 @@ export type ServiceUncheckedUpdateWithoutPoliciesInput = {
   questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
   samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceCreateWithoutSamplesInput = {
@@ -1661,6 +1841,9 @@ export type ServiceCreateWithoutSamplesInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutServicesInput
@@ -1669,6 +1852,7 @@ export type ServiceCreateWithoutSamplesInput = {
   questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutSamplesInput = {
@@ -1693,6 +1877,9 @@ export type ServiceUncheckedCreateWithoutSamplesInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
@@ -1700,6 +1887,7 @@ export type ServiceUncheckedCreateWithoutSamplesInput = {
   questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutSamplesInput = {
@@ -1739,6 +1927,9 @@ export type ServiceUpdateWithoutSamplesInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
@@ -1747,6 +1938,7 @@ export type ServiceUpdateWithoutSamplesInput = {
   questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutSamplesInput = {
@@ -1771,6 +1963,9 @@ export type ServiceUncheckedUpdateWithoutSamplesInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
@@ -1778,6 +1973,7 @@ export type ServiceUncheckedUpdateWithoutSamplesInput = {
   questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceCreateWithoutOrdersInput = {
@@ -1801,6 +1997,9 @@ export type ServiceCreateWithoutOrdersInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutServicesInput
@@ -1809,6 +2008,7 @@ export type ServiceCreateWithoutOrdersInput = {
   questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
   samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutOrdersInput = {
@@ -1833,6 +2033,9 @@ export type ServiceUncheckedCreateWithoutOrdersInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
@@ -1840,6 +2043,7 @@ export type ServiceUncheckedCreateWithoutOrdersInput = {
   questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
   samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
   policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
+  reviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutOrdersInput = {
@@ -1879,6 +2083,9 @@ export type ServiceUpdateWithoutOrdersInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
@@ -1887,6 +2094,7 @@ export type ServiceUpdateWithoutOrdersInput = {
   questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
   samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutOrdersInput = {
@@ -1911,6 +2119,9 @@ export type ServiceUncheckedUpdateWithoutOrdersInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
@@ -1918,6 +2129,163 @@ export type ServiceUncheckedUpdateWithoutOrdersInput = {
   questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
   samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceCreateWithoutReviewsInput = {
+  id?: string
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutServicesInput
+  addons?: Prisma.ServiceAddonCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceUncheckedCreateWithoutReviewsInput = {
+  id?: string
+  userId: number
+  title: string
+  slug?: string | null
+  shortDescription: string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: string | null
+  basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  requestMode?: $Enums.ServiceRequestMode
+  status?: $Enums.ServiceStatus
+  slotsEnabled?: boolean
+  slotsTotal?: number | null
+  slotsUsed?: number
+  isNSFWAllowed?: boolean
+  isCommercialAllowed?: boolean
+  canDo?: string | null
+  cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  addons?: Prisma.ServiceAddonUncheckedCreateNestedManyWithoutServiceInput
+  categories?: Prisma.TagUncheckedCreateNestedManyWithoutServicesInput
+  questions?: Prisma.ServiceQuestionUncheckedCreateNestedManyWithoutServiceInput
+  samples?: Prisma.ServiceSampleUncheckedCreateNestedManyWithoutServiceInput
+  policies?: Prisma.ServicePolicyUncheckedCreateNestedManyWithoutServiceInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceCreateOrConnectWithoutReviewsInput = {
+  where: Prisma.ServiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutReviewsInput, Prisma.ServiceUncheckedCreateWithoutReviewsInput>
+}
+
+export type ServiceUpsertWithoutReviewsInput = {
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutReviewsInput, Prisma.ServiceUncheckedUpdateWithoutReviewsInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutReviewsInput, Prisma.ServiceUncheckedCreateWithoutReviewsInput>
+  where?: Prisma.ServiceWhereInput
+}
+
+export type ServiceUpdateToOneWithWhereWithoutReviewsInput = {
+  where?: Prisma.ServiceWhereInput
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutReviewsInput, Prisma.ServiceUncheckedUpdateWithoutReviewsInput>
+}
+
+export type ServiceUpdateWithoutReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
+  addons?: Prisma.ServiceAddonUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceUncheckedUpdateWithoutReviewsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  requestMode?: Prisma.EnumServiceRequestModeFieldUpdateOperationsInput | $Enums.ServiceRequestMode
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  slotsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotsTotal?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slotsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  isNSFWAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
+  categories?: Prisma.TagUncheckedUpdateManyWithoutServicesNestedInput
+  questions?: Prisma.ServiceQuestionUncheckedUpdateManyWithoutServiceNestedInput
+  samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
+  policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceCreateManyUserInput = {
@@ -1941,6 +2309,9 @@ export type ServiceCreateManyUserInput = {
   isCommercialAllowed?: boolean
   canDo?: string | null
   cannotDo?: string | null
+  reviewCount?: number
+  ratingSum?: number
+  avgRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1966,6 +2337,9 @@ export type ServiceUpdateWithoutUserInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addons?: Prisma.ServiceAddonUpdateManyWithoutServiceNestedInput
@@ -1974,6 +2348,7 @@ export type ServiceUpdateWithoutUserInput = {
   samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutUserInput = {
@@ -1997,6 +2372,9 @@ export type ServiceUncheckedUpdateWithoutUserInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
@@ -2005,6 +2383,7 @@ export type ServiceUncheckedUpdateWithoutUserInput = {
   samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateManyWithoutUserInput = {
@@ -2028,6 +2407,9 @@ export type ServiceUncheckedUpdateManyWithoutUserInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2053,6 +2435,9 @@ export type ServiceUpdateWithoutCategoriesInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutServicesNestedInput
@@ -2061,6 +2446,7 @@ export type ServiceUpdateWithoutCategoriesInput = {
   samples?: Prisma.ServiceSampleUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutCategoriesInput = {
@@ -2085,6 +2471,9 @@ export type ServiceUncheckedUpdateWithoutCategoriesInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addons?: Prisma.ServiceAddonUncheckedUpdateManyWithoutServiceNestedInput
@@ -2092,6 +2481,7 @@ export type ServiceUncheckedUpdateWithoutCategoriesInput = {
   samples?: Prisma.ServiceSampleUncheckedUpdateManyWithoutServiceNestedInput
   policies?: Prisma.ServicePolicyUncheckedUpdateManyWithoutServiceNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutServiceNestedInput
+  reviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateManyWithoutCategoriesInput = {
@@ -2116,6 +2506,9 @@ export type ServiceUncheckedUpdateManyWithoutCategoriesInput = {
   isCommercialAllowed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   canDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cannotDo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  ratingSum?: Prisma.IntFieldUpdateOperationsInput | number
+  avgRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2132,6 +2525,7 @@ export type ServiceCountOutputType = {
   samples: number
   policies: number
   orders: number
+  reviews: number
 }
 
 export type ServiceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2141,6 +2535,7 @@ export type ServiceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   samples?: boolean | ServiceCountOutputTypeCountSamplesArgs
   policies?: boolean | ServiceCountOutputTypeCountPoliciesArgs
   orders?: boolean | ServiceCountOutputTypeCountOrdersArgs
+  reviews?: boolean | ServiceCountOutputTypeCountReviewsArgs
 }
 
 /**
@@ -2195,6 +2590,13 @@ export type ServiceCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.
   where?: Prisma.OrderWhereInput
 }
 
+/**
+ * ServiceCountOutputType without action
+ */
+export type ServiceCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceReviewWhereInput
+}
+
 
 export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2218,6 +2620,9 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   isCommercialAllowed?: boolean
   canDo?: boolean
   cannotDo?: boolean
+  reviewCount?: boolean
+  ratingSum?: boolean
+  avgRating?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2227,6 +2632,7 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   samples?: boolean | Prisma.Service$samplesArgs<ExtArgs>
   policies?: boolean | Prisma.Service$policiesArgs<ExtArgs>
   orders?: boolean | Prisma.Service$ordersArgs<ExtArgs>
+  reviews?: boolean | Prisma.Service$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["service"]>
 
@@ -2252,6 +2658,9 @@ export type ServiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   isCommercialAllowed?: boolean
   canDo?: boolean
   cannotDo?: boolean
+  reviewCount?: boolean
+  ratingSum?: boolean
+  avgRating?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2279,6 +2688,9 @@ export type ServiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   isCommercialAllowed?: boolean
   canDo?: boolean
   cannotDo?: boolean
+  reviewCount?: boolean
+  ratingSum?: boolean
+  avgRating?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2306,11 +2718,14 @@ export type ServiceSelectScalar = {
   isCommercialAllowed?: boolean
   canDo?: boolean
   cannotDo?: boolean
+  reviewCount?: boolean
+  ratingSum?: boolean
+  avgRating?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "slug" | "shortDescription" | "description" | "coverImageUrl" | "basePrice" | "currency" | "deliveryDaysMin" | "deliveryDaysMax" | "revisionsIncluded" | "requestMode" | "status" | "slotsEnabled" | "slotsTotal" | "slotsUsed" | "isNSFWAllowed" | "isCommercialAllowed" | "canDo" | "cannotDo" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
+export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "slug" | "shortDescription" | "description" | "coverImageUrl" | "basePrice" | "currency" | "deliveryDaysMin" | "deliveryDaysMax" | "revisionsIncluded" | "requestMode" | "status" | "slotsEnabled" | "slotsTotal" | "slotsUsed" | "isNSFWAllowed" | "isCommercialAllowed" | "canDo" | "cannotDo" | "reviewCount" | "ratingSum" | "avgRating" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
 export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   addons?: boolean | Prisma.Service$addonsArgs<ExtArgs>
@@ -2319,6 +2734,7 @@ export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   samples?: boolean | Prisma.Service$samplesArgs<ExtArgs>
   policies?: boolean | Prisma.Service$policiesArgs<ExtArgs>
   orders?: boolean | Prisma.Service$ordersArgs<ExtArgs>
+  reviews?: boolean | Prisma.Service$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ServiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2338,6 +2754,7 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     samples: Prisma.$ServiceSamplePayload<ExtArgs>[]
     policies: Prisma.$ServicePolicyPayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    reviews: Prisma.$ServiceReviewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2361,6 +2778,9 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     isCommercialAllowed: boolean
     canDo: string | null
     cannotDo: string | null
+    reviewCount: number
+    ratingSum: number
+    avgRating: runtime.Decimal | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["service"]>
@@ -2764,6 +3184,7 @@ export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends runtime.
   samples<T extends Prisma.Service$samplesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$samplesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceSamplePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   policies<T extends Prisma.Service$policiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$policiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Service$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviews<T extends Prisma.Service$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2814,6 +3235,9 @@ export interface ServiceFieldRefs {
   readonly isCommercialAllowed: Prisma.FieldRef<"Service", 'Boolean'>
   readonly canDo: Prisma.FieldRef<"Service", 'String'>
   readonly cannotDo: Prisma.FieldRef<"Service", 'String'>
+  readonly reviewCount: Prisma.FieldRef<"Service", 'Int'>
+  readonly ratingSum: Prisma.FieldRef<"Service", 'Int'>
+  readonly avgRating: Prisma.FieldRef<"Service", 'Decimal'>
   readonly createdAt: Prisma.FieldRef<"Service", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Service", 'DateTime'>
 }
@@ -3358,6 +3782,30 @@ export type Service$ordersArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * Service.reviews
+ */
+export type Service$reviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceReview
+   */
+  select?: Prisma.ServiceReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceReview
+   */
+  omit?: Prisma.ServiceReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceReviewInclude<ExtArgs> | null
+  where?: Prisma.ServiceReviewWhereInput
+  orderBy?: Prisma.ServiceReviewOrderByWithRelationInput | Prisma.ServiceReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceReviewScalarFieldEnum | Prisma.ServiceReviewScalarFieldEnum[]
 }
 
 /**

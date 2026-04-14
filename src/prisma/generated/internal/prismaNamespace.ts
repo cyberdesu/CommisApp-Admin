@@ -408,6 +408,7 @@ export const ModelName = {
   Payment: 'Payment',
   Payout: 'Payout',
   OrderEvent: 'OrderEvent',
+  ServiceReview: 'ServiceReview',
   Workflow: 'Workflow',
   SubPhase: 'SubPhase',
   UserInteraction: 'UserInteraction',
@@ -437,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "adminUser" | "adminSession" | "user" | "userModeration" | "artistVerificationRequest" | "settings" | "socials" | "otp" | "authToken" | "refreshToken" | "showcase" | "showcaseItem" | "showcaseFile" | "tag" | "service" | "serviceAddon" | "serviceQuestion" | "servicePolicy" | "serviceSample" | "customRequest" | "order" | "payment" | "payout" | "orderEvent" | "workflow" | "subPhase" | "userInteraction" | "follow" | "bookmark" | "publicViewRecord" | "behavioralLog" | "profileSearchRecord" | "fingerprintProfile" | "authAuditLog" | "conversation" | "conversationParticipant" | "message" | "notification"
+    modelProps: "adminUser" | "adminSession" | "user" | "userModeration" | "artistVerificationRequest" | "settings" | "socials" | "otp" | "authToken" | "refreshToken" | "showcase" | "showcaseItem" | "showcaseFile" | "tag" | "service" | "serviceAddon" | "serviceQuestion" | "servicePolicy" | "serviceSample" | "customRequest" | "order" | "payment" | "payout" | "orderEvent" | "serviceReview" | "workflow" | "subPhase" | "userInteraction" | "follow" | "bookmark" | "publicViewRecord" | "behavioralLog" | "profileSearchRecord" | "fingerprintProfile" | "authAuditLog" | "conversation" | "conversationParticipant" | "message" | "notification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2217,6 +2218,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ServiceReview: {
+      payload: Prisma.$ServiceReviewPayload<ExtArgs>
+      fields: Prisma.ServiceReviewFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ServiceReviewFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ServiceReviewFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload>
+        }
+        findFirst: {
+          args: Prisma.ServiceReviewFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ServiceReviewFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload>
+        }
+        findMany: {
+          args: Prisma.ServiceReviewFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload>[]
+        }
+        create: {
+          args: Prisma.ServiceReviewCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload>
+        }
+        createMany: {
+          args: Prisma.ServiceReviewCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ServiceReviewCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload>[]
+        }
+        delete: {
+          args: Prisma.ServiceReviewDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload>
+        }
+        update: {
+          args: Prisma.ServiceReviewUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload>
+        }
+        deleteMany: {
+          args: Prisma.ServiceReviewDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ServiceReviewUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ServiceReviewUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload>[]
+        }
+        upsert: {
+          args: Prisma.ServiceReviewUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceReviewPayload>
+        }
+        aggregate: {
+          args: Prisma.ServiceReviewAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateServiceReview>
+        }
+        groupBy: {
+          args: Prisma.ServiceReviewGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceReviewGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ServiceReviewCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceReviewCountAggregateOutputType> | number
+        }
+      }
+    }
     Workflow: {
       payload: Prisma.$WorkflowPayload<ExtArgs>
       fields: Prisma.WorkflowFieldRefs
@@ -3504,6 +3579,9 @@ export const ServiceScalarFieldEnum = {
   isCommercialAllowed: 'isCommercialAllowed',
   canDo: 'canDo',
   cannotDo: 'cannotDo',
+  reviewCount: 'reviewCount',
+  ratingSum: 'ratingSum',
+  avgRating: 'avgRating',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3665,6 +3743,21 @@ export const OrderEventScalarFieldEnum = {
 } as const
 
 export type OrderEventScalarFieldEnum = (typeof OrderEventScalarFieldEnum)[keyof typeof OrderEventScalarFieldEnum]
+
+
+export const ServiceReviewScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  serviceId: 'serviceId',
+  artistId: 'artistId',
+  reviewerId: 'reviewerId',
+  rating: 'rating',
+  comment: 'comment',
+  isVisible: 'isVisible',
+  createdAt: 'createdAt'
+} as const
+
+export type ServiceReviewScalarFieldEnum = (typeof ServiceReviewScalarFieldEnum)[keyof typeof ServiceReviewScalarFieldEnum]
 
 
 export const WorkflowScalarFieldEnum = {
@@ -4122,6 +4215,16 @@ export const OrderEventOrderByRelevanceFieldEnum = {
 } as const
 
 export type OrderEventOrderByRelevanceFieldEnum = (typeof OrderEventOrderByRelevanceFieldEnum)[keyof typeof OrderEventOrderByRelevanceFieldEnum]
+
+
+export const ServiceReviewOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  serviceId: 'serviceId',
+  comment: 'comment'
+} as const
+
+export type ServiceReviewOrderByRelevanceFieldEnum = (typeof ServiceReviewOrderByRelevanceFieldEnum)[keyof typeof ServiceReviewOrderByRelevanceFieldEnum]
 
 
 export const WorkflowOrderByRelevanceFieldEnum = {
@@ -4696,6 +4799,7 @@ export type GlobalOmitConfig = {
   payment?: Prisma.PaymentOmit
   payout?: Prisma.PayoutOmit
   orderEvent?: Prisma.OrderEventOmit
+  serviceReview?: Prisma.ServiceReviewOmit
   workflow?: Prisma.WorkflowOmit
   subPhase?: Prisma.SubPhaseOmit
   userInteraction?: Prisma.UserInteractionOmit

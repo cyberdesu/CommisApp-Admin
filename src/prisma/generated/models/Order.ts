@@ -331,6 +331,7 @@ export type OrderWhereInput = {
   notifications?: Prisma.NotificationListRelationFilter
   conversation?: Prisma.XOR<Prisma.ConversationNullableScalarRelationFilter, Prisma.ConversationWhereInput> | null
   events?: Prisma.OrderEventListRelationFilter
+  review?: Prisma.XOR<Prisma.ServiceReviewNullableScalarRelationFilter, Prisma.ServiceReviewWhereInput> | null
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -357,6 +358,7 @@ export type OrderOrderByWithRelationInput = {
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   conversation?: Prisma.ConversationOrderByWithRelationInput
   events?: Prisma.OrderEventOrderByRelationAggregateInput
+  review?: Prisma.ServiceReviewOrderByWithRelationInput
   _relevance?: Prisma.OrderOrderByRelevanceInput
 }
 
@@ -387,6 +389,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   notifications?: Prisma.NotificationListRelationFilter
   conversation?: Prisma.XOR<Prisma.ConversationNullableScalarRelationFilter, Prisma.ConversationWhereInput> | null
   events?: Prisma.OrderEventListRelationFilter
+  review?: Prisma.XOR<Prisma.ServiceReviewNullableScalarRelationFilter, Prisma.ServiceReviewWhereInput> | null
 }, "id">
 
 export type OrderOrderByWithAggregationInput = {
@@ -456,6 +459,7 @@ export type OrderCreateInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -479,6 +483,7 @@ export type OrderUncheckedCreateInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -502,6 +507,7 @@ export type OrderUpdateInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -525,6 +531,7 @@ export type OrderUncheckedUpdateInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -840,6 +847,20 @@ export type OrderUpdateOneRequiredWithoutEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutEventsInput, Prisma.OrderUpdateWithoutEventsInput>, Prisma.OrderUncheckedUpdateWithoutEventsInput>
 }
 
+export type OrderCreateNestedOneWithoutReviewInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutReviewInput, Prisma.OrderUncheckedCreateWithoutReviewInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutReviewInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneRequiredWithoutReviewNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutReviewInput, Prisma.OrderUncheckedCreateWithoutReviewInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutReviewInput
+  upsert?: Prisma.OrderUpsertWithoutReviewInput
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutReviewInput, Prisma.OrderUpdateWithoutReviewInput>, Prisma.OrderUncheckedUpdateWithoutReviewInput>
+}
+
 export type OrderCreateNestedOneWithoutConversationInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutConversationInput, Prisma.OrderUncheckedCreateWithoutConversationInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutConversationInput
@@ -892,6 +913,7 @@ export type OrderCreateWithoutArtistInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutArtistInput = {
@@ -914,6 +936,7 @@ export type OrderUncheckedCreateWithoutArtistInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutArtistInput = {
@@ -946,6 +969,7 @@ export type OrderCreateWithoutClientInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutClientInput = {
@@ -968,6 +992,7 @@ export type OrderUncheckedCreateWithoutClientInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutClientInput = {
@@ -1054,6 +1079,7 @@ export type OrderCreateWithoutServiceInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutServiceInput = {
@@ -1076,6 +1102,7 @@ export type OrderUncheckedCreateWithoutServiceInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutServiceInput = {
@@ -1124,6 +1151,7 @@ export type OrderCreateWithoutPaymentsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPaymentsInput = {
@@ -1146,6 +1174,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPaymentsInput = {
@@ -1184,6 +1213,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPaymentsInput = {
@@ -1206,6 +1236,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutEventsInput = {
@@ -1228,6 +1259,7 @@ export type OrderCreateWithoutEventsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
+  review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutEventsInput = {
@@ -1250,6 +1282,7 @@ export type OrderUncheckedCreateWithoutEventsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
+  review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutEventsInput = {
@@ -1288,6 +1321,7 @@ export type OrderUpdateWithoutEventsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutEventsInput = {
@@ -1310,6 +1344,115 @@ export type OrderUncheckedUpdateWithoutEventsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutReviewInput = {
+  id?: string
+  source?: $Enums.OrderSource
+  status?: $Enums.OrderStatus
+  titleSnapshot?: string | null
+  briefSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  revisionsUsed?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
+  artist: Prisma.UserCreateNestedOneWithoutArtistOrdersInput
+  client?: Prisma.UserCreateNestedOneWithoutClientOrdersInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
+  events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutReviewInput = {
+  id?: string
+  serviceId?: string | null
+  artistId: number
+  clientId?: number | null
+  source?: $Enums.OrderSource
+  status?: $Enums.OrderStatus
+  titleSnapshot?: string | null
+  briefSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  revisionsUsed?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
+  events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutReviewInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutReviewInput, Prisma.OrderUncheckedCreateWithoutReviewInput>
+}
+
+export type OrderUpsertWithoutReviewInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutReviewInput, Prisma.OrderUncheckedUpdateWithoutReviewInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutReviewInput, Prisma.OrderUncheckedCreateWithoutReviewInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutReviewInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutReviewInput, Prisma.OrderUncheckedUpdateWithoutReviewInput>
+}
+
+export type OrderUpdateWithoutReviewInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  titleSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  briefSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
+  artist?: Prisma.UserUpdateOneRequiredWithoutArtistOrdersNestedInput
+  client?: Prisma.UserUpdateOneWithoutClientOrdersNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
+  events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutReviewInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  artistId?: Prisma.IntFieldUpdateOperationsInput | number
+  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  source?: Prisma.EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  titleSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  briefSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
+  events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutConversationInput = {
@@ -1332,6 +1475,7 @@ export type OrderCreateWithoutConversationInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutConversationInput = {
@@ -1354,6 +1498,7 @@ export type OrderUncheckedCreateWithoutConversationInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutConversationInput = {
@@ -1392,6 +1537,7 @@ export type OrderUpdateWithoutConversationInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutConversationInput = {
@@ -1414,6 +1560,7 @@ export type OrderUncheckedUpdateWithoutConversationInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutNotificationsInput = {
@@ -1436,6 +1583,7 @@ export type OrderCreateWithoutNotificationsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutNotificationsInput = {
@@ -1458,6 +1606,7 @@ export type OrderUncheckedCreateWithoutNotificationsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutNotificationsInput = {
@@ -1496,6 +1645,7 @@ export type OrderUpdateWithoutNotificationsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutNotificationsInput = {
@@ -1518,6 +1668,7 @@ export type OrderUncheckedUpdateWithoutNotificationsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateManyArtistInput = {
@@ -1576,6 +1727,7 @@ export type OrderUpdateWithoutArtistInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutArtistInput = {
@@ -1598,6 +1750,7 @@ export type OrderUncheckedUpdateWithoutArtistInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutArtistInput = {
@@ -1638,6 +1791,7 @@ export type OrderUpdateWithoutClientInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutClientInput = {
@@ -1660,6 +1814,7 @@ export type OrderUncheckedUpdateWithoutClientInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutClientInput = {
@@ -1718,6 +1873,7 @@ export type OrderUpdateWithoutServiceInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutServiceInput = {
@@ -1740,6 +1896,7 @@ export type OrderUncheckedUpdateWithoutServiceInput = {
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutServiceInput = {
@@ -1833,6 +1990,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notifications?: boolean | Prisma.Order$notificationsArgs<ExtArgs>
   conversation?: boolean | Prisma.Order$conversationArgs<ExtArgs>
   events?: boolean | Prisma.Order$eventsArgs<ExtArgs>
+  review?: boolean | Prisma.Order$reviewArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -1908,6 +2066,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   notifications?: boolean | Prisma.Order$notificationsArgs<ExtArgs>
   conversation?: boolean | Prisma.Order$conversationArgs<ExtArgs>
   events?: boolean | Prisma.Order$eventsArgs<ExtArgs>
+  review?: boolean | Prisma.Order$reviewArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1931,6 +2090,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     conversation: Prisma.$ConversationPayload<ExtArgs> | null
     events: Prisma.$OrderEventPayload<ExtArgs>[]
+    review: Prisma.$ServiceReviewPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2350,6 +2510,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   notifications<T extends Prisma.Order$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversation<T extends Prisma.Order$conversationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$conversationArgs<ExtArgs>>): Prisma.Prisma__ConversationClient<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   events<T extends Prisma.Order$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  review<T extends Prisma.Order$reviewArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$reviewArgs<ExtArgs>>): Prisma.Prisma__ServiceReviewClient<runtime.Types.Result.GetResult<Prisma.$ServiceReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2922,6 +3083,25 @@ export type Order$eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.OrderEventScalarFieldEnum | Prisma.OrderEventScalarFieldEnum[]
+}
+
+/**
+ * Order.review
+ */
+export type Order$reviewArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceReview
+   */
+  select?: Prisma.ServiceReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceReview
+   */
+  omit?: Prisma.ServiceReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceReviewInclude<ExtArgs> | null
+  where?: Prisma.ServiceReviewWhereInput
 }
 
 /**

@@ -17,6 +17,7 @@ import {
   Wallet,
   Image as ImageIcon,
   ScrollText,
+  SearchCheck,
 } from "lucide-react";
 
 import { LogoutButton } from "@/components/admin/logout-button";
@@ -93,6 +94,12 @@ const menus = [
     icon: ScrollText,
   },
   {
+    href: "/search-indices",
+    label: "Search Indices",
+    description: "Rebuild Elasticsearch data",
+    icon: SearchCheck,
+  },
+  {
     href: "/settings",
     label: "Settings",
     description: "Control preferences",
@@ -110,6 +117,7 @@ function getPageTitle(pathname: string) {
   if (pathname.startsWith("/artist-requests")) return "Artist Verification";
   if (pathname.startsWith("/payouts")) return "Payout Management";
   if (pathname.startsWith("/transactions")) return "Transaction Ledger";
+  if (pathname.startsWith("/search-indices")) return "Search Indices";
   if (pathname.startsWith("/settings")) return "System Settings";
 
   return "Admin Panel";

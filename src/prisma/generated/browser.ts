@@ -138,6 +138,11 @@ export type Payout = Prisma.PayoutModel
  */
 export type OrderEvent = Prisma.OrderEventModel
 /**
+ * Model ServiceReview
+ * 
+ */
+export type ServiceReview = Prisma.ServiceReviewModel
+/**
  * Model Workflow
  * 
  */

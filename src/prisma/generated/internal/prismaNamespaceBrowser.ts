@@ -75,6 +75,7 @@ export const ModelName = {
   Payment: 'Payment',
   Payout: 'Payout',
   OrderEvent: 'OrderEvent',
+  ServiceReview: 'ServiceReview',
   Workflow: 'Workflow',
   SubPhase: 'SubPhase',
   UserInteraction: 'UserInteraction',
@@ -319,6 +320,9 @@ export const ServiceScalarFieldEnum = {
   isCommercialAllowed: 'isCommercialAllowed',
   canDo: 'canDo',
   cannotDo: 'cannotDo',
+  reviewCount: 'reviewCount',
+  ratingSum: 'ratingSum',
+  avgRating: 'avgRating',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -480,6 +484,21 @@ export const OrderEventScalarFieldEnum = {
 } as const
 
 export type OrderEventScalarFieldEnum = (typeof OrderEventScalarFieldEnum)[keyof typeof OrderEventScalarFieldEnum]
+
+
+export const ServiceReviewScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  serviceId: 'serviceId',
+  artistId: 'artistId',
+  reviewerId: 'reviewerId',
+  rating: 'rating',
+  comment: 'comment',
+  isVisible: 'isVisible',
+  createdAt: 'createdAt'
+} as const
+
+export type ServiceReviewScalarFieldEnum = (typeof ServiceReviewScalarFieldEnum)[keyof typeof ServiceReviewScalarFieldEnum]
 
 
 export const WorkflowScalarFieldEnum = {
@@ -937,6 +956,16 @@ export const OrderEventOrderByRelevanceFieldEnum = {
 } as const
 
 export type OrderEventOrderByRelevanceFieldEnum = (typeof OrderEventOrderByRelevanceFieldEnum)[keyof typeof OrderEventOrderByRelevanceFieldEnum]
+
+
+export const ServiceReviewOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  serviceId: 'serviceId',
+  comment: 'comment'
+} as const
+
+export type ServiceReviewOrderByRelevanceFieldEnum = (typeof ServiceReviewOrderByRelevanceFieldEnum)[keyof typeof ServiceReviewOrderByRelevanceFieldEnum]
 
 
 export const WorkflowOrderByRelevanceFieldEnum = {

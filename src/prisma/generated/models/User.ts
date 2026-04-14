@@ -338,6 +338,8 @@ export type UserWhereInput = {
   customRequestsMade?: Prisma.CustomRequestListRelationFilter
   customRequestsRecv?: Prisma.CustomRequestListRelationFilter
   payouts?: Prisma.PayoutListRelationFilter
+  artistReviews?: Prisma.ServiceReviewListRelationFilter
+  clientReviews?: Prisma.ServiceReviewListRelationFilter
   following?: Prisma.FollowListRelationFilter
   followers?: Prisma.FollowListRelationFilter
   moderations?: Prisma.UserModerationListRelationFilter
@@ -383,6 +385,8 @@ export type UserOrderByWithRelationInput = {
   customRequestsMade?: Prisma.CustomRequestOrderByRelationAggregateInput
   customRequestsRecv?: Prisma.CustomRequestOrderByRelationAggregateInput
   payouts?: Prisma.PayoutOrderByRelationAggregateInput
+  artistReviews?: Prisma.ServiceReviewOrderByRelationAggregateInput
+  clientReviews?: Prisma.ServiceReviewOrderByRelationAggregateInput
   following?: Prisma.FollowOrderByRelationAggregateInput
   followers?: Prisma.FollowOrderByRelationAggregateInput
   moderations?: Prisma.UserModerationOrderByRelationAggregateInput
@@ -432,6 +436,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   customRequestsMade?: Prisma.CustomRequestListRelationFilter
   customRequestsRecv?: Prisma.CustomRequestListRelationFilter
   payouts?: Prisma.PayoutListRelationFilter
+  artistReviews?: Prisma.ServiceReviewListRelationFilter
+  clientReviews?: Prisma.ServiceReviewListRelationFilter
   following?: Prisma.FollowListRelationFilter
   followers?: Prisma.FollowListRelationFilter
   moderations?: Prisma.UserModerationListRelationFilter
@@ -526,6 +532,8 @@ export type UserCreateInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -571,6 +579,8 @@ export type UserUncheckedCreateInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -615,6 +625,8 @@ export type UserUpdateInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -660,6 +672,8 @@ export type UserUncheckedUpdateInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -1045,6 +1059,36 @@ export type UserUpdateOneWithoutOrderEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrderEventsInput, Prisma.UserUpdateWithoutOrderEventsInput>, Prisma.UserUncheckedUpdateWithoutOrderEventsInput>
 }
 
+export type UserCreateNestedOneWithoutArtistReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutArtistReviewsInput, Prisma.UserUncheckedCreateWithoutArtistReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArtistReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutClientReviewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClientReviewsInput, Prisma.UserUncheckedCreateWithoutClientReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClientReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutArtistReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutArtistReviewsInput, Prisma.UserUncheckedCreateWithoutArtistReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutArtistReviewsInput
+  upsert?: Prisma.UserUpsertWithoutArtistReviewsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutArtistReviewsInput, Prisma.UserUpdateWithoutArtistReviewsInput>, Prisma.UserUncheckedUpdateWithoutArtistReviewsInput>
+}
+
+export type UserUpdateOneWithoutClientReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClientReviewsInput, Prisma.UserUncheckedCreateWithoutClientReviewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClientReviewsInput
+  upsert?: Prisma.UserUpsertWithoutClientReviewsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutClientReviewsInput, Prisma.UserUpdateWithoutClientReviewsInput>, Prisma.UserUncheckedUpdateWithoutClientReviewsInput>
+}
+
 export type UserCreateNestedOneWithoutWorkflowsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutWorkflowsInput, Prisma.UserUncheckedCreateWithoutWorkflowsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutWorkflowsInput
@@ -1209,6 +1253,8 @@ export type UserCreateWithoutModerationsInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
@@ -1253,6 +1299,8 @@ export type UserUncheckedCreateWithoutModerationsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
@@ -1312,6 +1360,8 @@ export type UserUpdateWithoutModerationsInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
@@ -1356,6 +1406,8 @@ export type UserUncheckedUpdateWithoutModerationsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
@@ -1398,6 +1450,8 @@ export type UserCreateWithoutArtistVerificationInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -1442,6 +1496,8 @@ export type UserUncheckedCreateWithoutArtistVerificationInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -1501,6 +1557,8 @@ export type UserUpdateWithoutArtistVerificationInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -1545,6 +1603,8 @@ export type UserUncheckedUpdateWithoutArtistVerificationInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -1588,6 +1648,8 @@ export type UserCreateWithoutSettingsInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -1632,6 +1694,8 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -1691,6 +1755,8 @@ export type UserUpdateWithoutSettingsInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -1735,6 +1801,8 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -1778,6 +1846,8 @@ export type UserCreateWithoutSocialsInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -1822,6 +1892,8 @@ export type UserUncheckedCreateWithoutSocialsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -1881,6 +1953,8 @@ export type UserUpdateWithoutSocialsInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -1925,6 +1999,8 @@ export type UserUncheckedUpdateWithoutSocialsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -1968,6 +2044,8 @@ export type UserCreateWithoutOtpsInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -2012,6 +2090,8 @@ export type UserUncheckedCreateWithoutOtpsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -2071,6 +2151,8 @@ export type UserUpdateWithoutOtpsInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -2115,6 +2197,8 @@ export type UserUncheckedUpdateWithoutOtpsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -2158,6 +2242,8 @@ export type UserCreateWithoutTokensInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -2202,6 +2288,8 @@ export type UserUncheckedCreateWithoutTokensInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -2261,6 +2349,8 @@ export type UserUpdateWithoutTokensInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -2305,6 +2395,8 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -2348,6 +2440,8 @@ export type UserCreateWithoutRefreshTokensInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -2392,6 +2486,8 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -2451,6 +2547,8 @@ export type UserUpdateWithoutRefreshTokensInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -2495,6 +2593,8 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -2538,6 +2638,8 @@ export type UserCreateWithoutShowcasesInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -2582,6 +2684,8 @@ export type UserUncheckedCreateWithoutShowcasesInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -2641,6 +2745,8 @@ export type UserUpdateWithoutShowcasesInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -2685,6 +2791,8 @@ export type UserUncheckedUpdateWithoutShowcasesInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -2728,6 +2836,8 @@ export type UserCreateWithoutServicesInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -2772,6 +2882,8 @@ export type UserUncheckedCreateWithoutServicesInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -2831,6 +2943,8 @@ export type UserUpdateWithoutServicesInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -2875,6 +2989,8 @@ export type UserUncheckedUpdateWithoutServicesInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -2918,6 +3034,8 @@ export type UserCreateWithoutCustomRequestsRecvInput = {
   orderEvents?: Prisma.OrderEventCreateNestedManyWithoutActorInput
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -2962,6 +3080,8 @@ export type UserUncheckedCreateWithoutCustomRequestsRecvInput = {
   orderEvents?: Prisma.OrderEventUncheckedCreateNestedManyWithoutActorInput
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -3010,6 +3130,8 @@ export type UserCreateWithoutCustomRequestsMadeInput = {
   orderEvents?: Prisma.OrderEventCreateNestedManyWithoutActorInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -3054,6 +3176,8 @@ export type UserUncheckedCreateWithoutCustomRequestsMadeInput = {
   orderEvents?: Prisma.OrderEventUncheckedCreateNestedManyWithoutActorInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -3113,6 +3237,8 @@ export type UserUpdateWithoutCustomRequestsRecvInput = {
   orderEvents?: Prisma.OrderEventUpdateManyWithoutActorNestedInput
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -3157,6 +3283,8 @@ export type UserUncheckedUpdateWithoutCustomRequestsRecvInput = {
   orderEvents?: Prisma.OrderEventUncheckedUpdateManyWithoutActorNestedInput
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -3211,6 +3339,8 @@ export type UserUpdateWithoutCustomRequestsMadeInput = {
   orderEvents?: Prisma.OrderEventUpdateManyWithoutActorNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -3255,6 +3385,8 @@ export type UserUncheckedUpdateWithoutCustomRequestsMadeInput = {
   orderEvents?: Prisma.OrderEventUncheckedUpdateManyWithoutActorNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -3298,6 +3430,8 @@ export type UserCreateWithoutArtistOrdersInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -3342,6 +3476,8 @@ export type UserUncheckedCreateWithoutArtistOrdersInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -3390,6 +3526,8 @@ export type UserCreateWithoutClientOrdersInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -3434,6 +3572,8 @@ export type UserUncheckedCreateWithoutClientOrdersInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -3493,6 +3633,8 @@ export type UserUpdateWithoutArtistOrdersInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -3537,6 +3679,8 @@ export type UserUncheckedUpdateWithoutArtistOrdersInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -3591,6 +3735,8 @@ export type UserUpdateWithoutClientOrdersInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -3635,6 +3781,8 @@ export type UserUncheckedUpdateWithoutClientOrdersInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -3678,6 +3826,8 @@ export type UserCreateWithoutPayoutsInput = {
   orderEvents?: Prisma.OrderEventCreateNestedManyWithoutActorInput
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -3722,6 +3872,8 @@ export type UserUncheckedCreateWithoutPayoutsInput = {
   orderEvents?: Prisma.OrderEventUncheckedCreateNestedManyWithoutActorInput
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -3781,6 +3933,8 @@ export type UserUpdateWithoutPayoutsInput = {
   orderEvents?: Prisma.OrderEventUpdateManyWithoutActorNestedInput
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -3825,6 +3979,8 @@ export type UserUncheckedUpdateWithoutPayoutsInput = {
   orderEvents?: Prisma.OrderEventUncheckedUpdateManyWithoutActorNestedInput
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -3868,6 +4024,8 @@ export type UserCreateWithoutOrderEventsInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -3912,6 +4070,8 @@ export type UserUncheckedCreateWithoutOrderEventsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -3971,6 +4131,8 @@ export type UserUpdateWithoutOrderEventsInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -4015,6 +4177,404 @@ export type UserUncheckedUpdateWithoutOrderEventsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutArtistReviewsInput = {
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
+  tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
+  workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  services?: Prisma.ServiceCreateNestedManyWithoutUserInput
+  artistOrders?: Prisma.OrderCreateNestedManyWithoutArtistInput
+  clientOrders?: Prisma.OrderCreateNestedManyWithoutClientInput
+  orderEvents?: Prisma.OrderEventCreateNestedManyWithoutActorInput
+  customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
+  customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
+  payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutArtistReviewsInput = {
+  id?: number
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
+  workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
+  artistOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutArtistInput
+  clientOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutClientInput
+  orderEvents?: Prisma.OrderEventUncheckedCreateNestedManyWithoutActorInput
+  customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
+  customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
+  payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutArtistReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutArtistReviewsInput, Prisma.UserUncheckedCreateWithoutArtistReviewsInput>
+}
+
+export type UserCreateWithoutClientReviewsInput = {
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
+  tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
+  workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  services?: Prisma.ServiceCreateNestedManyWithoutUserInput
+  artistOrders?: Prisma.OrderCreateNestedManyWithoutArtistInput
+  clientOrders?: Prisma.OrderCreateNestedManyWithoutClientInput
+  orderEvents?: Prisma.OrderEventCreateNestedManyWithoutActorInput
+  customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
+  customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
+  payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutClientReviewsInput = {
+  id?: number
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
+  workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
+  artistOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutArtistInput
+  clientOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutClientInput
+  orderEvents?: Prisma.OrderEventUncheckedCreateNestedManyWithoutActorInput
+  customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
+  customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
+  payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutClientReviewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutClientReviewsInput, Prisma.UserUncheckedCreateWithoutClientReviewsInput>
+}
+
+export type UserUpsertWithoutArtistReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutArtistReviewsInput, Prisma.UserUncheckedUpdateWithoutArtistReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutArtistReviewsInput, Prisma.UserUncheckedCreateWithoutArtistReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutArtistReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutArtistReviewsInput, Prisma.UserUncheckedUpdateWithoutArtistReviewsInput>
+}
+
+export type UserUpdateWithoutArtistReviewsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
+  artistOrders?: Prisma.OrderUpdateManyWithoutArtistNestedInput
+  clientOrders?: Prisma.OrderUpdateManyWithoutClientNestedInput
+  orderEvents?: Prisma.OrderEventUpdateManyWithoutActorNestedInput
+  customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
+  customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
+  payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutArtistReviewsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
+  artistOrders?: Prisma.OrderUncheckedUpdateManyWithoutArtistNestedInput
+  clientOrders?: Prisma.OrderUncheckedUpdateManyWithoutClientNestedInput
+  orderEvents?: Prisma.OrderEventUncheckedUpdateManyWithoutActorNestedInput
+  customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
+  customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
+  payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutClientReviewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutClientReviewsInput, Prisma.UserUncheckedUpdateWithoutClientReviewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutClientReviewsInput, Prisma.UserUncheckedCreateWithoutClientReviewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutClientReviewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutClientReviewsInput, Prisma.UserUncheckedUpdateWithoutClientReviewsInput>
+}
+
+export type UserUpdateWithoutClientReviewsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
+  artistOrders?: Prisma.OrderUpdateManyWithoutArtistNestedInput
+  clientOrders?: Prisma.OrderUpdateManyWithoutClientNestedInput
+  orderEvents?: Prisma.OrderEventUpdateManyWithoutActorNestedInput
+  customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
+  customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
+  payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutClientReviewsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
+  artistOrders?: Prisma.OrderUncheckedUpdateManyWithoutArtistNestedInput
+  clientOrders?: Prisma.OrderUncheckedUpdateManyWithoutClientNestedInput
+  orderEvents?: Prisma.OrderEventUncheckedUpdateManyWithoutActorNestedInput
+  customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
+  customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
+  payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -4058,6 +4618,8 @@ export type UserCreateWithoutWorkflowsInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -4102,6 +4664,8 @@ export type UserUncheckedCreateWithoutWorkflowsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -4161,6 +4725,8 @@ export type UserUpdateWithoutWorkflowsInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -4205,6 +4771,8 @@ export type UserUncheckedUpdateWithoutWorkflowsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -4248,6 +4816,8 @@ export type UserCreateWithoutInteractionsInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -4292,6 +4862,8 @@ export type UserUncheckedCreateWithoutInteractionsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -4351,6 +4923,8 @@ export type UserUpdateWithoutInteractionsInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -4395,6 +4969,8 @@ export type UserUncheckedUpdateWithoutInteractionsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -4439,6 +5015,8 @@ export type UserCreateWithoutFollowingInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
@@ -4483,6 +5061,8 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
@@ -4531,6 +5111,8 @@ export type UserCreateWithoutFollowersInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
@@ -4575,6 +5157,8 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
@@ -4634,6 +5218,8 @@ export type UserUpdateWithoutFollowingInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
@@ -4678,6 +5264,8 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
@@ -4732,6 +5320,8 @@ export type UserUpdateWithoutFollowersInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
@@ -4776,6 +5366,8 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
@@ -4818,6 +5410,8 @@ export type UserCreateWithoutBookmarksInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -4862,6 +5456,8 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -4921,6 +5517,8 @@ export type UserUpdateWithoutBookmarksInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -4965,6 +5563,8 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -5008,6 +5608,8 @@ export type UserCreateWithoutProfileSearchesInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -5052,6 +5654,8 @@ export type UserUncheckedCreateWithoutProfileSearchesInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -5111,6 +5715,8 @@ export type UserUpdateWithoutProfileSearchesInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -5155,6 +5761,8 @@ export type UserUncheckedUpdateWithoutProfileSearchesInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -5199,6 +5807,8 @@ export type UserCreateWithoutConversationsInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -5243,6 +5853,8 @@ export type UserUncheckedCreateWithoutConversationsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -5302,6 +5914,8 @@ export type UserUpdateWithoutConversationsInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -5346,6 +5960,8 @@ export type UserUncheckedUpdateWithoutConversationsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -5389,6 +6005,8 @@ export type UserCreateWithoutSentMessagesInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -5433,6 +6051,8 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -5492,6 +6112,8 @@ export type UserUpdateWithoutSentMessagesInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -5536,6 +6158,8 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -5579,6 +6203,8 @@ export type UserCreateWithoutNotificationsInput = {
   customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
@@ -5623,6 +6249,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
   payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
   following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
   followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
@@ -5682,6 +6310,8 @@ export type UserUpdateWithoutNotificationsInput = {
   customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
@@ -5726,6 +6356,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
   customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
   payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
   following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
   followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
@@ -5752,6 +6384,8 @@ export type UserCountOutputType = {
   customRequestsMade: number
   customRequestsRecv: number
   payouts: number
+  artistReviews: number
+  clientReviews: number
   following: number
   followers: number
   moderations: number
@@ -5774,6 +6408,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   customRequestsMade?: boolean | UserCountOutputTypeCountCustomRequestsMadeArgs
   customRequestsRecv?: boolean | UserCountOutputTypeCountCustomRequestsRecvArgs
   payouts?: boolean | UserCountOutputTypeCountPayoutsArgs
+  artistReviews?: boolean | UserCountOutputTypeCountArtistReviewsArgs
+  clientReviews?: boolean | UserCountOutputTypeCountClientReviewsArgs
   following?: boolean | UserCountOutputTypeCountFollowingArgs
   followers?: boolean | UserCountOutputTypeCountFollowersArgs
   moderations?: boolean | UserCountOutputTypeCountModerationsArgs
@@ -5886,6 +6522,20 @@ export type UserCountOutputTypeCountPayoutsArgs<ExtArgs extends runtime.Types.Ex
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountArtistReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceReviewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountClientReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ServiceReviewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountFollowingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FollowWhereInput
 }
@@ -5963,6 +6613,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   customRequestsMade?: boolean | Prisma.User$customRequestsMadeArgs<ExtArgs>
   customRequestsRecv?: boolean | Prisma.User$customRequestsRecvArgs<ExtArgs>
   payouts?: boolean | Prisma.User$payoutsArgs<ExtArgs>
+  artistReviews?: boolean | Prisma.User$artistReviewsArgs<ExtArgs>
+  clientReviews?: boolean | Prisma.User$clientReviewsArgs<ExtArgs>
   following?: boolean | Prisma.User$followingArgs<ExtArgs>
   followers?: boolean | Prisma.User$followersArgs<ExtArgs>
   moderations?: boolean | Prisma.User$moderationsArgs<ExtArgs>
@@ -6055,6 +6707,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   customRequestsMade?: boolean | Prisma.User$customRequestsMadeArgs<ExtArgs>
   customRequestsRecv?: boolean | Prisma.User$customRequestsRecvArgs<ExtArgs>
   payouts?: boolean | Prisma.User$payoutsArgs<ExtArgs>
+  artistReviews?: boolean | Prisma.User$artistReviewsArgs<ExtArgs>
+  clientReviews?: boolean | Prisma.User$clientReviewsArgs<ExtArgs>
   following?: boolean | Prisma.User$followingArgs<ExtArgs>
   followers?: boolean | Prisma.User$followersArgs<ExtArgs>
   moderations?: boolean | Prisma.User$moderationsArgs<ExtArgs>
@@ -6087,6 +6741,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     customRequestsMade: Prisma.$CustomRequestPayload<ExtArgs>[]
     customRequestsRecv: Prisma.$CustomRequestPayload<ExtArgs>[]
     payouts: Prisma.$PayoutPayload<ExtArgs>[]
+    artistReviews: Prisma.$ServiceReviewPayload<ExtArgs>[]
+    clientReviews: Prisma.$ServiceReviewPayload<ExtArgs>[]
     following: Prisma.$FollowPayload<ExtArgs>[]
     followers: Prisma.$FollowPayload<ExtArgs>[]
     moderations: Prisma.$UserModerationPayload<ExtArgs>[]
@@ -6525,6 +7181,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   customRequestsMade<T extends Prisma.User$customRequestsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$customRequestsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   customRequestsRecv<T extends Prisma.User$customRequestsRecvArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$customRequestsRecvArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payouts<T extends Prisma.User$payoutsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$payoutsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  artistReviews<T extends Prisma.User$artistReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$artistReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  clientReviews<T extends Prisma.User$clientReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$clientReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServiceReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   following<T extends Prisma.User$followingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   followers<T extends Prisma.User$followersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   moderations<T extends Prisma.User$moderationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$moderationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserModerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7375,6 +8033,54 @@ export type User$payoutsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.PayoutScalarFieldEnum | Prisma.PayoutScalarFieldEnum[]
+}
+
+/**
+ * User.artistReviews
+ */
+export type User$artistReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceReview
+   */
+  select?: Prisma.ServiceReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceReview
+   */
+  omit?: Prisma.ServiceReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceReviewInclude<ExtArgs> | null
+  where?: Prisma.ServiceReviewWhereInput
+  orderBy?: Prisma.ServiceReviewOrderByWithRelationInput | Prisma.ServiceReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceReviewScalarFieldEnum | Prisma.ServiceReviewScalarFieldEnum[]
+}
+
+/**
+ * User.clientReviews
+ */
+export type User$clientReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ServiceReview
+   */
+  select?: Prisma.ServiceReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ServiceReview
+   */
+  omit?: Prisma.ServiceReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ServiceReviewInclude<ExtArgs> | null
+  where?: Prisma.ServiceReviewWhereInput
+  orderBy?: Prisma.ServiceReviewOrderByWithRelationInput | Prisma.ServiceReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ServiceReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ServiceReviewScalarFieldEnum | Prisma.ServiceReviewScalarFieldEnum[]
 }
 
 /**

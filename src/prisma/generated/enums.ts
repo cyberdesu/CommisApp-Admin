@@ -168,7 +168,8 @@ export const NotificationType = {
   ORDER_UPDATED: 'ORDER_UPDATED',
   SERVICE_PAUSED: 'SERVICE_PAUSED',
   SERVICE_PUBLISHED: 'SERVICE_PUBLISHED',
-  ARTIST_VERIFIED: 'ARTIST_VERIFIED'
+  ARTIST_VERIFIED: 'ARTIST_VERIFIED',
+  REVIEW_RECEIVED: 'REVIEW_RECEIVED'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
