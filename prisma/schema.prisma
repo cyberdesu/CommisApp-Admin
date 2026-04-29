@@ -18,14 +18,16 @@ datasource db {
 // ======================================
 
 model AdminUser {
-  id           Int            @id @default(autoincrement())
-  email        String         @unique
-  passwordHash String
-  name         String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  sessions     AdminSession[]
-  moderations  UserModeration[]
+  id              Int             @id @default(autoincrement())
+  email           String          @unique
+  passwordHash    String
+  name            String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  sessions        AdminSession[]
+  moderations     UserModeration[]
+  assignedTickets Ticket[]        @relation("TicketAssignedAdmin")
+  ticketMessages  TicketMessage[] @relation("TicketMessageAdminSender")
 
   @@map("admin_users")
 }
@@ -173,6 +175,36 @@ enum NotificationType {
   SERVICE_PUBLISHED
   ARTIST_VERIFIED
   REVIEW_RECEIVED
+  TICKET_REPLY
+  TICKET_STATUS_CHANGED
+  TICKET_RESOLVED
+}
+
+enum TicketType {
+  SUPPORT
+  USER_REPORT
+  CONTENT_REPORT
+  ORDER_DISPUTE
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  AWAITING_USER
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum TicketSenderRole {
+  USER
+  ADMIN
 }
 
 // ======================================
@@ -236,6 +268,9 @@ model User {
   conversations   ConversationParticipant[]
   sentMessages    Message[]
   notifications   Notification[]
+  tickets         Ticket[]        @relation("TicketReporter")
+  reportedInTickets Ticket[]     @relation("TicketReportedUser")
+  ticketMessages  TicketMessage[] @relation("TicketMessageUserSender")
 
   @@index([email])
   @@index([username])
@@ -376,6 +411,7 @@ model ShowcaseItem {
   showcaseFiles              ShowcaseFile[]
   interactions               UserInteraction[]
   serviceSamples             ServiceSample[]
+  tickets                    Ticket[]
 
   @@index([likeCount, createdAt])
   @@index([document_vectors], type: Gin)
@@ -920,12 +956,92 @@ model Notification {
   followerId     Int?
   showcaseItemId String?
   orderId        String?
+  ticketId       String?
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   message Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
   order   Order?   @relation("OrderNotifications", fields: [orderId], references: [id], onDelete: Cascade)
+  ticket  Ticket?  @relation("TicketNotifications", fields: [ticketId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt(sort: Desc)])
   @@index([userId, isRead, createdAt(sort: Desc)])
   @@map("notifications")
+}
+
+model Ticket {
+  id          String         @id @default(cuid())
+  type        TicketType
+  subject     String
+  description String
+  status      TicketStatus   @default(OPEN)
+  priority    TicketPriority @default(NORMAL)
+  category    String?
+
+  reporterId Int
+  reporter   User @relation("TicketReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  assignedAdminId Int?
+  assignedAdmin   AdminUser? @relation("TicketAssignedAdmin", fields: [assignedAdminId], references: [id], onDelete: SetNull)
+
+  reportedUserId Int?
+  reportedUser   User? @relation("TicketReportedUser", fields: [reportedUserId], references: [id], onDelete: SetNull)
+
+  orderId String?
+
+  showcaseItemId String?
+  showcaseItem   ShowcaseItem? @relation(fields: [showcaseItemId], references: [id], onDelete: SetNull)
+
+  resolutionNote String?
+  resolvedAt     DateTime?
+  closedAt       DateTime?
+  lastReplyAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  messages      TicketMessage[]
+  attachments   TicketAttachment[]
+  notifications Notification[]     @relation("TicketNotifications")
+
+  @@index([reporterId, createdAt(sort: Desc)])
+  @@index([status, priority, createdAt(sort: Desc)])
+  @@index([type, status, createdAt(sort: Desc)])
+  @@index([assignedAdminId, status])
+  @@map("tickets")
+}
+
+model TicketMessage {
+  id            String           @id @default(cuid())
+  ticketId      String
+  ticket        Ticket           @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  senderRole    TicketSenderRole
+  senderUserId  Int?
+  senderUser    User?            @relation("TicketMessageUserSender", fields: [senderUserId], references: [id], onDelete: SetNull)
+  senderAdminId Int?
+  senderAdmin   AdminUser?       @relation("TicketMessageAdminSender", fields: [senderAdminId], references: [id], onDelete: SetNull)
+  body          String
+  internalNote  Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+
+  attachments TicketAttachment[]
+
+  @@index([ticketId, createdAt])
+  @@map("ticket_messages")
+}
+
+model TicketAttachment {
+  id           String         @id @default(cuid())
+  ticketId     String?
+  ticket       Ticket?        @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  messageId    String?
+  message      TicketMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  fileKey      String
+  fileName     String
+  mimeType     String
+  sizeBytes    Int
+  uploadedById Int?
+  createdAt    DateTime       @default(now())
+
+  @@index([ticketId])
+  @@index([messageId])
+  @@map("ticket_attachments")
 }

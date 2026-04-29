@@ -661,6 +661,74 @@ export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
 }
 
+export type EnumTicketTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketType | Prisma.EnumTicketTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketType[] | Prisma.ListEnumTicketTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketType[] | Prisma.ListEnumTicketTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketTypeFilter<$PrismaModel> | $Enums.TicketType
+}
+
+export type EnumTicketStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketStatus | Prisma.EnumTicketStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketStatus[] | Prisma.ListEnumTicketStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketStatus[] | Prisma.ListEnumTicketStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketStatusFilter<$PrismaModel> | $Enums.TicketStatus
+}
+
+export type EnumTicketPriorityFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketPriority | Prisma.EnumTicketPriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketPriority[] | Prisma.ListEnumTicketPriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketPriority[] | Prisma.ListEnumTicketPriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketPriorityFilter<$PrismaModel> | $Enums.TicketPriority
+}
+
+export type EnumTicketTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketType | Prisma.EnumTicketTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketType[] | Prisma.ListEnumTicketTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketType[] | Prisma.ListEnumTicketTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel> | $Enums.TicketType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTicketTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTicketTypeFilter<$PrismaModel>
+}
+
+export type EnumTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketStatus | Prisma.EnumTicketStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketStatus[] | Prisma.ListEnumTicketStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketStatus[] | Prisma.ListEnumTicketStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.TicketStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTicketStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTicketStatusFilter<$PrismaModel>
+}
+
+export type EnumTicketPriorityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketPriority | Prisma.EnumTicketPriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketPriority[] | Prisma.ListEnumTicketPriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketPriority[] | Prisma.ListEnumTicketPriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketPriorityWithAggregatesFilter<$PrismaModel> | $Enums.TicketPriority
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTicketPriorityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTicketPriorityFilter<$PrismaModel>
+}
+
+export type EnumTicketSenderRoleFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketSenderRole | Prisma.EnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketSenderRole[] | Prisma.ListEnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketSenderRole[] | Prisma.ListEnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketSenderRoleFilter<$PrismaModel> | $Enums.TicketSenderRole
+}
+
+export type EnumTicketSenderRoleWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketSenderRole | Prisma.EnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketSenderRole[] | Prisma.ListEnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketSenderRole[] | Prisma.ListEnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketSenderRoleWithAggregatesFilter<$PrismaModel> | $Enums.TicketSenderRole
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTicketSenderRoleFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTicketSenderRoleFilter<$PrismaModel>
+}
+
 export type NestedIntFilter<$PrismaModel = never> = {
   equals?: number | Prisma.IntFieldRefInput<$PrismaModel>
   in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
@@ -1265,6 +1333,74 @@ export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumTicketTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketType | Prisma.EnumTicketTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketType[] | Prisma.ListEnumTicketTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketType[] | Prisma.ListEnumTicketTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketTypeFilter<$PrismaModel> | $Enums.TicketType
+}
+
+export type NestedEnumTicketStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketStatus | Prisma.EnumTicketStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketStatus[] | Prisma.ListEnumTicketStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketStatus[] | Prisma.ListEnumTicketStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketStatusFilter<$PrismaModel> | $Enums.TicketStatus
+}
+
+export type NestedEnumTicketPriorityFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketPriority | Prisma.EnumTicketPriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketPriority[] | Prisma.ListEnumTicketPriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketPriority[] | Prisma.ListEnumTicketPriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketPriorityFilter<$PrismaModel> | $Enums.TicketPriority
+}
+
+export type NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketType | Prisma.EnumTicketTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketType[] | Prisma.ListEnumTicketTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketType[] | Prisma.ListEnumTicketTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel> | $Enums.TicketType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTicketTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTicketTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketStatus | Prisma.EnumTicketStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketStatus[] | Prisma.ListEnumTicketStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketStatus[] | Prisma.ListEnumTicketStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.TicketStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTicketStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTicketStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumTicketPriorityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketPriority | Prisma.EnumTicketPriorityFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketPriority[] | Prisma.ListEnumTicketPriorityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketPriority[] | Prisma.ListEnumTicketPriorityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketPriorityWithAggregatesFilter<$PrismaModel> | $Enums.TicketPriority
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTicketPriorityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTicketPriorityFilter<$PrismaModel>
+}
+
+export type NestedEnumTicketSenderRoleFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketSenderRole | Prisma.EnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketSenderRole[] | Prisma.ListEnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketSenderRole[] | Prisma.ListEnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketSenderRoleFilter<$PrismaModel> | $Enums.TicketSenderRole
+}
+
+export type NestedEnumTicketSenderRoleWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TicketSenderRole | Prisma.EnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  in?: $Enums.TicketSenderRole[] | Prisma.ListEnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TicketSenderRole[] | Prisma.ListEnumTicketSenderRoleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTicketSenderRoleWithAggregatesFilter<$PrismaModel> | $Enums.TicketSenderRole
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTicketSenderRoleFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTicketSenderRoleFilter<$PrismaModel>
 }
 
 

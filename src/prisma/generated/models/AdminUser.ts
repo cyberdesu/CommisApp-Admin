@@ -226,6 +226,8 @@ export type AdminUserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   sessions?: Prisma.AdminSessionListRelationFilter
   moderations?: Prisma.UserModerationListRelationFilter
+  assignedTickets?: Prisma.TicketListRelationFilter
+  ticketMessages?: Prisma.TicketMessageListRelationFilter
 }
 
 export type AdminUserOrderByWithRelationInput = {
@@ -237,6 +239,8 @@ export type AdminUserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.AdminSessionOrderByRelationAggregateInput
   moderations?: Prisma.UserModerationOrderByRelationAggregateInput
+  assignedTickets?: Prisma.TicketOrderByRelationAggregateInput
+  ticketMessages?: Prisma.TicketMessageOrderByRelationAggregateInput
   _relevance?: Prisma.AdminUserOrderByRelevanceInput
 }
 
@@ -252,6 +256,8 @@ export type AdminUserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"AdminUser"> | Date | string
   sessions?: Prisma.AdminSessionListRelationFilter
   moderations?: Prisma.UserModerationListRelationFilter
+  assignedTickets?: Prisma.TicketListRelationFilter
+  ticketMessages?: Prisma.TicketMessageListRelationFilter
 }, "id" | "email">
 
 export type AdminUserOrderByWithAggregationInput = {
@@ -288,6 +294,8 @@ export type AdminUserCreateInput = {
   updatedAt?: Date | string
   sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
   moderations?: Prisma.UserModerationCreateNestedManyWithoutAdminInput
+  assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssignedAdminInput
+  ticketMessages?: Prisma.TicketMessageCreateNestedManyWithoutSenderAdminInput
 }
 
 export type AdminUserUncheckedCreateInput = {
@@ -299,6 +307,8 @@ export type AdminUserUncheckedCreateInput = {
   updatedAt?: Date | string
   sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  ticketMessages?: Prisma.TicketMessageUncheckedCreateNestedManyWithoutSenderAdminInput
 }
 
 export type AdminUserUpdateInput = {
@@ -309,6 +319,8 @@ export type AdminUserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
   moderations?: Prisma.UserModerationUpdateManyWithoutAdminNestedInput
+  assignedTickets?: Prisma.TicketUpdateManyWithoutAssignedAdminNestedInput
+  ticketMessages?: Prisma.TicketMessageUpdateManyWithoutSenderAdminNestedInput
 }
 
 export type AdminUserUncheckedUpdateInput = {
@@ -320,6 +332,8 @@ export type AdminUserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  ticketMessages?: Prisma.TicketMessageUncheckedUpdateManyWithoutSenderAdminNestedInput
 }
 
 export type AdminUserCreateManyInput = {
@@ -394,6 +408,11 @@ export type AdminUserScalarRelationFilter = {
   isNot?: Prisma.AdminUserWhereInput
 }
 
+export type AdminUserNullableScalarRelationFilter = {
+  is?: Prisma.AdminUserWhereInput | null
+  isNot?: Prisma.AdminUserWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -438,6 +457,38 @@ export type AdminUserUpdateOneRequiredWithoutModerationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUserUpdateToOneWithWhereWithoutModerationsInput, Prisma.AdminUserUpdateWithoutModerationsInput>, Prisma.AdminUserUncheckedUpdateWithoutModerationsInput>
 }
 
+export type AdminUserCreateNestedOneWithoutAssignedTicketsInput = {
+  create?: Prisma.XOR<Prisma.AdminUserCreateWithoutAssignedTicketsInput, Prisma.AdminUserUncheckedCreateWithoutAssignedTicketsInput>
+  connectOrCreate?: Prisma.AdminUserCreateOrConnectWithoutAssignedTicketsInput
+  connect?: Prisma.AdminUserWhereUniqueInput
+}
+
+export type AdminUserUpdateOneWithoutAssignedTicketsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminUserCreateWithoutAssignedTicketsInput, Prisma.AdminUserUncheckedCreateWithoutAssignedTicketsInput>
+  connectOrCreate?: Prisma.AdminUserCreateOrConnectWithoutAssignedTicketsInput
+  upsert?: Prisma.AdminUserUpsertWithoutAssignedTicketsInput
+  disconnect?: Prisma.AdminUserWhereInput | boolean
+  delete?: Prisma.AdminUserWhereInput | boolean
+  connect?: Prisma.AdminUserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUserUpdateToOneWithWhereWithoutAssignedTicketsInput, Prisma.AdminUserUpdateWithoutAssignedTicketsInput>, Prisma.AdminUserUncheckedUpdateWithoutAssignedTicketsInput>
+}
+
+export type AdminUserCreateNestedOneWithoutTicketMessagesInput = {
+  create?: Prisma.XOR<Prisma.AdminUserCreateWithoutTicketMessagesInput, Prisma.AdminUserUncheckedCreateWithoutTicketMessagesInput>
+  connectOrCreate?: Prisma.AdminUserCreateOrConnectWithoutTicketMessagesInput
+  connect?: Prisma.AdminUserWhereUniqueInput
+}
+
+export type AdminUserUpdateOneWithoutTicketMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminUserCreateWithoutTicketMessagesInput, Prisma.AdminUserUncheckedCreateWithoutTicketMessagesInput>
+  connectOrCreate?: Prisma.AdminUserCreateOrConnectWithoutTicketMessagesInput
+  upsert?: Prisma.AdminUserUpsertWithoutTicketMessagesInput
+  disconnect?: Prisma.AdminUserWhereInput | boolean
+  delete?: Prisma.AdminUserWhereInput | boolean
+  connect?: Prisma.AdminUserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUserUpdateToOneWithWhereWithoutTicketMessagesInput, Prisma.AdminUserUpdateWithoutTicketMessagesInput>, Prisma.AdminUserUncheckedUpdateWithoutTicketMessagesInput>
+}
+
 export type AdminUserCreateWithoutSessionsInput = {
   email: string
   passwordHash: string
@@ -445,6 +496,8 @@ export type AdminUserCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   moderations?: Prisma.UserModerationCreateNestedManyWithoutAdminInput
+  assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssignedAdminInput
+  ticketMessages?: Prisma.TicketMessageCreateNestedManyWithoutSenderAdminInput
 }
 
 export type AdminUserUncheckedCreateWithoutSessionsInput = {
@@ -455,6 +508,8 @@ export type AdminUserUncheckedCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  ticketMessages?: Prisma.TicketMessageUncheckedCreateNestedManyWithoutSenderAdminInput
 }
 
 export type AdminUserCreateOrConnectWithoutSessionsInput = {
@@ -480,6 +535,8 @@ export type AdminUserUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   moderations?: Prisma.UserModerationUpdateManyWithoutAdminNestedInput
+  assignedTickets?: Prisma.TicketUpdateManyWithoutAssignedAdminNestedInput
+  ticketMessages?: Prisma.TicketMessageUpdateManyWithoutSenderAdminNestedInput
 }
 
 export type AdminUserUncheckedUpdateWithoutSessionsInput = {
@@ -490,6 +547,8 @@ export type AdminUserUncheckedUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  ticketMessages?: Prisma.TicketMessageUncheckedUpdateManyWithoutSenderAdminNestedInput
 }
 
 export type AdminUserCreateWithoutModerationsInput = {
@@ -499,6 +558,8 @@ export type AdminUserCreateWithoutModerationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssignedAdminInput
+  ticketMessages?: Prisma.TicketMessageCreateNestedManyWithoutSenderAdminInput
 }
 
 export type AdminUserUncheckedCreateWithoutModerationsInput = {
@@ -509,6 +570,8 @@ export type AdminUserUncheckedCreateWithoutModerationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  ticketMessages?: Prisma.TicketMessageUncheckedCreateNestedManyWithoutSenderAdminInput
 }
 
 export type AdminUserCreateOrConnectWithoutModerationsInput = {
@@ -534,6 +597,8 @@ export type AdminUserUpdateWithoutModerationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  assignedTickets?: Prisma.TicketUpdateManyWithoutAssignedAdminNestedInput
+  ticketMessages?: Prisma.TicketMessageUpdateManyWithoutSenderAdminNestedInput
 }
 
 export type AdminUserUncheckedUpdateWithoutModerationsInput = {
@@ -544,6 +609,132 @@ export type AdminUserUncheckedUpdateWithoutModerationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  ticketMessages?: Prisma.TicketMessageUncheckedUpdateManyWithoutSenderAdminNestedInput
+}
+
+export type AdminUserCreateWithoutAssignedTicketsInput = {
+  email: string
+  passwordHash: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutAdminInput
+  ticketMessages?: Prisma.TicketMessageCreateNestedManyWithoutSenderAdminInput
+}
+
+export type AdminUserUncheckedCreateWithoutAssignedTicketsInput = {
+  id?: number
+  email: string
+  passwordHash: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutAdminInput
+  ticketMessages?: Prisma.TicketMessageUncheckedCreateNestedManyWithoutSenderAdminInput
+}
+
+export type AdminUserCreateOrConnectWithoutAssignedTicketsInput = {
+  where: Prisma.AdminUserWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminUserCreateWithoutAssignedTicketsInput, Prisma.AdminUserUncheckedCreateWithoutAssignedTicketsInput>
+}
+
+export type AdminUserUpsertWithoutAssignedTicketsInput = {
+  update: Prisma.XOR<Prisma.AdminUserUpdateWithoutAssignedTicketsInput, Prisma.AdminUserUncheckedUpdateWithoutAssignedTicketsInput>
+  create: Prisma.XOR<Prisma.AdminUserCreateWithoutAssignedTicketsInput, Prisma.AdminUserUncheckedCreateWithoutAssignedTicketsInput>
+  where?: Prisma.AdminUserWhereInput
+}
+
+export type AdminUserUpdateToOneWithWhereWithoutAssignedTicketsInput = {
+  where?: Prisma.AdminUserWhereInput
+  data: Prisma.XOR<Prisma.AdminUserUpdateWithoutAssignedTicketsInput, Prisma.AdminUserUncheckedUpdateWithoutAssignedTicketsInput>
+}
+
+export type AdminUserUpdateWithoutAssignedTicketsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutAdminNestedInput
+  ticketMessages?: Prisma.TicketMessageUpdateManyWithoutSenderAdminNestedInput
+}
+
+export type AdminUserUncheckedUpdateWithoutAssignedTicketsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutAdminNestedInput
+  ticketMessages?: Prisma.TicketMessageUncheckedUpdateManyWithoutSenderAdminNestedInput
+}
+
+export type AdminUserCreateWithoutTicketMessagesInput = {
+  email: string
+  passwordHash: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionCreateNestedManyWithoutAdminInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutAdminInput
+  assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssignedAdminInput
+}
+
+export type AdminUserUncheckedCreateWithoutTicketMessagesInput = {
+  id?: number
+  email: string
+  passwordHash: string
+  name: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AdminSessionUncheckedCreateNestedManyWithoutAdminInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutAdminInput
+  assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+}
+
+export type AdminUserCreateOrConnectWithoutTicketMessagesInput = {
+  where: Prisma.AdminUserWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminUserCreateWithoutTicketMessagesInput, Prisma.AdminUserUncheckedCreateWithoutTicketMessagesInput>
+}
+
+export type AdminUserUpsertWithoutTicketMessagesInput = {
+  update: Prisma.XOR<Prisma.AdminUserUpdateWithoutTicketMessagesInput, Prisma.AdminUserUncheckedUpdateWithoutTicketMessagesInput>
+  create: Prisma.XOR<Prisma.AdminUserCreateWithoutTicketMessagesInput, Prisma.AdminUserUncheckedCreateWithoutTicketMessagesInput>
+  where?: Prisma.AdminUserWhereInput
+}
+
+export type AdminUserUpdateToOneWithWhereWithoutTicketMessagesInput = {
+  where?: Prisma.AdminUserWhereInput
+  data: Prisma.XOR<Prisma.AdminUserUpdateWithoutTicketMessagesInput, Prisma.AdminUserUncheckedUpdateWithoutTicketMessagesInput>
+}
+
+export type AdminUserUpdateWithoutTicketMessagesInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUpdateManyWithoutAdminNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutAdminNestedInput
+  assignedTickets?: Prisma.TicketUpdateManyWithoutAssignedAdminNestedInput
+}
+
+export type AdminUserUncheckedUpdateWithoutTicketMessagesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AdminSessionUncheckedUpdateManyWithoutAdminNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutAdminNestedInput
+  assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
 }
 
 
@@ -554,11 +745,15 @@ export type AdminUserUncheckedUpdateWithoutModerationsInput = {
 export type AdminUserCountOutputType = {
   sessions: number
   moderations: number
+  assignedTickets: number
+  ticketMessages: number
 }
 
 export type AdminUserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | AdminUserCountOutputTypeCountSessionsArgs
   moderations?: boolean | AdminUserCountOutputTypeCountModerationsArgs
+  assignedTickets?: boolean | AdminUserCountOutputTypeCountAssignedTicketsArgs
+  ticketMessages?: boolean | AdminUserCountOutputTypeCountTicketMessagesArgs
 }
 
 /**
@@ -585,6 +780,20 @@ export type AdminUserCountOutputTypeCountModerationsArgs<ExtArgs extends runtime
   where?: Prisma.UserModerationWhereInput
 }
 
+/**
+ * AdminUserCountOutputType without action
+ */
+export type AdminUserCountOutputTypeCountAssignedTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TicketWhereInput
+}
+
+/**
+ * AdminUserCountOutputType without action
+ */
+export type AdminUserCountOutputTypeCountTicketMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TicketMessageWhereInput
+}
+
 
 export type AdminUserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -595,6 +804,8 @@ export type AdminUserSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   updatedAt?: boolean
   sessions?: boolean | Prisma.AdminUser$sessionsArgs<ExtArgs>
   moderations?: boolean | Prisma.AdminUser$moderationsArgs<ExtArgs>
+  assignedTickets?: boolean | Prisma.AdminUser$assignedTicketsArgs<ExtArgs>
+  ticketMessages?: boolean | Prisma.AdminUser$ticketMessagesArgs<ExtArgs>
   _count?: boolean | Prisma.AdminUserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["adminUser"]>
 
@@ -629,6 +840,8 @@ export type AdminUserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type AdminUserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.AdminUser$sessionsArgs<ExtArgs>
   moderations?: boolean | Prisma.AdminUser$moderationsArgs<ExtArgs>
+  assignedTickets?: boolean | Prisma.AdminUser$assignedTicketsArgs<ExtArgs>
+  ticketMessages?: boolean | Prisma.AdminUser$ticketMessagesArgs<ExtArgs>
   _count?: boolean | Prisma.AdminUserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AdminUserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -639,6 +852,8 @@ export type $AdminUserPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     sessions: Prisma.$AdminSessionPayload<ExtArgs>[]
     moderations: Prisma.$UserModerationPayload<ExtArgs>[]
+    assignedTickets: Prisma.$TicketPayload<ExtArgs>[]
+    ticketMessages: Prisma.$TicketMessagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1043,6 +1258,8 @@ export interface Prisma__AdminUserClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sessions<T extends Prisma.AdminUser$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdminUser$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   moderations<T extends Prisma.AdminUser$moderationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdminUser$moderationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserModerationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assignedTickets<T extends Prisma.AdminUser$assignedTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdminUser$assignedTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ticketMessages<T extends Prisma.AdminUser$ticketMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdminUser$ticketMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1516,6 +1733,54 @@ export type AdminUser$moderationsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.UserModerationScalarFieldEnum | Prisma.UserModerationScalarFieldEnum[]
+}
+
+/**
+ * AdminUser.assignedTickets
+ */
+export type AdminUser$assignedTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Ticket
+   */
+  select?: Prisma.TicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Ticket
+   */
+  omit?: Prisma.TicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TicketInclude<ExtArgs> | null
+  where?: Prisma.TicketWhereInput
+  orderBy?: Prisma.TicketOrderByWithRelationInput | Prisma.TicketOrderByWithRelationInput[]
+  cursor?: Prisma.TicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
+}
+
+/**
+ * AdminUser.ticketMessages
+ */
+export type AdminUser$ticketMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TicketMessage
+   */
+  select?: Prisma.TicketMessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TicketMessage
+   */
+  omit?: Prisma.TicketMessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TicketMessageInclude<ExtArgs> | null
+  where?: Prisma.TicketMessageWhereInput
+  orderBy?: Prisma.TicketMessageOrderByWithRelationInput | Prisma.TicketMessageOrderByWithRelationInput[]
+  cursor?: Prisma.TicketMessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TicketMessageScalarFieldEnum | Prisma.TicketMessageScalarFieldEnum[]
 }
 
 /**

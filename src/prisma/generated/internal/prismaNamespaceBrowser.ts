@@ -89,7 +89,10 @@ export const ModelName = {
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',
   Message: 'Message',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  Ticket: 'Ticket',
+  TicketMessage: 'TicketMessage',
+  TicketAttachment: 'TicketAttachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -671,10 +674,64 @@ export const NotificationScalarFieldEnum = {
   messageId: 'messageId',
   followerId: 'followerId',
   showcaseItemId: 'showcaseItemId',
-  orderId: 'orderId'
+  orderId: 'orderId',
+  ticketId: 'ticketId'
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const TicketScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  subject: 'subject',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  category: 'category',
+  reporterId: 'reporterId',
+  assignedAdminId: 'assignedAdminId',
+  reportedUserId: 'reportedUserId',
+  orderId: 'orderId',
+  showcaseItemId: 'showcaseItemId',
+  resolutionNote: 'resolutionNote',
+  resolvedAt: 'resolvedAt',
+  closedAt: 'closedAt',
+  lastReplyAt: 'lastReplyAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
+
+
+export const TicketMessageScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  senderRole: 'senderRole',
+  senderUserId: 'senderUserId',
+  senderAdminId: 'senderAdminId',
+  body: 'body',
+  internalNote: 'internalNote',
+  createdAt: 'createdAt'
+} as const
+
+export type TicketMessageScalarFieldEnum = (typeof TicketMessageScalarFieldEnum)[keyof typeof TicketMessageScalarFieldEnum]
+
+
+export const TicketAttachmentScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  messageId: 'messageId',
+  fileKey: 'fileKey',
+  fileName: 'fileName',
+  mimeType: 'mimeType',
+  sizeBytes: 'sizeBytes',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+} as const
+
+export type TicketAttachmentScalarFieldEnum = (typeof TicketAttachmentScalarFieldEnum)[keyof typeof TicketAttachmentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1081,8 +1138,43 @@ export const NotificationOrderByRelevanceFieldEnum = {
   body: 'body',
   messageId: 'messageId',
   showcaseItemId: 'showcaseItemId',
-  orderId: 'orderId'
+  orderId: 'orderId',
+  ticketId: 'ticketId'
 } as const
 
 export type NotificationOrderByRelevanceFieldEnum = (typeof NotificationOrderByRelevanceFieldEnum)[keyof typeof NotificationOrderByRelevanceFieldEnum]
+
+
+export const TicketOrderByRelevanceFieldEnum = {
+  id: 'id',
+  subject: 'subject',
+  description: 'description',
+  category: 'category',
+  orderId: 'orderId',
+  showcaseItemId: 'showcaseItemId',
+  resolutionNote: 'resolutionNote'
+} as const
+
+export type TicketOrderByRelevanceFieldEnum = (typeof TicketOrderByRelevanceFieldEnum)[keyof typeof TicketOrderByRelevanceFieldEnum]
+
+
+export const TicketMessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  body: 'body'
+} as const
+
+export type TicketMessageOrderByRelevanceFieldEnum = (typeof TicketMessageOrderByRelevanceFieldEnum)[keyof typeof TicketMessageOrderByRelevanceFieldEnum]
+
+
+export const TicketAttachmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  messageId: 'messageId',
+  fileKey: 'fileKey',
+  fileName: 'fileName',
+  mimeType: 'mimeType'
+} as const
+
+export type TicketAttachmentOrderByRelevanceFieldEnum = (typeof TicketAttachmentOrderByRelevanceFieldEnum)[keyof typeof TicketAttachmentOrderByRelevanceFieldEnum]
 

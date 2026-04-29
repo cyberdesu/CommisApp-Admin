@@ -169,7 +169,49 @@ export const NotificationType = {
   SERVICE_PAUSED: 'SERVICE_PAUSED',
   SERVICE_PUBLISHED: 'SERVICE_PUBLISHED',
   ARTIST_VERIFIED: 'ARTIST_VERIFIED',
-  REVIEW_RECEIVED: 'REVIEW_RECEIVED'
+  REVIEW_RECEIVED: 'REVIEW_RECEIVED',
+  TICKET_REPLY: 'TICKET_REPLY',
+  TICKET_STATUS_CHANGED: 'TICKET_STATUS_CHANGED',
+  TICKET_RESOLVED: 'TICKET_RESOLVED'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const TicketType = {
+  SUPPORT: 'SUPPORT',
+  USER_REPORT: 'USER_REPORT',
+  CONTENT_REPORT: 'CONTENT_REPORT',
+  ORDER_DISPUTE: 'ORDER_DISPUTE'
+} as const
+
+export type TicketType = (typeof TicketType)[keyof typeof TicketType]
+
+
+export const TicketStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  AWAITING_USER: 'AWAITING_USER',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED'
+} as const
+
+export type TicketStatus = (typeof TicketStatus)[keyof typeof TicketStatus]
+
+
+export const TicketPriority = {
+  LOW: 'LOW',
+  NORMAL: 'NORMAL',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type TicketPriority = (typeof TicketPriority)[keyof typeof TicketPriority]
+
+
+export const TicketSenderRole = {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+} as const
+
+export type TicketSenderRole = (typeof TicketSenderRole)[keyof typeof TicketSenderRole]

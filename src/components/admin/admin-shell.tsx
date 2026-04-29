@@ -16,6 +16,7 @@ import {
   Users,
   Wallet,
   Image as ImageIcon,
+  LifeBuoy,
   ScrollText,
   SearchCheck,
 } from "lucide-react";
@@ -76,6 +77,12 @@ const menus = [
     icon: MessageSquare,
   },
   {
+    href: "/tickets",
+    label: "Tickets",
+    description: "Support & reports",
+    icon: LifeBuoy,
+  },
+  {
     href: "/artist-requests",
     label: "Artist Requests",
     description: "Review artist verification",
@@ -114,6 +121,7 @@ function getPageTitle(pathname: string) {
   if (pathname.startsWith("/orders")) return "Order Oversight";
   if (pathname.startsWith("/showcases")) return "Showcases Management";
   if (pathname.startsWith("/chats")) return "Chat Monitoring";
+  if (pathname.startsWith("/tickets")) return "Support Tickets";
   if (pathname.startsWith("/artist-requests")) return "Artist Verification";
   if (pathname.startsWith("/payouts")) return "Payout Management";
   if (pathname.startsWith("/transactions")) return "Transaction Ledger";
