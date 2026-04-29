@@ -107,6 +107,7 @@ enum OrderStatus {
   COMPLETED
   CANCELLED
   REJECTED
+  REFUNDED
 }
 
 enum OrderSource {
@@ -145,6 +146,32 @@ enum OrderEventType {
   ORDER_COMPLETED
   ORDER_CANCELLED
   MESSAGE_SENT
+  REFUND_REQUESTED
+  REFUND_WITHDRAWN
+  REFUND_APPROVED_BY_ARTIST
+  REFUND_DENIED_BY_ARTIST
+  REFUND_ESCALATED
+  REFUND_RESOLVED_BY_ADMIN
+  REFUND_COMPLETED
+}
+
+enum RefundStatus {
+  REQUESTED
+  APPROVED_BY_ARTIST
+  DENIED_BY_ARTIST
+  ESCALATED
+  APPROVED_BY_ADMIN
+  DENIED_BY_ADMIN
+  REFUNDED
+  WITHDRAWN
+  FAILED
+}
+
+enum RefundResolverRole {
+  ARTIST
+  ADMIN
+  CLIENT
+  SYSTEM
 }
 
 // --- Chat enums (preserved) ---
@@ -253,6 +280,9 @@ model User {
   payouts             Payout[]         @relation("ArtistPayouts")
   artistReviews       ServiceReview[]  @relation("ArtistReviews")
   clientReviews       ServiceReview[]  @relation("ClientReviews")
+  clientRefunds       RefundRequest[]  @relation("ClientRefunds")
+  artistRefunds       RefundRequest[]  @relation("ArtistRefunds")
+  resolvedRefunds     RefundRequest[]  @relation("RefundResolver")
 
   // Social graph
   following       Follow[]          @relation("Following")
@@ -620,6 +650,7 @@ model Order {
   conversation    Conversation?  @relation("OrderConversation")
   events          OrderEvent[]
   review          ServiceReview?
+  refunds         RefundRequest[]
 
   @@index([artistId, status, createdAt(sort: Desc)])
   @@index([artistId, createdAt(sort: Desc), id(sort: Desc)], map: "Order_artistId_createdAt_id_desc_idx")
@@ -651,8 +682,11 @@ model Payment {
   currency        String          @default("USD")
 
   paidAt          DateTime?
+  refundedAt      DateTime?
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
+
+  refundRequests  RefundRequest[]
 
   @@index([orderId])
   @@index([paypalOrderId])
@@ -705,6 +739,52 @@ model OrderEvent {
 
   @@index([orderId, createdAt(sort: Desc)])
   @@map("order_events")
+}
+
+// ======================================
+// REFUNDS
+// ======================================
+
+model RefundRequest {
+  id        String       @id @default(uuid())
+  orderId   String
+  paymentId String
+  clientId  Int
+  artistId  Int
+
+  status   RefundStatus @default(REQUESTED)
+  amount   Decimal      @db.Decimal(10, 2)
+  currency String       @default("USD")
+
+  reason         String  @db.Text
+  artistResponse String? @db.Text
+  adminNote      String? @db.Text
+
+  resolvedById   Int?
+  resolvedByRole RefundResolverRole?
+  resolvedAt     DateTime?
+
+  paypalRefundId String?
+  refundedAt     DateTime?
+  failureReason  String?
+
+  ticketId String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  payment    Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  client     User    @relation("ClientRefunds", fields: [clientId], references: [id], onDelete: Cascade)
+  artist     User    @relation("ArtistRefunds", fields: [artistId], references: [id], onDelete: Cascade)
+  resolvedBy User?   @relation("RefundResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([paymentId])
+  @@index([clientId, status, createdAt(sort: Desc)])
+  @@index([artistId, status, createdAt(sort: Desc)])
+  @@index([status, createdAt(sort: Desc)])
+  @@map("refund_requests")
 }
 
 // ======================================

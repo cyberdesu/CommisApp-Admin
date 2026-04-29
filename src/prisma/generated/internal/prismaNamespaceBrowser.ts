@@ -75,6 +75,7 @@ export const ModelName = {
   Payment: 'Payment',
   Payout: 'Payout',
   OrderEvent: 'OrderEvent',
+  RefundRequest: 'RefundRequest',
   ServiceReview: 'ServiceReview',
   Workflow: 'Workflow',
   SubPhase: 'SubPhase',
@@ -445,6 +446,7 @@ export const PaymentScalarFieldEnum = {
   paypalFeeSyncedAt: 'paypalFeeSyncedAt',
   currency: 'currency',
   paidAt: 'paidAt',
+  refundedAt: 'refundedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -487,6 +489,32 @@ export const OrderEventScalarFieldEnum = {
 } as const
 
 export type OrderEventScalarFieldEnum = (typeof OrderEventScalarFieldEnum)[keyof typeof OrderEventScalarFieldEnum]
+
+
+export const RefundRequestScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  paymentId: 'paymentId',
+  clientId: 'clientId',
+  artistId: 'artistId',
+  status: 'status',
+  amount: 'amount',
+  currency: 'currency',
+  reason: 'reason',
+  artistResponse: 'artistResponse',
+  adminNote: 'adminNote',
+  resolvedById: 'resolvedById',
+  resolvedByRole: 'resolvedByRole',
+  resolvedAt: 'resolvedAt',
+  paypalRefundId: 'paypalRefundId',
+  refundedAt: 'refundedAt',
+  failureReason: 'failureReason',
+  ticketId: 'ticketId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RefundRequestScalarFieldEnum = (typeof RefundRequestScalarFieldEnum)[keyof typeof RefundRequestScalarFieldEnum]
 
 
 export const ServiceReviewScalarFieldEnum = {
@@ -1013,6 +1041,22 @@ export const OrderEventOrderByRelevanceFieldEnum = {
 } as const
 
 export type OrderEventOrderByRelevanceFieldEnum = (typeof OrderEventOrderByRelevanceFieldEnum)[keyof typeof OrderEventOrderByRelevanceFieldEnum]
+
+
+export const RefundRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  paymentId: 'paymentId',
+  currency: 'currency',
+  reason: 'reason',
+  artistResponse: 'artistResponse',
+  adminNote: 'adminNote',
+  paypalRefundId: 'paypalRefundId',
+  failureReason: 'failureReason',
+  ticketId: 'ticketId'
+} as const
+
+export type RefundRequestOrderByRelevanceFieldEnum = (typeof RefundRequestOrderByRelevanceFieldEnum)[keyof typeof RefundRequestOrderByRelevanceFieldEnum]
 
 
 export const ServiceReviewOrderByRelevanceFieldEnum = {

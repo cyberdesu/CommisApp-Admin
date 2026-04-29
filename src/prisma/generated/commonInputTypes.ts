@@ -593,6 +593,40 @@ export type EnumOrderEventTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumOrderEventTypeFilter<$PrismaModel>
 }
 
+export type EnumRefundStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.RefundStatus | Prisma.EnumRefundStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.RefundStatus[] | Prisma.ListEnumRefundStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RefundStatus[] | Prisma.ListEnumRefundStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRefundStatusFilter<$PrismaModel> | $Enums.RefundStatus
+}
+
+export type EnumRefundResolverRoleNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.RefundResolverRole | Prisma.EnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RefundResolverRole[] | Prisma.ListEnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RefundResolverRole[] | Prisma.ListEnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRefundResolverRoleNullableFilter<$PrismaModel> | $Enums.RefundResolverRole | null
+}
+
+export type EnumRefundStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RefundStatus | Prisma.EnumRefundStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.RefundStatus[] | Prisma.ListEnumRefundStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RefundStatus[] | Prisma.ListEnumRefundStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRefundStatusWithAggregatesFilter<$PrismaModel> | $Enums.RefundStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRefundStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRefundStatusFilter<$PrismaModel>
+}
+
+export type EnumRefundResolverRoleNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RefundResolverRole | Prisma.EnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RefundResolverRole[] | Prisma.ListEnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RefundResolverRole[] | Prisma.ListEnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRefundResolverRoleNullableWithAggregatesFilter<$PrismaModel> | $Enums.RefundResolverRole | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRefundResolverRoleNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRefundResolverRoleNullableFilter<$PrismaModel>
+}
+
 export type EnumMainPhaseKeyFilter<$PrismaModel = never> = {
   equals?: $Enums.MainPhaseKey | Prisma.EnumMainPhaseKeyFieldRefInput<$PrismaModel>
   in?: $Enums.MainPhaseKey[] | Prisma.ListEnumMainPhaseKeyFieldRefInput<$PrismaModel>
@@ -1265,6 +1299,40 @@ export type NestedEnumOrderEventTypeWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumOrderEventTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumOrderEventTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumRefundStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.RefundStatus | Prisma.EnumRefundStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.RefundStatus[] | Prisma.ListEnumRefundStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RefundStatus[] | Prisma.ListEnumRefundStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRefundStatusFilter<$PrismaModel> | $Enums.RefundStatus
+}
+
+export type NestedEnumRefundResolverRoleNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.RefundResolverRole | Prisma.EnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RefundResolverRole[] | Prisma.ListEnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RefundResolverRole[] | Prisma.ListEnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRefundResolverRoleNullableFilter<$PrismaModel> | $Enums.RefundResolverRole | null
+}
+
+export type NestedEnumRefundStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RefundStatus | Prisma.EnumRefundStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.RefundStatus[] | Prisma.ListEnumRefundStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.RefundStatus[] | Prisma.ListEnumRefundStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumRefundStatusWithAggregatesFilter<$PrismaModel> | $Enums.RefundStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRefundStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRefundStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumRefundResolverRoleNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RefundResolverRole | Prisma.EnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RefundResolverRole[] | Prisma.ListEnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RefundResolverRole[] | Prisma.ListEnumRefundResolverRoleFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRefundResolverRoleNullableWithAggregatesFilter<$PrismaModel> | $Enums.RefundResolverRole | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRefundResolverRoleNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRefundResolverRoleNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumMainPhaseKeyFilter<$PrismaModel = never> = {

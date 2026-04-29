@@ -6,7 +6,8 @@ export type AdminOrderStatus =
   | "DELIVERED"
   | "COMPLETED"
   | "CANCELLED"
-  | "REJECTED";
+  | "REJECTED"
+  | "REFUNDED";
 
 export type UserOrderParticipantRole = "ARTIST" | "CLIENT";
 

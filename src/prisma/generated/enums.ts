@@ -85,7 +85,8 @@ export const OrderStatus = {
   DELIVERED: 'DELIVERED',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED',
-  REJECTED: 'REJECTED'
+  REJECTED: 'REJECTED',
+  REFUNDED: 'REFUNDED'
 } as const
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
@@ -134,10 +135,42 @@ export const OrderEventType = {
   REVISION_REQUESTED: 'REVISION_REQUESTED',
   ORDER_COMPLETED: 'ORDER_COMPLETED',
   ORDER_CANCELLED: 'ORDER_CANCELLED',
-  MESSAGE_SENT: 'MESSAGE_SENT'
+  MESSAGE_SENT: 'MESSAGE_SENT',
+  REFUND_REQUESTED: 'REFUND_REQUESTED',
+  REFUND_WITHDRAWN: 'REFUND_WITHDRAWN',
+  REFUND_APPROVED_BY_ARTIST: 'REFUND_APPROVED_BY_ARTIST',
+  REFUND_DENIED_BY_ARTIST: 'REFUND_DENIED_BY_ARTIST',
+  REFUND_ESCALATED: 'REFUND_ESCALATED',
+  REFUND_RESOLVED_BY_ADMIN: 'REFUND_RESOLVED_BY_ADMIN',
+  REFUND_COMPLETED: 'REFUND_COMPLETED'
 } as const
 
 export type OrderEventType = (typeof OrderEventType)[keyof typeof OrderEventType]
+
+
+export const RefundStatus = {
+  REQUESTED: 'REQUESTED',
+  APPROVED_BY_ARTIST: 'APPROVED_BY_ARTIST',
+  DENIED_BY_ARTIST: 'DENIED_BY_ARTIST',
+  ESCALATED: 'ESCALATED',
+  APPROVED_BY_ADMIN: 'APPROVED_BY_ADMIN',
+  DENIED_BY_ADMIN: 'DENIED_BY_ADMIN',
+  REFUNDED: 'REFUNDED',
+  WITHDRAWN: 'WITHDRAWN',
+  FAILED: 'FAILED'
+} as const
+
+export type RefundStatus = (typeof RefundStatus)[keyof typeof RefundStatus]
+
+
+export const RefundResolverRole = {
+  ARTIST: 'ARTIST',
+  ADMIN: 'ADMIN',
+  CLIENT: 'CLIENT',
+  SYSTEM: 'SYSTEM'
+} as const
+
+export type RefundResolverRole = (typeof RefundResolverRole)[keyof typeof RefundResolverRole]
 
 
 export const ConversationType = {
