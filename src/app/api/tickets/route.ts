@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { Prisma } from "@/prisma/generated/client";
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 20;
@@ -41,6 +42,7 @@ function parseSortOrder(value: string | null): SortOrder {
 }
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, { route: "api.tickets.list" });
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
@@ -155,7 +157,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Fetch tickets error:", error);
+    logger.error("Fetch tickets failed", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

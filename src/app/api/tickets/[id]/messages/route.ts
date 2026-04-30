@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { filterXSS } from "xss";
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger, type AppLogger } from "@/lib/logger";
 
 const REPLY_BODY_MAX = 5000;
 const RESOLUTION_NOTE_MAX = 2000;
@@ -36,6 +37,9 @@ export async function POST(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) {
+  const logger = createRequestLogger(req, {
+    route: "api.tickets.messages.create",
+  });
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
@@ -138,15 +142,22 @@ export async function POST(
       statusChanged &&
       (newStatus === "RESOLVED" || newStatus === "CLOSED");
 
+    let webhookDelivered: boolean | null = null;
     if (!internalNote || becameTerminal) {
-      void triggerHook(id, ticket.reporterId, ticket.subject, {
-        bodyExcerpt: internalNote
-          ? safeResolutionNote
-          : safeBody.slice(0, 500),
-        newStatus: result.ticket.status as PostBody["setStatus"],
-        isResolved: result.ticket.status === "RESOLVED",
-        statusChanged,
-      });
+      webhookDelivered = await triggerHook(
+        logger,
+        id,
+        ticket.reporterId,
+        ticket.subject,
+        {
+          bodyExcerpt: internalNote
+            ? safeResolutionNote
+            : safeBody.slice(0, 500),
+          newStatus: result.ticket.status as PostBody["setStatus"],
+          isResolved: result.ticket.status === "RESOLVED",
+          statusChanged,
+        },
+      );
     }
 
     return NextResponse.json({
@@ -156,10 +167,11 @@ export async function POST(
         ticketStatus: result.ticket.status,
         createdAt: result.message.createdAt,
         internalNote: result.message.internalNote,
+        webhookDelivered,
       },
     });
   } catch (error) {
-    console.error("Post ticket message error:", error);
+    logger.error("Post ticket message failed", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
@@ -168,6 +180,7 @@ export async function POST(
 }
 
 async function triggerHook(
+  logger: AppLogger,
   ticketId: string,
   recipientUserId: number,
   ticketSubject: string,
@@ -177,30 +190,43 @@ async function triggerHook(
     isResolved?: boolean;
     statusChanged?: boolean;
   },
-) {
+): Promise<boolean> {
   const url = process.env.BACKEND_INTERNAL_URL;
   const secret = process.env.ADMIN_HOOK_SECRET;
   if (!url || !secret) {
-    console.warn(
-      "BACKEND_INTERNAL_URL or ADMIN_HOOK_SECRET missing; skipping ticket webhook.",
+    logger.error(
+      "Ticket webhook config missing; user notification skipped",
+      { ticketId, missing: { url: !url, secret: !secret } },
     );
-    return;
+    return false;
   }
 
   try {
-    await fetch(`${url}/internal/tickets/${ticketId}/admin-reply-hook`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-internal-secret": secret,
+    const response = await fetch(
+      `${url}/internal/tickets/${ticketId}/admin-reply-hook`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-internal-secret": secret,
+        },
+        body: JSON.stringify({
+          recipientUserId,
+          ticketSubject,
+          ...payload,
+        }),
       },
-      body: JSON.stringify({
-        recipientUserId,
-        ticketSubject,
-        ...payload,
-      }),
-    });
+    );
+    if (!response.ok) {
+      logger.error("Ticket webhook returned non-OK", {
+        ticketId,
+        status: response.status,
+      });
+      return false;
+    }
+    return true;
   } catch (err) {
-    console.error("Ticket webhook failed:", err);
+    logger.error("Ticket webhook failed", { ticketId, error: err });
+    return false;
   }
 }

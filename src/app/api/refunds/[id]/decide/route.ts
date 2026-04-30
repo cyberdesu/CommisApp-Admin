@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { filterXSS } from "xss";
 import { getSessionAdmin } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
+import { createRequestLogger } from "@/lib/logger";
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -72,6 +73,7 @@ export async function POST(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) {
+  const logger = createRequestLogger(req, { route: "api.refunds.decide" });
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
@@ -118,8 +120,9 @@ export async function POST(
     const url = process.env.BACKEND_INTERNAL_URL;
     const secret = process.env.ADMIN_HOOK_SECRET;
     if (!url || !secret) {
-      console.error(
+      logger.error(
         "BACKEND_INTERNAL_URL or ADMIN_HOOK_SECRET missing; cannot decide refund.",
+        { refundId: id, adminId: admin.id },
       );
       return NextResponse.json(
         { message: "Refund webhook not configured." },
@@ -171,7 +174,7 @@ export async function POST(
       { status: 200 },
     );
   } catch (error) {
-    console.error("Refund decide error:", error);
+    logger.error("Refund decide failed", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

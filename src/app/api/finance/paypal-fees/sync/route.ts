@@ -99,11 +99,10 @@ export async function POST(req: NextRequest) {
     let syncedCount = 0;
     let failedCount = 0;
 
-    for (const payment of payments) {
-      if (!payment.paypalCaptureId) {
-        continue;
-      }
+    const CONCURRENCY = 5;
+    const work = payments.filter((p) => p.paypalCaptureId);
 
+    const syncOne = async (payment: (typeof work)[number]) => {
       const paymentLogger = requestLogger.child({
         paymentId: payment.id,
         paypalCaptureId: payment.paypalCaptureId,
@@ -111,7 +110,7 @@ export async function POST(req: NextRequest) {
 
       try {
         const details = await getPaypalCaptureFinancials({
-          captureId: payment.paypalCaptureId,
+          captureId: payment.paypalCaptureId!,
           logger: paymentLogger,
         });
 
@@ -123,9 +122,7 @@ export async function POST(req: NextRequest) {
           details.netAmount?.currency ?? payment.currency;
 
         await prisma.payment.update({
-          where: {
-            id: payment.id,
-          },
+          where: { id: payment.id },
           data: {
             paypalFee: paypalFeeAmount,
             paypalFeeCurrency,
@@ -149,6 +146,11 @@ export async function POST(req: NextRequest) {
           error,
         });
       }
+    };
+
+    for (let i = 0; i < work.length; i += CONCURRENCY) {
+      const chunk = work.slice(i, i + CONCURRENCY);
+      await Promise.all(chunk.map(syncOne));
     }
 
     broadcastAdminRealtimeTopics(["finance"], "direct");

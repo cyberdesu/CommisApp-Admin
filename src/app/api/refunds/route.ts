@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { Prisma } from "@/prisma/generated/client";
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 20;
@@ -35,6 +36,7 @@ function parseEnum<T extends string>(
 }
 
 export async function GET(req: NextRequest) {
+  const logger = createRequestLogger(req, { route: "api.refunds.list" });
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
@@ -161,7 +163,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Fetch refunds error:", error);
+    logger.error("Fetch refunds failed", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

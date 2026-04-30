@@ -103,11 +103,10 @@ export async function POST(req: NextRequest) {
     let pendingCount = 0;
     let failedCount = 0;
 
-    for (const payout of payouts) {
-      if (!payout.paypalBatchId) {
-        continue;
-      }
+    const CONCURRENCY = 5;
+    const work = payouts.filter((p) => p.paypalBatchId);
 
+    const syncOne = async (payout: (typeof work)[number]) => {
       const payoutLogger = requestLogger.child({
         payoutId: payout.id,
         paypalBatchId: payout.paypalBatchId,
@@ -117,7 +116,7 @@ export async function POST(req: NextRequest) {
       try {
         const details = await getPaypalPayoutFinancials({
           payoutId: payout.id,
-          payoutBatchId: payout.paypalBatchId,
+          payoutBatchId: payout.paypalBatchId!,
           payoutItemId: payout.paypalItemId,
           logger: payoutLogger,
         });
@@ -125,9 +124,7 @@ export async function POST(req: NextRequest) {
         const hasFee = Boolean(details.payoutFee);
 
         await prisma.payout.update({
-          where: {
-            id: payout.id,
-          },
+          where: { id: payout.id },
           data: {
             paypalBatchId: details.payoutBatchId,
             paypalItemId: details.payoutItemId,
@@ -163,6 +160,11 @@ export async function POST(req: NextRequest) {
           error,
         });
       }
+    };
+
+    for (let i = 0; i < work.length; i += CONCURRENCY) {
+      const chunk = work.slice(i, i + CONCURRENCY);
+      await Promise.all(chunk.map(syncOne));
     }
 
     broadcastAdminRealtimeTopics(["finance"], "direct");

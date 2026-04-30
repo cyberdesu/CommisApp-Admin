@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { createRequestLogger } from "@/lib/logger";
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -9,6 +10,7 @@ export async function GET(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) {
+  const logger = createRequestLogger(req, { route: "api.refunds.detail" });
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
@@ -111,7 +113,7 @@ export async function GET(
 
     return NextResponse.json({ data: refund });
   } catch (error) {
-    console.error("Fetch refund detail error:", error);
+    logger.error("Fetch refund detail failed", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

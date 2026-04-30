@@ -3,6 +3,7 @@ import { filterXSS } from "xss";
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { minio } from "@/lib/minio";
+import { createRequestLogger, type AppLogger } from "@/lib/logger";
 
 const TICKET_STATUSES = [
   "OPEN",
@@ -26,6 +27,7 @@ export async function GET(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) {
+  const logger = createRequestLogger(req, { route: "api.tickets.detail" });
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
@@ -162,7 +164,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("Fetch ticket detail error:", error);
+    logger.error("Fetch ticket detail failed", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
@@ -181,6 +183,7 @@ export async function PATCH(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> },
 ) {
+  const logger = createRequestLogger(req, { route: "api.tickets.patch" });
   try {
     const admin = await getSessionAdmin(req);
     if (!admin) {
@@ -277,22 +280,29 @@ export async function PATCH(
       "AWAITING_USER",
       "CLOSED",
     ];
+    let webhookDelivered = true;
     if (
       body.status &&
       body.status !== ticket.status &&
       userVisibleStatuses.includes(body.status)
     ) {
-      void triggerHook(id, ticket.reporterId, ticket.subject, {
-        newStatus: body.status,
-        isResolved: body.status === "RESOLVED",
-        bodyExcerpt: safeResolutionNote ?? undefined,
-        statusChanged: true,
-      });
+      webhookDelivered = await triggerHook(
+        logger,
+        id,
+        ticket.reporterId,
+        ticket.subject,
+        {
+          newStatus: body.status,
+          isResolved: body.status === "RESOLVED",
+          bodyExcerpt: safeResolutionNote ?? undefined,
+          statusChanged: true,
+        },
+      );
     }
 
-    return NextResponse.json({ data: updated });
+    return NextResponse.json({ data: updated, webhookDelivered });
   } catch (error) {
-    console.error("Patch ticket error:", error);
+    logger.error("Patch ticket failed", { error });
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
@@ -301,6 +311,7 @@ export async function PATCH(
 }
 
 async function triggerHook(
+  logger: AppLogger,
   ticketId: string,
   recipientUserId: number,
   ticketSubject: string,
@@ -310,30 +321,43 @@ async function triggerHook(
     isResolved?: boolean;
     statusChanged?: boolean;
   },
-) {
+): Promise<boolean> {
   const url = process.env.BACKEND_INTERNAL_URL;
   const secret = process.env.ADMIN_HOOK_SECRET;
   if (!url || !secret) {
-    console.warn(
-      "BACKEND_INTERNAL_URL or ADMIN_HOOK_SECRET missing; skipping ticket webhook.",
+    logger.error(
+      "Ticket webhook config missing; user notification skipped",
+      { ticketId, missing: { url: !url, secret: !secret } },
     );
-    return;
+    return false;
   }
 
   try {
-    await fetch(`${url}/internal/tickets/${ticketId}/admin-reply-hook`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-internal-secret": secret,
+    const response = await fetch(
+      `${url}/internal/tickets/${ticketId}/admin-reply-hook`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-internal-secret": secret,
+        },
+        body: JSON.stringify({
+          recipientUserId,
+          ticketSubject,
+          ...payload,
+        }),
       },
-      body: JSON.stringify({
-        recipientUserId,
-        ticketSubject,
-        ...payload,
-      }),
-    });
+    );
+    if (!response.ok) {
+      logger.error("Ticket webhook returned non-OK", {
+        ticketId,
+        status: response.status,
+      });
+      return false;
+    }
+    return true;
   } catch (err) {
-    console.error("Ticket webhook failed:", err);
+    logger.error("Ticket webhook failed", { ticketId, error: err });
+    return false;
   }
 }
