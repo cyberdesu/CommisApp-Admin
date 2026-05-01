@@ -1,17 +1,23 @@
 "use client";
 
+import { useMemo } from "react";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  ArrowDownToLine,
   ArrowRightLeft,
+  Banknote,
   BarChart3,
+  CheckCircle2,
   Coins,
-  Landmark,
+  CreditCard,
   Layers3,
+  Landmark,
   RefreshCcw,
   Receipt,
-  Sparkles,
+  TrendingUp,
   Users,
+  WalletCards,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -62,6 +68,28 @@ type SyncPaypalPayoutFeesResponse = {
   };
 };
 
+type MoneyField =
+  | "grossVolume"
+  | "platformFees"
+  | "paymentPaypalFees"
+  | "payoutPaypalFees"
+  | "adminNetProfit"
+  | "artistPayouts";
+
+type RankedOrderItem = {
+  key: string;
+  title: string;
+  subtitle: string;
+  badge?: string;
+  orderCount: number;
+  volumes: OrderAnalyticsVolume[];
+};
+
+function parseMoneyValue(amount: string) {
+  const numeric = Number(amount);
+  return Number.isFinite(numeric) ? numeric : 0;
+}
+
 function formatMoney(amount: string, currency: string) {
   const numeric = Number(amount);
 
@@ -81,113 +109,516 @@ function formatNumber(value: number) {
   return new Intl.NumberFormat("id-ID").format(value);
 }
 
+function formatPercent(value: number, total: number) {
+  if (!Number.isFinite(value) || !Number.isFinite(total) || total <= 0) {
+    return "0%";
+  }
+
+  return `${Math.round((value / total) * 100)}%`;
+}
+
+function getPrimaryRevenue(
+  revenue: PlatformRevenueCurrencyBreakdown[] | undefined,
+) {
+  if (!revenue?.length) return null;
+
+  return [...revenue].sort(
+    (a, b) =>
+      parseMoneyValue(b.adminNetProfit) - parseMoneyValue(a.adminNetProfit),
+  )[0];
+}
+
+function getVolumeAmount(volumes: OrderAnalyticsVolume[]) {
+  return volumes.reduce((total, volume) => total + parseMoneyValue(volume.amount), 0);
+}
+
+function SyncBadge({
+  pending,
+  synced,
+  label,
+}: {
+  pending: number;
+  synced: number;
+  label: string;
+}) {
+  if (pending > 0) {
+    return (
+      <Badge className="rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-800">
+        {formatNumber(pending)} {label} fee pending
+      </Badge>
+    );
+  }
+
+  return (
+    <Badge className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700">
+      <CheckCircle2 className="mr-1 size-3" />
+      {formatNumber(synced)} {label} fee synced
+    </Badge>
+  );
+}
+
+function CurrencyValueList({
+  revenue,
+  field,
+  valueClassName,
+}: {
+  revenue: PlatformRevenueCurrencyBreakdown[];
+  field: MoneyField;
+  valueClassName?: string;
+}) {
+  if (revenue.length === 0) {
+    return <span className="text-zinc-400">-</span>;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {revenue.map((item) => (
+        <span
+          key={`${item.currency}-${field}`}
+          className={cn(
+            "rounded-md border border-zinc-200 bg-white px-2.5 py-1 font-semibold text-zinc-900",
+            valueClassName,
+          )}
+        >
+          {formatMoney(item[field], item.currency)}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function SummaryTile({
+  label,
+  detail,
+  icon: Icon,
+  children,
+}: {
+  label: string;
+  detail: string;
+  icon: React.ComponentType<{ className?: string }>;
+  children: React.ReactNode;
+}) {
+  return (
+    <Card className="border border-border bg-card shadow-sm">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 space-y-1">
+            <CardDescription className="text-xs font-semibold text-muted-foreground">
+              {label}
+            </CardDescription>
+            <CardTitle className="text-xl font-bold tracking-tight text-foreground">
+              {children}
+            </CardTitle>
+          </div>
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-secondary/55 text-muted-foreground">
+            <Icon className="size-5" />
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <p className="text-xs leading-relaxed text-muted-foreground">{detail}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function AdminEarningsHero({
+  finance,
+  isLoading,
+}: {
+  finance: PlatformFinanceStats | undefined;
+  isLoading: boolean;
+}) {
+  const revenue = finance?.revenue ?? [];
+  const primary = getPrimaryRevenue(revenue);
+  const totalPending =
+    (finance?.pendingPaymentFeeSyncPayments ?? 0) +
+    (finance?.pendingPayoutFeeSyncPayouts ?? 0);
+
+  return (
+    <section className="grid gap-4 xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.75fr)]">
+      <Card className="border border-border bg-card shadow-sm">
+        <CardHeader className="border-b border-border/70 pb-5">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-2">
+              <Badge className="w-fit rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-bold text-primary">
+                Revenue & Analytics
+              </Badge>
+              <div>
+                <CardTitle className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+                  Penghasilan Admin Bersih
+                </CardTitle>
+                <CardDescription className="mt-2 max-w-2xl text-sm leading-relaxed">
+                  Angka utama yang admin bawa pulang setelah website fee dikurangi
+                  biaya PayPal masuk dan biaya payout artist.
+                </CardDescription>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <SyncBadge
+                label="payment"
+                pending={finance?.pendingPaymentFeeSyncPayments ?? 0}
+                synced={finance?.syncedPaymentFeePayments ?? 0}
+              />
+              <SyncBadge
+                label="payout"
+                pending={finance?.pendingPayoutFeeSyncPayouts ?? 0}
+                synced={finance?.syncedPayoutFeePayouts ?? 0}
+              />
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className="grid gap-5 pt-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5">
+            <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+              Admin Net Profit
+            </p>
+            {isLoading ? (
+              <Skeleton className="mt-3 h-11 w-56 rounded-lg" />
+            ) : primary ? (
+              <>
+                <p className="mt-2 text-4xl font-black tracking-tight text-emerald-950">
+                  {formatMoney(primary.adminNetProfit, primary.currency)}
+                </p>
+                {revenue.length > 1 && (
+                  <div className="mt-3">
+                    <CurrencyValueList
+                      revenue={revenue.filter(
+                        (item) => item.currency !== primary.currency,
+                      )}
+                      field="adminNetProfit"
+                      valueClassName="border-emerald-200 bg-white text-emerald-900"
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="mt-2 text-3xl font-black tracking-tight text-emerald-950">
+                -
+              </p>
+            )}
+            <p className="mt-3 text-sm leading-relaxed text-emerald-900/80">
+              Formula: platform fee - payment PayPal fee - payout PayPal fee.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-xl border border-zinc-200 bg-white p-4">
+              <p className="text-xs font-semibold text-zinc-500">
+                Gross volume
+              </p>
+              <div className="mt-2 text-sm">
+                {isLoading ? (
+                  <Skeleton className="h-8 w-44 rounded-lg" />
+                ) : (
+                  <CurrencyValueList revenue={revenue} field="grossVolume" />
+                )}
+              </div>
+            </div>
+            <div className="rounded-xl border border-zinc-200 bg-white p-4">
+              <p className="text-xs font-semibold text-zinc-500">
+                Website fee terkumpul
+              </p>
+              <div className="mt-2 text-sm">
+                {isLoading ? (
+                  <Skeleton className="h-8 w-44 rounded-lg" />
+                ) : (
+                  <CurrencyValueList revenue={revenue} field="platformFees" />
+                )}
+              </div>
+            </div>
+            <div className="rounded-xl border border-zinc-200 bg-white p-4">
+              <p className="text-xs font-semibold text-zinc-500">
+                Biaya PayPal total
+              </p>
+              <div className="mt-2 text-sm">
+                {isLoading ? (
+                  <Skeleton className="h-8 w-44 rounded-lg" />
+                ) : revenue.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {revenue.map((item) => {
+                      const totalFee =
+                        parseMoneyValue(item.paymentPaypalFees) +
+                        parseMoneyValue(item.payoutPaypalFees);
+
+                      return (
+                        <span
+                          key={`${item.currency}-paypal-total`}
+                          className="rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1 font-semibold text-rose-900"
+                        >
+                          {formatMoney(String(totalFee), item.currency)}
+                        </span>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <span className="text-zinc-400">-</span>
+                )}
+              </div>
+            </div>
+            <div className="rounded-xl border border-zinc-200 bg-white p-4">
+              <p className="text-xs font-semibold text-zinc-500">
+                Status akurasi fee
+              </p>
+              <p
+                className={cn(
+                  "mt-2 text-sm font-semibold",
+                  totalPending > 0 ? "text-amber-700" : "text-emerald-700",
+                )}
+              >
+                {totalPending > 0
+                  ? `${formatNumber(totalPending)} fee masih perlu sync`
+                  : "Semua fee sudah tersinkron"}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+        <SummaryTile
+          label="Completed Payments"
+          detail="Pembayaran client yang masuk ke kalkulasi revenue."
+          icon={Receipt}
+        >
+          {isLoading ? (
+            <Skeleton className="h-7 w-24 rounded-lg" />
+          ) : (
+            formatNumber(finance?.completedPayments ?? 0)
+          )}
+        </SummaryTile>
+        <SummaryTile
+          label="Processed Payouts"
+          detail="Withdrawal artist yang sudah diproses admin."
+          icon={Landmark}
+        >
+          {isLoading ? (
+            <Skeleton className="h-7 w-24 rounded-lg" />
+          ) : (
+            formatNumber(finance?.processedPayouts ?? 0)
+          )}
+        </SummaryTile>
+      </div>
+    </section>
+  );
+}
+
+function FormulaStep({
+  label,
+  value,
+  tone,
+  sign,
+}: {
+  label: string;
+  value: string;
+  tone: "green" | "red" | "blue" | "zinc";
+  sign: "+" | "-" | "=";
+}) {
+  const toneClass = {
+    green: "border-emerald-200 bg-emerald-50 text-emerald-950",
+    red: "border-rose-200 bg-rose-50 text-rose-950",
+    blue: "border-sky-200 bg-sky-50 text-sky-950",
+    zinc: "border-zinc-200 bg-zinc-50 text-zinc-950",
+  }[tone];
+
+  return (
+    <div className={cn("rounded-xl border p-4", toneClass)}>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-bold uppercase tracking-wider opacity-70">
+          {label}
+        </p>
+        <span className="rounded-md bg-white/70 px-2 py-0.5 text-xs font-black">
+          {sign}
+        </span>
+      </div>
+      <p className="mt-2 text-lg font-black tracking-tight">{value}</p>
+    </div>
+  );
+}
+
+function RevenueShareBar({ item }: { item: PlatformRevenueCurrencyBreakdown }) {
+  const gross = parseMoneyValue(item.grossVolume);
+  const artist = Math.max(parseMoneyValue(item.artistPayouts), 0);
+  const paymentFee = Math.max(parseMoneyValue(item.paymentPaypalFees), 0);
+  const payoutFee = Math.max(parseMoneyValue(item.payoutPaypalFees), 0);
+  const adminNet = Math.max(parseMoneyValue(item.adminNetProfit), 0);
+  const totalVisible = Math.max(gross, artist + paymentFee + payoutFee + adminNet, 1);
+  const segments = [
+    {
+      label: "Artist",
+      value: artist,
+      className: "bg-sky-400",
+    },
+    {
+      label: "PayPal fees",
+      value: paymentFee + payoutFee,
+      className: "bg-rose-400",
+    },
+    {
+      label: "Admin net",
+      value: adminNet,
+      className: "bg-emerald-500",
+    },
+  ];
+
+  return (
+    <div className="space-y-3">
+      <div className="flex h-3 overflow-hidden rounded-full bg-zinc-100">
+        {segments.map((segment) => (
+          <div
+            key={segment.label}
+            className={segment.className}
+            style={{
+              width: `${Math.max((segment.value / totalVisible) * 100, segment.value > 0 ? 3 : 0)}%`,
+            }}
+          />
+        ))}
+      </div>
+      <div className="grid gap-2 text-xs sm:grid-cols-3">
+        {segments.map((segment) => (
+          <div key={segment.label} className="flex items-center gap-2">
+            <span className={cn("size-2 rounded-full", segment.className)} />
+            <span className="text-zinc-500">{segment.label}</span>
+            <span className="font-semibold text-zinc-900">
+              {formatPercent(segment.value, totalVisible)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function RevenueCard({
   item,
 }: {
   item: PlatformRevenueCurrencyBreakdown;
 }) {
+  const gross = parseMoneyValue(item.grossVolume);
+  const platformFee = parseMoneyValue(item.platformFees);
+  const paymentFee = parseMoneyValue(item.paymentPaypalFees);
+  const payoutFee = parseMoneyValue(item.payoutPaypalFees);
+  const net = parseMoneyValue(item.adminNetProfit);
+  const paypalFeeTotal = paymentFee + payoutFee;
+
   return (
-    <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
-      <CardHeader className="border-b border-zinc-100 pb-4">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <CardDescription className="text-[10px] font-bold uppercase tracking-[0.22em] text-zinc-400">
-              Currency
-            </CardDescription>
-            <CardTitle className="mt-1 text-2xl font-bold text-zinc-950">
-              {item.currency}
-            </CardTitle>
+    <Card className="border border-border bg-card shadow-sm">
+      <CardHeader className="border-b border-border/70 pb-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="flex size-10 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700">
+                <Coins className="size-5" />
+              </div>
+              <div>
+                <CardDescription className="text-xs font-semibold">
+                  Currency
+                </CardDescription>
+                <CardTitle className="text-2xl font-black tracking-tight">
+                  {item.currency}
+                </CardTitle>
+              </div>
+            </div>
           </div>
-          <div className="flex size-11 items-center justify-center rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-700">
-            <Coins className="size-5" />
+
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-right">
+            <p className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+              Admin dapat
+            </p>
+            <p className="mt-1 text-2xl font-black tracking-tight text-emerald-950">
+              {formatMoney(item.adminNetProfit, item.currency)}
+            </p>
+            <p className="mt-1 text-xs text-emerald-800">
+              {formatPercent(net, gross)} dari gross volume
+            </p>
           </div>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4 pt-5">
-        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/80 p-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-700">
-            Gross Volume
-          </p>
-          <p className="mt-1 text-2xl font-bold tracking-tight text-emerald-950">
-            {formatMoney(item.grossVolume, item.currency)}
-          </p>
-          <p className="mt-1 text-xs text-emerald-800/80">
-            Total paid by clients before fee split
-          </p>
+      <CardContent className="space-y-5 pt-5">
+        <div className="grid gap-3 md:grid-cols-4">
+          <FormulaStep
+            label="Website fee"
+            sign="+"
+            tone="green"
+            value={formatMoney(item.platformFees, item.currency)}
+          />
+          <FormulaStep
+            label="Payment fee"
+            sign="-"
+            tone="red"
+            value={formatMoney(item.paymentPaypalFees, item.currency)}
+          />
+          <FormulaStep
+            label="Payout fee"
+            sign="-"
+            tone="red"
+            value={formatMoney(item.payoutPaypalFees, item.currency)}
+          />
+          <FormulaStep
+            label="Admin net"
+            sign="="
+            tone="blue"
+            value={formatMoney(item.adminNetProfit, item.currency)}
+          />
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-amber-100 bg-amber-50/80 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-amber-700">
-              Platform Fees
+        <div className="rounded-xl border border-zinc-200 bg-white p-4">
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-sm font-bold text-zinc-950">
+                Distribusi dari Gross Volume
+              </p>
+              <p className="text-xs text-zinc-500">
+                Gross {formatMoney(item.grossVolume, item.currency)} dibagi ke artist,
+                biaya PayPal, dan admin net.
+              </p>
+            </div>
+            <Badge className="w-fit rounded-md border border-zinc-200 bg-zinc-50 text-zinc-700">
+              PayPal fees {formatMoney(String(paypalFeeTotal), item.currency)}
+            </Badge>
+          </div>
+          <RevenueShareBar item={item} />
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-3">
+          <div className="rounded-xl border border-zinc-200 bg-white p-4">
+            <p className="text-xs font-semibold text-zinc-500">
+              Gross Volume
             </p>
-            <p className="mt-1 text-sm font-semibold text-amber-950">
-              {formatMoney(item.platformFees, item.currency)}
-            </p>
-            <p className="mt-1 text-[11px] text-amber-900/70">
-              Gross website fee before any PayPal costs
+            <p className="mt-1 text-lg font-black text-zinc-950">
+              {formatMoney(item.grossVolume, item.currency)}
             </p>
           </div>
-          <div className="rounded-2xl border border-sky-100 bg-sky-50/80 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-700">
+          <div className="rounded-xl border border-zinc-200 bg-white p-4">
+            <p className="text-xs font-semibold text-zinc-500">
               Artist Payouts
             </p>
-            <p className="mt-1 text-sm font-semibold text-sky-950">
+            <p className="mt-1 text-lg font-black text-zinc-950">
               {formatMoney(item.artistPayouts, item.currency)}
             </p>
           </div>
-        </div>
-
-        <div className="grid gap-3 lg:grid-cols-3">
-          <div className="rounded-2xl border border-rose-100 bg-rose-50/80 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-rose-700">
-              Payment Fees
+          <div className="rounded-xl border border-zinc-200 bg-white p-4">
+            <p className="text-xs font-semibold text-zinc-500">
+              Margin dari platform fee
             </p>
-            <p className="mt-1 text-sm font-semibold text-rose-950">
-              {formatMoney(item.paymentPaypalFees, item.currency)}
-            </p>
-            <p className="mt-1 text-[11px] text-rose-900/70">
-              Incoming PayPal fees when clients pay
-            </p>
-          </div>
-          <div className="rounded-2xl border border-orange-100 bg-orange-50/90 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-orange-700">
-              Payout Fees
-            </p>
-            <p className="mt-1 text-sm font-semibold text-orange-950">
-              {formatMoney(item.payoutPaypalFees, item.currency)}
-            </p>
-            <p className="mt-1 text-[11px] text-orange-900/70">
-              Outgoing PayPal fees when admin pays artists
-            </p>
-          </div>
-          <div className="rounded-2xl border border-emerald-100 bg-emerald-50/90 p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">
-              Net Admin Profit
-            </p>
-            <p className="mt-1 text-sm font-semibold text-emerald-950">
-              {formatMoney(item.adminNetProfit, item.currency)}
-            </p>
-            <p className="mt-1 text-[11px] text-emerald-900/70">
-              Platform fees minus incoming and outgoing PayPal fees
+            <p className="mt-1 text-lg font-black text-zinc-950">
+              {formatPercent(net, platformFee)}
             </p>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Badge className="rounded-full border border-zinc-200 bg-white text-zinc-700">
-            Payment Sync {item.syncedPaymentFeePayments}
+          <SyncBadge
+            label="payment"
+            pending={item.pendingPaymentFeeSyncPayments}
+            synced={item.syncedPaymentFeePayments}
+          />
+          <Badge className="rounded-md border border-zinc-200 bg-white px-2 py-1 text-[11px] font-semibold text-zinc-700">
+            Currency bucket {item.currency}
           </Badge>
-          {item.pendingPaymentFeeSyncPayments > 0 ? (
-            <Badge className="rounded-full border border-amber-200 bg-amber-50 text-amber-700">
-              Pending payment sync {item.pendingPaymentFeeSyncPayments}
-            </Badge>
-          ) : (
-            <Badge className="rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700">
-              Payment fees synced
-            </Badge>
-          )}
         </div>
       </CardContent>
     </Card>
@@ -205,36 +636,28 @@ function VolumeBreakdown({
 
   return (
     <div className="space-y-2">
-      {volumes.slice(0, 2).map((volume) => (
+      {volumes.slice(0, 3).map((volume) => (
         <div
           key={volume.currency}
-          className="rounded-2xl border border-zinc-100 bg-white/80 p-3"
+          className="grid gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs sm:grid-cols-3"
         >
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-              {volume.currency}
-            </p>
-            <p className="text-xs font-semibold text-zinc-500">
+          <div>
+            <p className="font-bold text-zinc-950">
               {formatMoney(volume.amount, volume.currency)}
             </p>
+            <p className="text-zinc-500">Gross</p>
           </div>
-          <div className="mt-2 grid gap-2 sm:grid-cols-2">
-            <div className="rounded-xl border border-amber-100 bg-amber-50/70 px-3 py-2">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-700">
-                Fees
-              </p>
-              <p className="mt-1 text-xs font-semibold text-amber-950">
-                {formatMoney(volume.platformFees, volume.currency)}
-              </p>
-            </div>
-            <div className="rounded-xl border border-sky-100 bg-sky-50/70 px-3 py-2">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-sky-700">
-                Net
-              </p>
-              <p className="mt-1 text-xs font-semibold text-sky-950">
-                {formatMoney(volume.netVolume, volume.currency)}
-              </p>
-            </div>
+          <div>
+            <p className="font-bold text-amber-700">
+              {formatMoney(volume.platformFees, volume.currency)}
+            </p>
+            <p className="text-zinc-500">Website fee</p>
+          </div>
+          <div>
+            <p className="font-bold text-sky-700">
+              {formatMoney(volume.netVolume, volume.currency)}
+            </p>
+            <p className="text-zinc-500">Artist net</p>
           </div>
         </div>
       ))}
@@ -242,32 +665,102 @@ function VolumeBreakdown({
   );
 }
 
-function AnalyticsCard({
+function RankingRow({
+  item,
+  index,
+  maxAmount,
+}: {
+  item: RankedOrderItem;
+  index: number;
+  maxAmount: number;
+}) {
+  const amount = getVolumeAmount(item.volumes);
+  const width = maxAmount > 0 ? Math.max((amount / maxAmount) * 100, 6) : 0;
+
+  return (
+    <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+      <div className="flex items-start gap-3">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-white text-xs font-black text-zinc-700">
+          {index + 1}
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-bold text-zinc-950">
+                {item.title}
+              </p>
+              <p className="mt-0.5 text-xs text-zinc-500">{item.subtitle}</p>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-2">
+              {item.badge && (
+                <Badge className="rounded-md border border-zinc-200 bg-white text-zinc-700">
+                  {item.badge}
+                </Badge>
+              )}
+              <Badge className="rounded-md border border-primary/20 bg-primary/10 text-primary">
+                {formatNumber(item.orderCount)} orders
+              </Badge>
+            </div>
+          </div>
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-zinc-200">
+            <div
+              className="h-full rounded-full bg-primary"
+              style={{ width: `${width}%` }}
+            />
+          </div>
+          <div className="mt-3">
+            <VolumeBreakdown volumes={item.volumes} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RankingCard({
   title,
   description,
   emptyLabel,
-  children,
+  icon: Icon,
+  items,
 }: {
   title: string;
   description: string;
   emptyLabel: string;
-  children: React.ReactNode;
+  icon: React.ComponentType<{ className?: string }>;
+  items: RankedOrderItem[];
 }) {
-  const items = Array.isArray(children) ? children : [children];
+  const maxAmount = Math.max(...items.map((item) => getVolumeAmount(item.volumes)), 0);
 
   return (
-    <Card className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-lg font-bold text-zinc-900">
-          {title}
-        </CardTitle>
-        <CardDescription>{description}</CardDescription>
+    <Card className="border border-border bg-card shadow-sm">
+      <CardHeader className="border-b border-border/70 pb-4">
+        <div className="flex items-start gap-3">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border bg-secondary/55 text-muted-foreground">
+            <Icon className="size-5" />
+          </div>
+          <div>
+            <CardTitle className="text-lg font-bold text-foreground">
+              {title}
+            </CardTitle>
+            <CardDescription>{description}</CardDescription>
+          </div>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-3">
-        {items.length > 0 && items.some(Boolean) ? (
-          children
+      <CardContent className="space-y-3 pt-4">
+        {items.length > 0 ? (
+          items.map((item, index) => (
+            <RankingRow
+              key={item.key}
+              item={item}
+              index={index}
+              maxAmount={maxAmount}
+            />
+          ))
         ) : (
-          <p className="text-sm text-zinc-400">{emptyLabel}</p>
+          <p className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50 p-5 text-sm text-zinc-500">
+            {emptyLabel}
+          </p>
         )}
       </CardContent>
     </Card>
@@ -276,22 +769,23 @@ function AnalyticsCard({
 
 function RevenueSkeleton() {
   return (
-    <div className="grid gap-4 xl:grid-cols-3">
-      {Array.from({ length: 3 }).map((_, index) => (
+    <div className="grid gap-4">
+      {Array.from({ length: 2 }).map((_, index) => (
         <Card
           key={index}
-          className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm"
+          className="border border-zinc-200/80 bg-white shadow-sm"
         >
           <CardHeader className="border-b border-zinc-100 pb-4">
-            <Skeleton className="h-4 w-16 rounded-full" />
-            <Skeleton className="mt-2 h-8 w-20 rounded-xl" />
+            <Skeleton className="h-5 w-24 rounded-full" />
+            <Skeleton className="mt-2 h-9 w-48 rounded-lg" />
           </CardHeader>
           <CardContent className="space-y-4 pt-5">
-            <Skeleton className="h-24 w-full rounded-2xl" />
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Skeleton className="h-20 w-full rounded-2xl" />
-              <Skeleton className="h-20 w-full rounded-2xl" />
+            <div className="grid gap-3 md:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, tileIndex) => (
+                <Skeleton key={tileIndex} className="h-24 w-full rounded-xl" />
+              ))}
             </div>
+            <Skeleton className="h-28 w-full rounded-xl" />
           </CardContent>
         </Card>
       ))}
@@ -386,113 +880,164 @@ export default function AnalyticsPage() {
 
   const finance = financeQuery.data;
   const analytics = analyticsQuery.data;
+  const sortedRevenue = useMemo(
+    () =>
+      [...(finance?.revenue ?? [])].sort(
+        (a, b) =>
+          parseMoneyValue(b.adminNetProfit) - parseMoneyValue(a.adminNetProfit),
+      ),
+    [finance?.revenue],
+  );
 
-  const highlightCards = [
-    {
-      label: "Currencies",
-      value: formatNumber(finance?.revenue.length ?? 0),
-      detail: "revenue buckets tracked",
-      icon: Layers3,
-      tone: "text-violet-700 bg-violet-50 border-violet-200",
-    },
-    {
-      label: "Completed Payments",
-      value: formatNumber(finance?.completedPayments ?? 0),
-      detail: "payment records included",
-      icon: Receipt,
-      tone: "text-emerald-700 bg-emerald-50 border-emerald-200",
-    },
-    {
-      label: "Processed Payouts",
-      value: formatNumber(finance?.processedPayouts ?? 0),
-      detail: "artist withdrawals already processed",
-      icon: Landmark,
-      tone: "text-sky-700 bg-sky-50 border-sky-200",
-    },
-    {
-      label: "Net Admin Profit",
-      value: finance?.revenue[0]
-        ? formatMoney(
-            finance.revenue[0].adminNetProfit,
-            finance.revenue[0].currency,
-          )
-        : "—",
-      detail:
-        (finance?.pendingPaymentFeeSyncPayments ?? 0) > 0 ||
-        (finance?.pendingPayoutFeeSyncPayouts ?? 0) > 0
-          ? `${formatNumber(finance?.pendingPaymentFeeSyncPayments ?? 0)} payment sync pending, ${formatNumber(finance?.pendingPayoutFeeSyncPayouts ?? 0)} payout sync pending`
-          : "clean admin profit after incoming and outgoing PayPal fees",
-      icon: Coins,
-      tone: "text-emerald-700 bg-emerald-50 border-emerald-200",
-    },
-    {
-      label: "Top Artist Pairs",
-      value: formatNumber(analytics?.topPairs.length ?? 0),
-      detail: "repeat order relationships visible",
-      icon: ArrowRightLeft,
-      tone: "text-amber-700 bg-amber-50 border-amber-200",
-    },
-  ];
+  const rankingSections = useMemo(() => {
+    if (!analytics) return null;
+
+    return {
+      pairs: analytics.topPairs.map((item) => ({
+        key: `${item.artist.id}-${item.client.id}`,
+        title: `@${item.client.username} -> @${item.artist.username}`,
+        subtitle: "Client dan artist dengan repeat order tertinggi",
+        orderCount: item.orderCount,
+        volumes: item.grossVolume,
+      })),
+      artists: analytics.topArtists.map((item) => ({
+        key: String(item.id),
+        title: `@${item.username}`,
+        subtitle: item.name ?? "Artist",
+        badge: `ID ${item.id}`,
+        orderCount: item.orderCount,
+        volumes: item.grossVolume,
+      })),
+      clients: analytics.topClients.map((item) => ({
+        key: String(item.id),
+        title: `@${item.username}`,
+        subtitle: item.name ?? "Client",
+        badge: `ID ${item.id}`,
+        orderCount: item.orderCount,
+        volumes: item.grossVolume,
+      })),
+      services: analytics.topServices.map((item) => ({
+        key: item.id,
+        title: item.title,
+        subtitle: `by @${item.artist.username}`,
+        badge: item.categories.join(", ") || "Uncategorized",
+        orderCount: item.orderCount,
+        volumes: item.grossVolume,
+      })),
+      categories: analytics.topCategories.map((item) => ({
+        key: item.name,
+        title: item.name,
+        subtitle: `${formatNumber(item.serviceCount)} services aktif di kategori ini`,
+        orderCount: item.orderCount,
+        volumes: item.grossVolume,
+      })),
+      sources: analytics.sources.map((item) => ({
+        key: item.source,
+        title: item.source === "SERVICE" ? "Service orders" : "Custom requests",
+        subtitle:
+          item.source === "SERVICE"
+            ? "Order yang datang dari service listing"
+            : "Order yang datang dari request custom",
+        orderCount: item.orderCount,
+        volumes: item.grossVolume,
+      })),
+    };
+  }, [analytics]);
 
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-8 text-white shadow-lg">
-        <div className="pointer-events-none absolute -right-14 top-0 size-56 rounded-full bg-emerald-500/20 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 left-1/4 size-48 rounded-full bg-sky-500/10 blur-2xl" />
+      <AdminEarningsHero
+        finance={finance}
+        isLoading={financeQuery.isLoading}
+      />
 
-        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl space-y-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-300">
-              <Sparkles className="size-3.5" />
-              Revenue Intelligence
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <SummaryTile
+          label="Currencies"
+          detail="Jumlah currency bucket yang punya revenue."
+          icon={Layers3}
+        >
+          {financeQuery.isLoading ? (
+            <Skeleton className="h-7 w-16 rounded-lg" />
+          ) : (
+            formatNumber(finance?.revenue.length ?? 0)
+          )}
+        </SummaryTile>
+        <SummaryTile
+          label="Website Fees"
+          detail="Fee platform kotor sebelum dipotong biaya PayPal."
+          icon={Banknote}
+        >
+          {financeQuery.isLoading ? (
+            <Skeleton className="h-7 w-32 rounded-lg" />
+          ) : (
+            <CurrencyValueList revenue={sortedRevenue} field="platformFees" />
+          )}
+        </SummaryTile>
+        <SummaryTile
+          label="PayPal Costs"
+          detail="Total biaya incoming payment dan outgoing payout."
+          icon={CreditCard}
+        >
+          {financeQuery.isLoading ? (
+            <Skeleton className="h-7 w-32 rounded-lg" />
+          ) : sortedRevenue.length ? (
+            <div className="flex flex-wrap gap-2">
+              {sortedRevenue.map((item) => {
+                const totalFee =
+                  parseMoneyValue(item.paymentPaypalFees) +
+                  parseMoneyValue(item.payoutPaypalFees);
+
+                return (
+                  <span
+                    key={`${item.currency}-cost-summary`}
+                    className="rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1 font-semibold text-rose-900"
+                  >
+                    {formatMoney(String(totalFee), item.currency)}
+                  </span>
+                );
+              })}
             </div>
-            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-              Admin Balance & Order Analytics
-            </h1>
-            <p className="max-w-2xl text-sm leading-relaxed text-slate-300 md:text-base">
-              Review gross volume, website fees, actual PayPal costs, clean admin revenue, and the order segments that generate the most value across the platform.
-            </p>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[420px]">
-            {highlightCards.map(({ label, value, detail, icon: Icon, tone }) => (
-              <div
-                key={label}
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">
-                      {label}
-                    </p>
-                    <p className="mt-1 text-lg font-semibold text-white">
-                      {value}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-300">{detail}</p>
-                  </div>
-                  <div className={cn("flex size-10 items-center justify-center rounded-2xl border", tone)}>
-                    <Icon className="size-4" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+          ) : (
+            <span className="text-zinc-400">-</span>
+          )}
+        </SummaryTile>
+        <SummaryTile
+          label="Order Segments"
+          detail="Ranking analytics yang sudah tersedia dari order platform."
+          icon={TrendingUp}
+        >
+          {analyticsQuery.isLoading ? (
+            <Skeleton className="h-7 w-16 rounded-lg" />
+          ) : (
+            formatNumber(
+              (analytics?.topPairs.length ?? 0) +
+                (analytics?.topArtists.length ?? 0) +
+                (analytics?.topClients.length ?? 0) +
+                (analytics?.topServices.length ?? 0) +
+                (analytics?.topCategories.length ?? 0) +
+                (analytics?.sources.length ?? 0),
+            )
+          )}
+        </SummaryTile>
       </section>
 
       <section className="space-y-4">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <h2 className="text-lg font-semibold tracking-tight text-zinc-950">
-            Admin Balance
-          </h2>
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm text-zinc-500">
-              Net admin profit is calculated from platform fees minus incoming payment fees and outgoing payout fees.
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 className="text-lg font-bold tracking-tight text-foreground">
+              Revenue Breakdown
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Baca dari kiri ke kanan: website fee masuk, PayPal cost keluar,
+              lalu sisa bersih untuk admin.
             </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               type="button"
               variant="outline"
-              className="rounded-xl border-zinc-200 bg-white"
+              className="rounded-lg border-border bg-card"
               onClick={() => syncPaypalFeesMutation.mutate()}
               disabled={syncPaypalFeesMutation.isPending}
             >
@@ -509,7 +1054,7 @@ export default function AnalyticsPage() {
             <Button
               type="button"
               variant="outline"
-              className="rounded-xl border-zinc-200 bg-white"
+              className="rounded-lg border-border bg-card"
               onClick={() => syncPaypalPayoutFeesMutation.mutate()}
               disabled={syncPaypalPayoutFeesMutation.isPending}
             >
@@ -528,23 +1073,23 @@ export default function AnalyticsPage() {
 
         {financeQuery.isLoading ? (
           <RevenueSkeleton />
-        ) : finance?.revenue.length ? (
-          <div className="grid gap-4 xl:grid-cols-3">
-            {finance.revenue.map((item) => (
+        ) : sortedRevenue.length ? (
+          <div className="grid gap-4">
+            {sortedRevenue.map((item) => (
               <RevenueCard key={item.currency} item={item} />
             ))}
           </div>
         ) : (
-          <Card className="rounded-3xl border border-dashed border-zinc-200 bg-white/70 shadow-sm">
+          <Card className="border border-dashed border-zinc-200 bg-white/70 shadow-sm">
             <CardContent className="flex min-h-44 flex-col items-center justify-center px-6 text-center">
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-500">
+              <div className="flex size-12 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500">
                 <Coins className="size-5" />
               </div>
               <p className="mt-4 text-base font-semibold text-zinc-900">
-                No admin balance data yet
+                Belum ada revenue
               </p>
               <p className="mt-1 max-w-md text-sm text-zinc-500">
-                Revenue cards will populate once completed payments and PayPal fee sync data are available.
+                Data akan muncul setelah ada completed payment dan data fee PayPal.
               </p>
             </CardContent>
           </Card>
@@ -552,204 +1097,94 @@ export default function AnalyticsPage() {
       </section>
 
       <section className="space-y-4">
-        <div className="flex items-center gap-2">
-          <BarChart3 className="size-5 text-zinc-600" />
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground">
+            <BarChart3 className="size-5" />
+          </div>
           <div>
-            <h2 className="text-lg font-semibold tracking-tight text-zinc-950">
+            <h2 className="text-lg font-bold tracking-tight text-foreground">
               Order Analytics
             </h2>
-            <p className="text-sm text-zinc-500">
-              Top segments now include gross, fees, and net volume.
+            <p className="text-sm text-muted-foreground">
+              Ranking dibuat lebih compact supaya top contributor gampang dibandingkan.
             </p>
           </div>
         </div>
 
         {analyticsQuery.isLoading ? (
-          <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
+          <div className="grid gap-4 xl:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, index) => (
               <Card
                 key={index}
-                className="rounded-3xl border border-zinc-200/80 bg-white shadow-sm"
+                className="border border-zinc-200/80 bg-white shadow-sm"
               >
                 <CardHeader>
-                  <Skeleton className="h-6 w-40 rounded-xl" />
+                  <Skeleton className="h-6 w-40 rounded-lg" />
                   <Skeleton className="h-4 w-48 rounded-full" />
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <Skeleton className="h-24 w-full rounded-2xl" />
-                  <Skeleton className="h-24 w-full rounded-2xl" />
+                  <Skeleton className="h-32 w-full rounded-xl" />
+                  <Skeleton className="h-32 w-full rounded-xl" />
                 </CardContent>
               </Card>
             ))}
           </div>
-        ) : analytics ? (
-          <div className="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
-            <AnalyticsCard
+        ) : rankingSections ? (
+          <div className="grid gap-4 xl:grid-cols-2">
+            <RankingCard
               title="Top Artist-Client Pairs"
-              description="Pairing yang paling sering repeat order."
-              emptyLabel="No pair data yet."
-            >
-              {analytics.topPairs.map((item) => (
-                <div
-                  key={`${item.artist.id}-${item.client.id}`}
-                  className="rounded-2xl border border-zinc-100 bg-zinc-50 p-4"
-                >
-                  <p className="text-sm font-semibold text-zinc-900">
-                    @{item.client.username} → @{item.artist.username}
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-500">
-                    {item.orderCount} orders
-                  </p>
-                  <div className="mt-3">
-                    <VolumeBreakdown volumes={item.grossVolume} />
-                  </div>
-                </div>
-              ))}
-            </AnalyticsCard>
-
-            <AnalyticsCard
+              description="Pair yang paling sering menghasilkan order."
+              emptyLabel="Belum ada pair data."
+              icon={ArrowRightLeft}
+              items={rankingSections.pairs}
+            />
+            <RankingCard
               title="Top Artists"
-              description="Artist dengan order volume paling tinggi."
-              emptyLabel="No artist data yet."
-            >
-              {analytics.topArtists.map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-2xl border border-zinc-100 bg-zinc-50 p-4"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm font-semibold text-zinc-900">
-                        @{item.username}
-                      </p>
-                      <p className="mt-1 text-xs text-zinc-500">
-                        {item.orderCount} orders
-                      </p>
-                    </div>
-                    <Badge className="rounded-full border border-zinc-200 bg-white text-zinc-700">
-                      {item.id}
-                    </Badge>
-                  </div>
-                  <div className="mt-3">
-                    <VolumeBreakdown volumes={item.grossVolume} />
-                  </div>
-                </div>
-              ))}
-            </AnalyticsCard>
-
-            <AnalyticsCard
+              description="Artist dengan kontribusi volume tertinggi."
+              emptyLabel="Belum ada artist data."
+              icon={WalletCards}
+              items={rankingSections.artists}
+            />
+            <RankingCard
               title="Top Clients"
-              description="Client dengan jumlah order paling banyak."
-              emptyLabel="No client data yet."
-            >
-              {analytics.topClients.map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-2xl border border-zinc-100 bg-zinc-50 p-4"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm font-semibold text-zinc-900">
-                        @{item.username}
-                      </p>
-                      <p className="mt-1 text-xs text-zinc-500">
-                        {item.orderCount} orders
-                      </p>
-                    </div>
-                    <div className="flex size-9 items-center justify-center rounded-2xl border border-zinc-200 bg-white text-zinc-600">
-                      <Users className="size-4" />
-                    </div>
-                  </div>
-                  <div className="mt-3">
-                    <VolumeBreakdown volumes={item.grossVolume} />
-                  </div>
-                </div>
-              ))}
-            </AnalyticsCard>
-
-            <AnalyticsCard
+              description="Client dengan order dan volume tertinggi."
+              emptyLabel="Belum ada client data."
+              icon={Users}
+              items={rankingSections.clients}
+            />
+            <RankingCard
               title="Top Services"
-              description="Jasa yang paling sering dipakai."
-              emptyLabel="No service data yet."
-            >
-              {analytics.topServices.map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-2xl border border-zinc-100 bg-zinc-50 p-4"
-                >
-                  <p className="text-sm font-semibold text-zinc-900">
-                    {item.title}
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-500">
-                    by @{item.artist.username} · {item.orderCount} orders
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-400">
-                    {item.categories.join(", ") || "Uncategorized"}
-                  </p>
-                  <div className="mt-3">
-                    <VolumeBreakdown volumes={item.grossVolume} />
-                  </div>
-                </div>
-              ))}
-            </AnalyticsCard>
-
-            <AnalyticsCard
+              description="Service yang paling kuat performanya."
+              emptyLabel="Belum ada service data."
+              icon={Receipt}
+              items={rankingSections.services}
+            />
+            <RankingCard
               title="Popular Categories"
-              description="Kategori layanan yang paling banyak dipakai."
-              emptyLabel="No category data yet."
-            >
-              {analytics.topCategories.map((item) => (
-                <div
-                  key={item.name}
-                  className="rounded-2xl border border-zinc-100 bg-zinc-50 p-4"
-                >
-                  <p className="text-sm font-semibold text-zinc-900">
-                    {item.name}
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-500">
-                    {item.orderCount} orders · {item.serviceCount} services
-                  </p>
-                  <div className="mt-3">
-                    <VolumeBreakdown volumes={item.grossVolume} />
-                  </div>
-                </div>
-              ))}
-            </AnalyticsCard>
-
-            <AnalyticsCard
+              description="Kategori yang paling sering menghasilkan order."
+              emptyLabel="Belum ada category data."
+              icon={Layers3}
+              items={rankingSections.categories}
+            />
+            <RankingCard
               title="Order Types"
-              description="Distribusi source order saat ini."
-              emptyLabel="No source data yet."
-            >
-              {analytics.sources.map((item) => (
-                <div
-                  key={item.source}
-                  className="rounded-2xl border border-zinc-100 bg-zinc-50 p-4"
-                >
-                  <p className="text-sm font-semibold text-zinc-900">
-                    {item.source}
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-500">
-                    {item.orderCount} orders
-                  </p>
-                  <div className="mt-3">
-                    <VolumeBreakdown volumes={item.grossVolume} />
-                  </div>
-                </div>
-              ))}
-            </AnalyticsCard>
+              description="Perbandingan service order dan custom request."
+              emptyLabel="Belum ada source data."
+              icon={ArrowDownToLine}
+              items={rankingSections.sources}
+            />
           </div>
         ) : (
-          <Card className="rounded-3xl border border-dashed border-zinc-200 bg-white/70 shadow-sm">
+          <Card className="border border-dashed border-zinc-200 bg-white/70 shadow-sm">
             <CardContent className="flex min-h-44 flex-col items-center justify-center px-6 text-center">
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-zinc-100 text-zinc-500">
+              <div className="flex size-12 items-center justify-center rounded-lg bg-zinc-100 text-zinc-500">
                 <BarChart3 className="size-5" />
               </div>
               <p className="mt-4 text-base font-semibold text-zinc-900">
-                Order analytics unavailable
+                Analytics order belum tersedia
               </p>
               <p className="mt-1 max-w-md text-sm text-zinc-500">
-                The analytics cards will appear here once the admin analytics endpoint returns ranking data.
+                Ranking akan muncul setelah endpoint analytics mengembalikan data.
               </p>
             </CardContent>
           </Card>
