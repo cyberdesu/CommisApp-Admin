@@ -3,13 +3,91 @@ import { z } from "zod";
 
 import { isAllowedOrigin } from "@/lib/auth/origin";
 import { getSessionAdmin } from "@/lib/auth/session";
-import { createRequestLogger } from "@/lib/logger";
+import { getBackendApiUrl } from "@/lib/backend";
+import { createRequestLogger, type AppLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
 
 const updateArtistRequestSchema = z.object({
   action: z.enum(["approve", "reject"]),
   reason: z.string().max(300).optional(),
 });
+
+const ARTIST_VERIFY_TIMEOUT_MS = 15_000;
+
+type ArtistVerifyHookResult =
+  | { ok: true; alreadyArtist: boolean }
+  | { ok: false; status: number; message: string };
+
+async function callBackendArtistVerify(
+  userId: number,
+  logger: AppLogger,
+): Promise<ArtistVerifyHookResult> {
+  const baseUrl = getBackendApiUrl("/auth/ArtistVerify");
+  const secret = process.env.ARTIST_VERIFY_SECRET?.trim();
+
+  if (!baseUrl || !secret) {
+    logger.error(
+      "Backend URL or ARTIST_VERIFY_SECRET missing; cannot promote artist.",
+      { hasBaseUrl: Boolean(baseUrl), hasSecret: Boolean(secret) },
+    );
+    return {
+      ok: false,
+      status: 503,
+      message: "Artist verification hook is not configured.",
+    };
+  }
+
+  const url = new URL(baseUrl);
+  url.searchParams.set("id", String(userId));
+
+  let response: Response;
+  try {
+    response = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        secret,
+        accept: "application/json",
+      },
+      cache: "no-store",
+      signal: AbortSignal.timeout(ARTIST_VERIFY_TIMEOUT_MS),
+    });
+  } catch (error) {
+    logger.error("Artist verification hook fetch failed", { error });
+    return {
+      ok: false,
+      status: 502,
+      message: "Backend unreachable while approving artist.",
+    };
+  }
+
+  if (response.ok) {
+    return { ok: true, alreadyArtist: false };
+  }
+
+  let bodyMessage: string | null = null;
+  try {
+    const body = (await response.json().catch(() => null)) as {
+      message?: unknown;
+    } | null;
+    if (body && typeof body.message === "string") {
+      bodyMessage = body.message;
+    }
+  } catch {}
+
+  if (
+    response.status === 400 &&
+    bodyMessage &&
+    /already.*artist/i.test(bodyMessage)
+  ) {
+    return { ok: true, alreadyArtist: true };
+  }
+
+  return {
+    ok: false,
+    status: response.status,
+    message: bodyMessage ?? "Backend rejected artist verification.",
+  };
+}
 
 type RouteContext = {
   params: Promise<{
@@ -118,46 +196,48 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
       });
     }
 
-    await prisma.$transaction(async (tx) => {
-      await tx.authToken.deleteMany({
-        where: { userId: requestItem.userId },
-      });
+    const hookResult = await callBackendArtistVerify(
+      requestItem.userId,
+      requestLogger,
+    );
 
-      await tx.refreshToken.deleteMany({
-        where: { userId: requestItem.userId },
+    if (!hookResult.ok) {
+      requestLogger.warn("Backend rejected artist verification", {
+        backendStatus: hookResult.status,
+        backendMessage: hookResult.message,
       });
-
-      const showcase = await tx.showcase.findUnique({
-        where: { userId: requestItem.userId },
-        select: { id: true },
-      });
-
-      await tx.user.update({
-        where: { id: requestItem.userId },
-        data: {
-          verifiedArtists: true,
-          role: "artist",
-          ...(showcase ? {} : { showcases: { create: {} } }),
+      return NextResponse.json(
+        { message: hookResult.message },
+        {
+          status:
+            hookResult.status >= 500
+              ? 502
+              : hookResult.status >= 400
+                ? hookResult.status
+                : 500,
         },
-      });
+      );
+    }
 
-      await tx.artistVerificationRequest.update({
-        where: { id: requestId },
-        data: {
-          status: "APPROVED",
-          reviewedAt: new Date(),
-          reviewReason: reason,
-          reviewedByAdminId: admin.id,
-        },
-      });
+    await prisma.artistVerificationRequest.update({
+      where: { id: requestId },
+      data: {
+        status: "APPROVED",
+        reviewedAt: new Date(),
+        reviewReason: reason,
+        reviewedByAdminId: admin.id,
+      },
     });
 
     requestLogger.info("Approved artist verification request", {
       userId: requestItem.userId,
+      alreadyArtist: hookResult.alreadyArtist,
     });
 
     return NextResponse.json({
-      message: "Artist approved successfully",
+      message: hookResult.alreadyArtist
+        ? "Artist request marked as approved (user was already an artist)."
+        : "Artist approved successfully",
     });
   } catch (error) {
     logger.error("Failed to update artist request", { error });

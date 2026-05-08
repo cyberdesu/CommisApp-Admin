@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { filterXSS } from "xss";
 import prisma from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { getBackendApiUrl } from "@/lib/backend";
 import { createRequestLogger, type AppLogger } from "@/lib/logger";
 
 const REPLY_BODY_MAX = 5000;
@@ -191,19 +192,21 @@ async function triggerHook(
     statusChanged?: boolean;
   },
 ): Promise<boolean> {
-  const url = process.env.BACKEND_INTERNAL_URL;
+  const hookUrl = getBackendApiUrl(
+    `/internal/tickets/${ticketId}/admin-reply-hook`,
+  );
   const secret = process.env.ADMIN_HOOK_SECRET;
-  if (!url || !secret) {
+  if (!hookUrl || !secret) {
     logger.error(
       "Ticket webhook config missing; user notification skipped",
-      { ticketId, missing: { url: !url, secret: !secret } },
+      { ticketId, missing: { url: !hookUrl, secret: !secret } },
     );
     return false;
   }
 
   try {
     const response = await fetch(
-      `${url}/internal/tickets/${ticketId}/admin-reply-hook`,
+      hookUrl,
       {
         method: "POST",
         headers: {

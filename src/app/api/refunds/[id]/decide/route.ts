@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { filterXSS } from "xss";
 import { getSessionAdmin } from "@/lib/auth/session";
+import { getBackendApiUrl } from "@/lib/backend";
 import prisma from "@/lib/prisma";
 import { createRequestLogger } from "@/lib/logger";
 
@@ -9,6 +10,11 @@ const UUID_PATTERN =
 
 const NOTE_MAX = 2000;
 const NOTE_MIN = 5;
+
+const ADMIN_DECIDABLE_STATUSES: ReadonlySet<string> = new Set([
+  "ESCALATED",
+  "FAILED",
+]);
 
 type DecidePayload = {
   approve: boolean;
@@ -117,7 +123,6 @@ export async function POST(
       );
     }
 
-    const ADMIN_DECIDABLE_STATUSES = new Set(["ESCALATED", "FAILED"]);
     if (!ADMIN_DECIDABLE_STATUSES.has(refund.status)) {
       logger.warn("Rejected refund decide due to non-decidable status", {
         refundId: id,
@@ -132,11 +137,11 @@ export async function POST(
       );
     }
 
-    const url = process.env.BACKEND_INTERNAL_URL;
+    const hookUrl = getBackendApiUrl(`/internal/refunds/${id}/decision`);
     const secret = process.env.ADMIN_HOOK_SECRET;
-    if (!url || !secret) {
+    if (!hookUrl || !secret) {
       logger.error(
-        "BACKEND_INTERNAL_URL or ADMIN_HOOK_SECRET missing; cannot decide refund.",
+        "Backend URL or ADMIN_HOOK_SECRET missing; cannot decide refund.",
         { refundId: id, adminId: admin.id },
       );
       return NextResponse.json(
@@ -147,7 +152,7 @@ export async function POST(
 
     const idempotencyKey = `refund:${id}:${admin.id}:${validation.data.approve ? "approve" : "deny"}`;
 
-    const response = await fetch(`${url}/internal/refunds/${id}/decision`, {
+    const response = await fetch(hookUrl, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -159,7 +164,6 @@ export async function POST(
         approve: validation.data.approve,
         adminNote: validation.data.adminNote,
         ticketId: validation.data.ticketId ?? refund.ticketId ?? undefined,
-        idempotencyKey,
       }),
     });
 
