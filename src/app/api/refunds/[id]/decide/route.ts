@@ -117,6 +117,21 @@ export async function POST(
       );
     }
 
+    const ADMIN_DECIDABLE_STATUSES = new Set(["ESCALATED", "FAILED"]);
+    if (!ADMIN_DECIDABLE_STATUSES.has(refund.status)) {
+      logger.warn("Rejected refund decide due to non-decidable status", {
+        refundId: id,
+        adminId: admin.id,
+        status: refund.status,
+      });
+      return NextResponse.json(
+        {
+          message: `Refund cannot be decided in current status (${refund.status}).`,
+        },
+        { status: 409 },
+      );
+    }
+
     const url = process.env.BACKEND_INTERNAL_URL;
     const secret = process.env.ADMIN_HOOK_SECRET;
     if (!url || !secret) {
@@ -130,17 +145,21 @@ export async function POST(
       );
     }
 
+    const idempotencyKey = `refund:${id}:${admin.id}:${validation.data.approve ? "approve" : "deny"}`;
+
     const response = await fetch(`${url}/internal/refunds/${id}/decision`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
         "x-internal-secret": secret,
+        "idempotency-key": idempotencyKey,
       },
       body: JSON.stringify({
         adminId: admin.id,
         approve: validation.data.approve,
         adminNote: validation.data.adminNote,
         ticketId: validation.data.ticketId ?? refund.ticketId ?? undefined,
+        idempotencyKey,
       }),
     });
 

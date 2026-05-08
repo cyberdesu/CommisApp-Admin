@@ -27,7 +27,7 @@ type RouteContext = {
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-const PAYOUT_TRANSACTION_TIMEOUT_MS = 20_000;
+const PAYOUT_TRANSACTION_TIMEOUT_MS = 40_000;
 
 class PayoutRouteError extends Error {
   status: number;
