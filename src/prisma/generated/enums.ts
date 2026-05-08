@@ -102,6 +102,7 @@ export type OrderSource = (typeof OrderSource)[keyof typeof OrderSource]
 
 export const PaymentStatus = {
   PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
   REFUNDED: 'REFUNDED'
@@ -191,6 +192,23 @@ export const MessageType = {
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
 
 
+export const SearchIndexEntity = {
+  SERVICE: 'SERVICE',
+  SHOWCASE: 'SHOWCASE',
+  PROFILE: 'PROFILE'
+} as const
+
+export type SearchIndexEntity = (typeof SearchIndexEntity)[keyof typeof SearchIndexEntity]
+
+
+export const SearchIndexOperation = {
+  UPSERT: 'UPSERT',
+  DELETE: 'DELETE'
+} as const
+
+export type SearchIndexOperation = (typeof SearchIndexOperation)[keyof typeof SearchIndexOperation]
+
+
 export const NotificationType = {
   NEW_MESSAGE: 'NEW_MESSAGE',
   NEW_FOLLOWER: 'NEW_FOLLOWER',
@@ -199,6 +217,7 @@ export const NotificationType = {
   SYSTEM_ANNOUNCEMENT: 'SYSTEM_ANNOUNCEMENT',
   ORDER_CREATED: 'ORDER_CREATED',
   ORDER_UPDATED: 'ORDER_UPDATED',
+  ORDER_DEADLINE_REMINDER: 'ORDER_DEADLINE_REMINDER',
   SERVICE_PAUSED: 'SERVICE_PAUSED',
   SERVICE_PUBLISHED: 'SERVICE_PUBLISHED',
   ARTIST_VERIFIED: 'ARTIST_VERIFIED',

@@ -34,6 +34,7 @@ export type OrderAvgAggregateOutputType = {
   deliveryDaysMax: number | null
   revisionsIncluded: number | null
   revisionsUsed: number | null
+  remindersSent: number | null
 }
 
 export type OrderSumAggregateOutputType = {
@@ -44,6 +45,7 @@ export type OrderSumAggregateOutputType = {
   deliveryDaysMax: number | null
   revisionsIncluded: number | null
   revisionsUsed: number | null
+  remindersSent: number | null
 }
 
 export type OrderMinAggregateOutputType = {
@@ -60,6 +62,9 @@ export type OrderMinAggregateOutputType = {
   deliveryDaysMax: number | null
   revisionsIncluded: number | null
   revisionsUsed: number | null
+  deadlineAt: Date | null
+  remindersSent: number | null
+  phaseLabel: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,6 +83,9 @@ export type OrderMaxAggregateOutputType = {
   deliveryDaysMax: number | null
   revisionsIncluded: number | null
   revisionsUsed: number | null
+  deadlineAt: Date | null
+  remindersSent: number | null
+  phaseLabel: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -97,6 +105,9 @@ export type OrderCountAggregateOutputType = {
   deliveryDaysMax: number
   revisionsIncluded: number
   revisionsUsed: number
+  deadlineAt: number
+  remindersSent: number
+  phaseLabel: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -111,6 +122,7 @@ export type OrderAvgAggregateInputType = {
   deliveryDaysMax?: true
   revisionsIncluded?: true
   revisionsUsed?: true
+  remindersSent?: true
 }
 
 export type OrderSumAggregateInputType = {
@@ -121,6 +133,7 @@ export type OrderSumAggregateInputType = {
   deliveryDaysMax?: true
   revisionsIncluded?: true
   revisionsUsed?: true
+  remindersSent?: true
 }
 
 export type OrderMinAggregateInputType = {
@@ -137,6 +150,9 @@ export type OrderMinAggregateInputType = {
   deliveryDaysMax?: true
   revisionsIncluded?: true
   revisionsUsed?: true
+  deadlineAt?: true
+  remindersSent?: true
+  phaseLabel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -155,6 +171,9 @@ export type OrderMaxAggregateInputType = {
   deliveryDaysMax?: true
   revisionsIncluded?: true
   revisionsUsed?: true
+  deadlineAt?: true
+  remindersSent?: true
+  phaseLabel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -174,6 +193,9 @@ export type OrderCountAggregateInputType = {
   deliveryDaysMax?: true
   revisionsIncluded?: true
   revisionsUsed?: true
+  deadlineAt?: true
+  remindersSent?: true
+  phaseLabel?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -280,6 +302,9 @@ export type OrderGroupByOutputType = {
   deliveryDaysMax: number | null
   revisionsIncluded: number
   revisionsUsed: number
+  deadlineAt: Date | null
+  remindersSent: number
+  phaseLabel: string | null
   createdAt: Date
   updatedAt: Date
   _count: OrderCountAggregateOutputType | null
@@ -322,6 +347,9 @@ export type OrderWhereInput = {
   deliveryDaysMax?: Prisma.IntNullableFilter<"Order"> | number | null
   revisionsIncluded?: Prisma.IntFilter<"Order"> | number
   revisionsUsed?: Prisma.IntFilter<"Order"> | number
+  deadlineAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  remindersSent?: Prisma.IntFilter<"Order"> | number
+  phaseLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   service?: Prisma.XOR<Prisma.ServiceNullableScalarRelationFilter, Prisma.ServiceWhereInput> | null
@@ -332,6 +360,7 @@ export type OrderWhereInput = {
   conversation?: Prisma.XOR<Prisma.ConversationNullableScalarRelationFilter, Prisma.ConversationWhereInput> | null
   events?: Prisma.OrderEventListRelationFilter
   review?: Prisma.XOR<Prisma.ServiceReviewNullableScalarRelationFilter, Prisma.ServiceReviewWhereInput> | null
+  tickets?: Prisma.TicketListRelationFilter
   refunds?: Prisma.RefundRequestListRelationFilter
 }
 
@@ -350,6 +379,9 @@ export type OrderOrderByWithRelationInput = {
   deliveryDaysMax?: Prisma.SortOrderInput | Prisma.SortOrder
   revisionsIncluded?: Prisma.SortOrder
   revisionsUsed?: Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  remindersSent?: Prisma.SortOrder
+  phaseLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   service?: Prisma.ServiceOrderByWithRelationInput
@@ -360,6 +392,7 @@ export type OrderOrderByWithRelationInput = {
   conversation?: Prisma.ConversationOrderByWithRelationInput
   events?: Prisma.OrderEventOrderByRelationAggregateInput
   review?: Prisma.ServiceReviewOrderByWithRelationInput
+  tickets?: Prisma.TicketOrderByRelationAggregateInput
   refunds?: Prisma.RefundRequestOrderByRelationAggregateInput
   _relevance?: Prisma.OrderOrderByRelevanceInput
 }
@@ -382,6 +415,9 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   deliveryDaysMax?: Prisma.IntNullableFilter<"Order"> | number | null
   revisionsIncluded?: Prisma.IntFilter<"Order"> | number
   revisionsUsed?: Prisma.IntFilter<"Order"> | number
+  deadlineAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  remindersSent?: Prisma.IntFilter<"Order"> | number
+  phaseLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   service?: Prisma.XOR<Prisma.ServiceNullableScalarRelationFilter, Prisma.ServiceWhereInput> | null
@@ -392,6 +428,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   conversation?: Prisma.XOR<Prisma.ConversationNullableScalarRelationFilter, Prisma.ConversationWhereInput> | null
   events?: Prisma.OrderEventListRelationFilter
   review?: Prisma.XOR<Prisma.ServiceReviewNullableScalarRelationFilter, Prisma.ServiceReviewWhereInput> | null
+  tickets?: Prisma.TicketListRelationFilter
   refunds?: Prisma.RefundRequestListRelationFilter
 }, "id">
 
@@ -410,6 +447,9 @@ export type OrderOrderByWithAggregationInput = {
   deliveryDaysMax?: Prisma.SortOrderInput | Prisma.SortOrder
   revisionsIncluded?: Prisma.SortOrder
   revisionsUsed?: Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  remindersSent?: Prisma.SortOrder
+  phaseLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
@@ -437,6 +477,9 @@ export type OrderScalarWhereWithAggregatesInput = {
   deliveryDaysMax?: Prisma.IntNullableWithAggregatesFilter<"Order"> | number | null
   revisionsIncluded?: Prisma.IntWithAggregatesFilter<"Order"> | number
   revisionsUsed?: Prisma.IntWithAggregatesFilter<"Order"> | number
+  deadlineAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  remindersSent?: Prisma.IntWithAggregatesFilter<"Order"> | number
+  phaseLabel?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
 }
@@ -453,6 +496,9 @@ export type OrderCreateInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
@@ -463,6 +509,7 @@ export type OrderCreateInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
 }
 
@@ -481,6 +528,9 @@ export type OrderUncheckedCreateInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -488,6 +538,7 @@ export type OrderUncheckedCreateInput = {
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -503,6 +554,9 @@ export type OrderUpdateInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
@@ -513,6 +567,7 @@ export type OrderUpdateInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
 }
 
@@ -531,6 +586,9 @@ export type OrderUncheckedUpdateInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -538,6 +596,7 @@ export type OrderUncheckedUpdateInput = {
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -556,6 +615,9 @@ export type OrderCreateManyInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -572,6 +634,9 @@ export type OrderUpdateManyMutationInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -591,6 +656,9 @@ export type OrderUncheckedUpdateManyInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -626,6 +694,9 @@ export type OrderCountOrderByAggregateInput = {
   deliveryDaysMax?: Prisma.SortOrder
   revisionsIncluded?: Prisma.SortOrder
   revisionsUsed?: Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrder
+  remindersSent?: Prisma.SortOrder
+  phaseLabel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -638,6 +709,7 @@ export type OrderAvgOrderByAggregateInput = {
   deliveryDaysMax?: Prisma.SortOrder
   revisionsIncluded?: Prisma.SortOrder
   revisionsUsed?: Prisma.SortOrder
+  remindersSent?: Prisma.SortOrder
 }
 
 export type OrderMaxOrderByAggregateInput = {
@@ -654,6 +726,9 @@ export type OrderMaxOrderByAggregateInput = {
   deliveryDaysMax?: Prisma.SortOrder
   revisionsIncluded?: Prisma.SortOrder
   revisionsUsed?: Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrder
+  remindersSent?: Prisma.SortOrder
+  phaseLabel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -672,6 +747,9 @@ export type OrderMinOrderByAggregateInput = {
   deliveryDaysMax?: Prisma.SortOrder
   revisionsIncluded?: Prisma.SortOrder
   revisionsUsed?: Prisma.SortOrder
+  deadlineAt?: Prisma.SortOrder
+  remindersSent?: Prisma.SortOrder
+  phaseLabel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -684,6 +762,7 @@ export type OrderSumOrderByAggregateInput = {
   deliveryDaysMax?: Prisma.SortOrder
   revisionsIncluded?: Prisma.SortOrder
   revisionsUsed?: Prisma.SortOrder
+  remindersSent?: Prisma.SortOrder
 }
 
 export type OrderScalarRelationFilter = {
@@ -914,6 +993,22 @@ export type OrderUpdateOneWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutNotificationsInput, Prisma.OrderUpdateWithoutNotificationsInput>, Prisma.OrderUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type OrderCreateNestedOneWithoutTicketsInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketsInput, Prisma.OrderUncheckedCreateWithoutTicketsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketsInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutTicketsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTicketsInput, Prisma.OrderUncheckedCreateWithoutTicketsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTicketsInput
+  upsert?: Prisma.OrderUpsertWithoutTicketsInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutTicketsInput, Prisma.OrderUpdateWithoutTicketsInput>, Prisma.OrderUncheckedUpdateWithoutTicketsInput>
+}
+
 export type OrderCreateWithoutArtistInput = {
   id?: string
   source?: $Enums.OrderSource
@@ -926,6 +1021,9 @@ export type OrderCreateWithoutArtistInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
@@ -935,6 +1033,7 @@ export type OrderCreateWithoutArtistInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
 }
 
@@ -952,6 +1051,9 @@ export type OrderUncheckedCreateWithoutArtistInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -959,6 +1061,7 @@ export type OrderUncheckedCreateWithoutArtistInput = {
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -984,6 +1087,9 @@ export type OrderCreateWithoutClientInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
@@ -993,6 +1099,7 @@ export type OrderCreateWithoutClientInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
 }
 
@@ -1010,6 +1117,9 @@ export type OrderUncheckedCreateWithoutClientInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -1017,6 +1127,7 @@ export type OrderUncheckedCreateWithoutClientInput = {
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1064,6 +1175,9 @@ export type OrderScalarWhereInput = {
   deliveryDaysMax?: Prisma.IntNullableFilter<"Order"> | number | null
   revisionsIncluded?: Prisma.IntFilter<"Order"> | number
   revisionsUsed?: Prisma.IntFilter<"Order"> | number
+  deadlineAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  remindersSent?: Prisma.IntFilter<"Order"> | number
+  phaseLabel?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
 }
@@ -1096,6 +1210,9 @@ export type OrderCreateWithoutServiceInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   artist: Prisma.UserCreateNestedOneWithoutArtistOrdersInput
@@ -1105,6 +1222,7 @@ export type OrderCreateWithoutServiceInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
 }
 
@@ -1122,6 +1240,9 @@ export type OrderUncheckedCreateWithoutServiceInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -1129,6 +1250,7 @@ export type OrderUncheckedCreateWithoutServiceInput = {
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1170,6 +1292,9 @@ export type OrderCreateWithoutPaymentsInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
@@ -1179,6 +1304,7 @@ export type OrderCreateWithoutPaymentsInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
 }
 
@@ -1197,12 +1323,16 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1234,6 +1364,9 @@ export type OrderUpdateWithoutPaymentsInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
@@ -1243,6 +1376,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
 }
 
@@ -1261,12 +1395,16 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -1282,6 +1420,9 @@ export type OrderCreateWithoutEventsInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
@@ -1291,6 +1432,7 @@ export type OrderCreateWithoutEventsInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
 }
 
@@ -1309,12 +1451,16 @@ export type OrderUncheckedCreateWithoutEventsInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1346,6 +1492,9 @@ export type OrderUpdateWithoutEventsInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
@@ -1355,6 +1504,7 @@ export type OrderUpdateWithoutEventsInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
 }
 
@@ -1373,12 +1523,16 @@ export type OrderUncheckedUpdateWithoutEventsInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -1394,6 +1548,9 @@ export type OrderCreateWithoutRefundsInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
@@ -1404,6 +1561,7 @@ export type OrderCreateWithoutRefundsInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutRefundsInput = {
@@ -1421,6 +1579,9 @@ export type OrderUncheckedCreateWithoutRefundsInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -1428,6 +1589,7 @@ export type OrderUncheckedCreateWithoutRefundsInput = {
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutRefundsInput = {
@@ -1458,6 +1620,9 @@ export type OrderUpdateWithoutRefundsInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
@@ -1468,6 +1633,7 @@ export type OrderUpdateWithoutRefundsInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutRefundsInput = {
@@ -1485,6 +1651,9 @@ export type OrderUncheckedUpdateWithoutRefundsInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -1492,6 +1661,7 @@ export type OrderUncheckedUpdateWithoutRefundsInput = {
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutReviewInput = {
@@ -1506,6 +1676,9 @@ export type OrderCreateWithoutReviewInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
@@ -1515,6 +1688,7 @@ export type OrderCreateWithoutReviewInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
 }
 
@@ -1533,12 +1707,16 @@ export type OrderUncheckedCreateWithoutReviewInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1570,6 +1748,9 @@ export type OrderUpdateWithoutReviewInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
@@ -1579,6 +1760,7 @@ export type OrderUpdateWithoutReviewInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
 }
 
@@ -1597,12 +1779,16 @@ export type OrderUncheckedUpdateWithoutReviewInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -1618,6 +1804,9 @@ export type OrderCreateWithoutConversationInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
@@ -1627,6 +1816,7 @@ export type OrderCreateWithoutConversationInput = {
   notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
 }
 
@@ -1645,12 +1835,16 @@ export type OrderUncheckedCreateWithoutConversationInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1682,6 +1876,9 @@ export type OrderUpdateWithoutConversationInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
@@ -1691,6 +1888,7 @@ export type OrderUpdateWithoutConversationInput = {
   notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
 }
 
@@ -1709,12 +1907,16 @@ export type OrderUncheckedUpdateWithoutConversationInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -1730,6 +1932,9 @@ export type OrderCreateWithoutNotificationsInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
@@ -1739,6 +1944,7 @@ export type OrderCreateWithoutNotificationsInput = {
   conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
 }
 
@@ -1757,12 +1963,16 @@ export type OrderUncheckedCreateWithoutNotificationsInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
   events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
   review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutOrderInput
   refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
 }
 
@@ -1794,6 +2004,9 @@ export type OrderUpdateWithoutNotificationsInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
@@ -1803,6 +2016,7 @@ export type OrderUpdateWithoutNotificationsInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
 }
 
@@ -1821,9 +2035,141 @@ export type OrderUncheckedUpdateWithoutNotificationsInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
+  events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
+  refunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutTicketsInput = {
+  id?: string
+  source?: $Enums.OrderSource
+  status?: $Enums.OrderStatus
+  titleSnapshot?: string | null
+  briefSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  service?: Prisma.ServiceCreateNestedOneWithoutOrdersInput
+  artist: Prisma.UserCreateNestedOneWithoutArtistOrdersInput
+  client?: Prisma.UserCreateNestedOneWithoutClientOrdersInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationCreateNestedOneWithoutOrderInput
+  events?: Prisma.OrderEventCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewCreateNestedOneWithoutOrderInput
+  refunds?: Prisma.RefundRequestCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutTicketsInput = {
+  id?: string
+  serviceId?: string | null
+  artistId: number
+  clientId?: number | null
+  source?: $Enums.OrderSource
+  status?: $Enums.OrderStatus
+  titleSnapshot?: string | null
+  briefSnapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceSnapshot: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  deliveryDaysMin?: number | null
+  deliveryDaysMax?: number | null
+  revisionsIncluded?: number
+  revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutOrderInput
+  conversation?: Prisma.ConversationUncheckedCreateNestedOneWithoutOrderInput
+  events?: Prisma.OrderEventUncheckedCreateNestedManyWithoutOrderInput
+  review?: Prisma.ServiceReviewUncheckedCreateNestedOneWithoutOrderInput
+  refunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutTicketsInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutTicketsInput, Prisma.OrderUncheckedCreateWithoutTicketsInput>
+}
+
+export type OrderUpsertWithoutTicketsInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutTicketsInput, Prisma.OrderUncheckedUpdateWithoutTicketsInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutTicketsInput, Prisma.OrderUncheckedCreateWithoutTicketsInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutTicketsInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutTicketsInput, Prisma.OrderUncheckedUpdateWithoutTicketsInput>
+}
+
+export type OrderUpdateWithoutTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  source?: Prisma.EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  titleSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  briefSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
+  artist?: Prisma.UserUpdateOneRequiredWithoutArtistOrdersNestedInput
+  client?: Prisma.UserUpdateOneWithoutClientOrdersNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutOrderNestedInput
+  conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
+  events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
+  review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  artistId?: Prisma.IntFieldUpdateOperationsInput | number
+  clientId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  source?: Prisma.EnumOrderSourceFieldUpdateOperationsInput | $Enums.OrderSource
+  status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+  titleSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  briefSnapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  priceSnapshot?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  deliveryDaysMin?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
+  revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutOrderNestedInput
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
@@ -1844,6 +2190,9 @@ export type OrderCreateManyArtistInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1862,6 +2211,9 @@ export type OrderCreateManyClientInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1878,6 +2230,9 @@ export type OrderUpdateWithoutArtistInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
@@ -1887,6 +2242,7 @@ export type OrderUpdateWithoutArtistInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
 }
 
@@ -1904,6 +2260,9 @@ export type OrderUncheckedUpdateWithoutArtistInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -1911,6 +2270,7 @@ export type OrderUncheckedUpdateWithoutArtistInput = {
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -1928,6 +2288,9 @@ export type OrderUncheckedUpdateManyWithoutArtistInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1944,6 +2307,9 @@ export type OrderUpdateWithoutClientInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   service?: Prisma.ServiceUpdateOneWithoutOrdersNestedInput
@@ -1953,6 +2319,7 @@ export type OrderUpdateWithoutClientInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
 }
 
@@ -1970,6 +2337,9 @@ export type OrderUncheckedUpdateWithoutClientInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -1977,6 +2347,7 @@ export type OrderUncheckedUpdateWithoutClientInput = {
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -1994,6 +2365,9 @@ export type OrderUncheckedUpdateManyWithoutClientInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2012,6 +2386,9 @@ export type OrderCreateManyServiceInput = {
   deliveryDaysMax?: number | null
   revisionsIncluded?: number
   revisionsUsed?: number
+  deadlineAt?: Date | string | null
+  remindersSent?: number
+  phaseLabel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2028,6 +2405,9 @@ export type OrderUpdateWithoutServiceInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   artist?: Prisma.UserUpdateOneRequiredWithoutArtistOrdersNestedInput
@@ -2037,6 +2417,7 @@ export type OrderUpdateWithoutServiceInput = {
   conversation?: Prisma.ConversationUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUpdateManyWithoutOrderNestedInput
 }
 
@@ -2054,6 +2435,9 @@ export type OrderUncheckedUpdateWithoutServiceInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -2061,6 +2445,7 @@ export type OrderUncheckedUpdateWithoutServiceInput = {
   conversation?: Prisma.ConversationUncheckedUpdateOneWithoutOrderNestedInput
   events?: Prisma.OrderEventUncheckedUpdateManyWithoutOrderNestedInput
   review?: Prisma.ServiceReviewUncheckedUpdateOneWithoutOrderNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutOrderNestedInput
   refunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutOrderNestedInput
 }
 
@@ -2078,6 +2463,9 @@ export type OrderUncheckedUpdateManyWithoutServiceInput = {
   deliveryDaysMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   revisionsIncluded?: Prisma.IntFieldUpdateOperationsInput | number
   revisionsUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  deadlineAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remindersSent?: Prisma.IntFieldUpdateOperationsInput | number
+  phaseLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2091,6 +2479,7 @@ export type OrderCountOutputType = {
   payments: number
   notifications: number
   events: number
+  tickets: number
   refunds: number
 }
 
@@ -2098,6 +2487,7 @@ export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   payments?: boolean | OrderCountOutputTypeCountPaymentsArgs
   notifications?: boolean | OrderCountOutputTypeCountNotificationsArgs
   events?: boolean | OrderCountOutputTypeCountEventsArgs
+  tickets?: boolean | OrderCountOutputTypeCountTicketsArgs
   refunds?: boolean | OrderCountOutputTypeCountRefundsArgs
 }
 
@@ -2135,6 +2525,13 @@ export type OrderCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Ex
 /**
  * OrderCountOutputType without action
  */
+export type OrderCountOutputTypeCountTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TicketWhereInput
+}
+
+/**
+ * OrderCountOutputType without action
+ */
 export type OrderCountOutputTypeCountRefundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.RefundRequestWhereInput
 }
@@ -2155,6 +2552,9 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   deliveryDaysMax?: boolean
   revisionsIncluded?: boolean
   revisionsUsed?: boolean
+  deadlineAt?: boolean
+  remindersSent?: boolean
+  phaseLabel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   service?: boolean | Prisma.Order$serviceArgs<ExtArgs>
@@ -2165,6 +2565,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   conversation?: boolean | Prisma.Order$conversationArgs<ExtArgs>
   events?: boolean | Prisma.Order$eventsArgs<ExtArgs>
   review?: boolean | Prisma.Order$reviewArgs<ExtArgs>
+  tickets?: boolean | Prisma.Order$ticketsArgs<ExtArgs>
   refunds?: boolean | Prisma.Order$refundsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
@@ -2184,6 +2585,9 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryDaysMax?: boolean
   revisionsIncluded?: boolean
   revisionsUsed?: boolean
+  deadlineAt?: boolean
+  remindersSent?: boolean
+  phaseLabel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   service?: boolean | Prisma.Order$serviceArgs<ExtArgs>
@@ -2206,6 +2610,9 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryDaysMax?: boolean
   revisionsIncluded?: boolean
   revisionsUsed?: boolean
+  deadlineAt?: boolean
+  remindersSent?: boolean
+  phaseLabel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   service?: boolean | Prisma.Order$serviceArgs<ExtArgs>
@@ -2228,11 +2635,14 @@ export type OrderSelectScalar = {
   deliveryDaysMax?: boolean
   revisionsIncluded?: boolean
   revisionsUsed?: boolean
+  deadlineAt?: boolean
+  remindersSent?: boolean
+  phaseLabel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "serviceId" | "artistId" | "clientId" | "source" | "status" | "titleSnapshot" | "briefSnapshot" | "priceSnapshot" | "currency" | "deliveryDaysMin" | "deliveryDaysMax" | "revisionsIncluded" | "revisionsUsed" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "serviceId" | "artistId" | "clientId" | "source" | "status" | "titleSnapshot" | "briefSnapshot" | "priceSnapshot" | "currency" | "deliveryDaysMin" | "deliveryDaysMax" | "revisionsIncluded" | "revisionsUsed" | "deadlineAt" | "remindersSent" | "phaseLabel" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   service?: boolean | Prisma.Order$serviceArgs<ExtArgs>
   artist?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2242,6 +2652,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   conversation?: boolean | Prisma.Order$conversationArgs<ExtArgs>
   events?: boolean | Prisma.Order$eventsArgs<ExtArgs>
   review?: boolean | Prisma.Order$reviewArgs<ExtArgs>
+  tickets?: boolean | Prisma.Order$ticketsArgs<ExtArgs>
   refunds?: boolean | Prisma.Order$refundsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -2267,6 +2678,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     conversation: Prisma.$ConversationPayload<ExtArgs> | null
     events: Prisma.$OrderEventPayload<ExtArgs>[]
     review: Prisma.$ServiceReviewPayload<ExtArgs> | null
+    tickets: Prisma.$TicketPayload<ExtArgs>[]
     refunds: Prisma.$RefundRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2284,6 +2696,9 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     deliveryDaysMax: number | null
     revisionsIncluded: number
     revisionsUsed: number
+    deadlineAt: Date | null
+    remindersSent: number
+    phaseLabel: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["order"]>
@@ -2688,6 +3103,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   conversation<T extends Prisma.Order$conversationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$conversationArgs<ExtArgs>>): Prisma.Prisma__ConversationClient<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   events<T extends Prisma.Order$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   review<T extends Prisma.Order$reviewArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$reviewArgs<ExtArgs>>): Prisma.Prisma__ServiceReviewClient<runtime.Types.Result.GetResult<Prisma.$ServiceReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  tickets<T extends Prisma.Order$ticketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   refunds<T extends Prisma.Order$refundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$refundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2732,6 +3148,9 @@ export interface OrderFieldRefs {
   readonly deliveryDaysMax: Prisma.FieldRef<"Order", 'Int'>
   readonly revisionsIncluded: Prisma.FieldRef<"Order", 'Int'>
   readonly revisionsUsed: Prisma.FieldRef<"Order", 'Int'>
+  readonly deadlineAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly remindersSent: Prisma.FieldRef<"Order", 'Int'>
+  readonly phaseLabel: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
 }
@@ -3280,6 +3699,30 @@ export type Order$reviewArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.ServiceReviewInclude<ExtArgs> | null
   where?: Prisma.ServiceReviewWhereInput
+}
+
+/**
+ * Order.tickets
+ */
+export type Order$ticketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Ticket
+   */
+  select?: Prisma.TicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Ticket
+   */
+  omit?: Prisma.TicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TicketInclude<ExtArgs> | null
+  where?: Prisma.TicketWhereInput
+  orderBy?: Prisma.TicketOrderByWithRelationInput | Prisma.TicketOrderByWithRelationInput[]
+  cursor?: Prisma.TicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
 }
 
 /**

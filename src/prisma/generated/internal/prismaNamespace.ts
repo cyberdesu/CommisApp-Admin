@@ -390,6 +390,7 @@ export const ModelName = {
   UserModeration: 'UserModeration',
   ArtistVerificationRequest: 'ArtistVerificationRequest',
   Settings: 'Settings',
+  ArtistAvailability: 'ArtistAvailability',
   Socials: 'Socials',
   otp: 'otp',
   AuthToken: 'AuthToken',
@@ -424,6 +425,7 @@ export const ModelName = {
   ConversationParticipant: 'ConversationParticipant',
   Message: 'Message',
   Notification: 'Notification',
+  SearchIndexOutbox: 'SearchIndexOutbox',
   Ticket: 'Ticket',
   TicketMessage: 'TicketMessage',
   TicketAttachment: 'TicketAttachment'
@@ -442,7 +444,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "adminUser" | "adminSession" | "user" | "userModeration" | "artistVerificationRequest" | "settings" | "socials" | "otp" | "authToken" | "refreshToken" | "showcase" | "showcaseItem" | "showcaseFile" | "tag" | "service" | "serviceAddon" | "serviceQuestion" | "servicePolicy" | "serviceSample" | "customRequest" | "order" | "payment" | "payout" | "orderEvent" | "refundRequest" | "serviceReview" | "workflow" | "subPhase" | "userInteraction" | "follow" | "bookmark" | "publicViewRecord" | "behavioralLog" | "profileSearchRecord" | "fingerprintProfile" | "authAuditLog" | "conversation" | "conversationParticipant" | "message" | "notification" | "ticket" | "ticketMessage" | "ticketAttachment"
+    modelProps: "adminUser" | "adminSession" | "user" | "userModeration" | "artistVerificationRequest" | "settings" | "artistAvailability" | "socials" | "otp" | "authToken" | "refreshToken" | "showcase" | "showcaseItem" | "showcaseFile" | "tag" | "service" | "serviceAddon" | "serviceQuestion" | "servicePolicy" | "serviceSample" | "customRequest" | "order" | "payment" | "payout" | "orderEvent" | "refundRequest" | "serviceReview" | "workflow" | "subPhase" | "userInteraction" | "follow" | "bookmark" | "publicViewRecord" | "behavioralLog" | "profileSearchRecord" | "fingerprintProfile" | "authAuditLog" | "conversation" | "conversationParticipant" | "message" | "notification" | "searchIndexOutbox" | "ticket" | "ticketMessage" | "ticketAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -887,6 +889,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SettingsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SettingsCountAggregateOutputType> | number
+        }
+      }
+    }
+    ArtistAvailability: {
+      payload: Prisma.$ArtistAvailabilityPayload<ExtArgs>
+      fields: Prisma.ArtistAvailabilityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ArtistAvailabilityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ArtistAvailabilityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload>
+        }
+        findFirst: {
+          args: Prisma.ArtistAvailabilityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ArtistAvailabilityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload>
+        }
+        findMany: {
+          args: Prisma.ArtistAvailabilityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload>[]
+        }
+        create: {
+          args: Prisma.ArtistAvailabilityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload>
+        }
+        createMany: {
+          args: Prisma.ArtistAvailabilityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ArtistAvailabilityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload>[]
+        }
+        delete: {
+          args: Prisma.ArtistAvailabilityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload>
+        }
+        update: {
+          args: Prisma.ArtistAvailabilityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload>
+        }
+        deleteMany: {
+          args: Prisma.ArtistAvailabilityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ArtistAvailabilityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ArtistAvailabilityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload>[]
+        }
+        upsert: {
+          args: Prisma.ArtistAvailabilityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ArtistAvailabilityPayload>
+        }
+        aggregate: {
+          args: Prisma.ArtistAvailabilityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateArtistAvailability>
+        }
+        groupBy: {
+          args: Prisma.ArtistAvailabilityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ArtistAvailabilityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ArtistAvailabilityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ArtistAvailabilityCountAggregateOutputType> | number
         }
       }
     }
@@ -3406,6 +3482,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SearchIndexOutbox: {
+      payload: Prisma.$SearchIndexOutboxPayload<ExtArgs>
+      fields: Prisma.SearchIndexOutboxFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SearchIndexOutboxFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SearchIndexOutboxFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload>
+        }
+        findFirst: {
+          args: Prisma.SearchIndexOutboxFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SearchIndexOutboxFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload>
+        }
+        findMany: {
+          args: Prisma.SearchIndexOutboxFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload>[]
+        }
+        create: {
+          args: Prisma.SearchIndexOutboxCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload>
+        }
+        createMany: {
+          args: Prisma.SearchIndexOutboxCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SearchIndexOutboxCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload>[]
+        }
+        delete: {
+          args: Prisma.SearchIndexOutboxDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload>
+        }
+        update: {
+          args: Prisma.SearchIndexOutboxUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload>
+        }
+        deleteMany: {
+          args: Prisma.SearchIndexOutboxDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SearchIndexOutboxUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SearchIndexOutboxUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload>[]
+        }
+        upsert: {
+          args: Prisma.SearchIndexOutboxUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SearchIndexOutboxPayload>
+        }
+        aggregate: {
+          args: Prisma.SearchIndexOutboxAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSearchIndexOutbox>
+        }
+        groupBy: {
+          args: Prisma.SearchIndexOutboxGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SearchIndexOutboxGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SearchIndexOutboxCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SearchIndexOutboxCountAggregateOutputType> | number
+        }
+      }
+    }
     Ticket: {
       payload: Prisma.$TicketPayload<ExtArgs>
       fields: Prisma.TicketFieldRefs
@@ -3707,7 +3857,8 @@ export const UserScalarFieldEnum = {
   country: 'country',
   isBanned: 'isBanned',
   suspendedUntil: 'suspendedUntil',
-  banReason: 'banReason'
+  banReason: 'banReason',
+  lastSeenAt: 'lastSeenAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -3752,6 +3903,29 @@ export const SettingsScalarFieldEnum = {
 } as const
 
 export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
+
+
+export const ArtistAvailabilityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  statusMessage: 'statusMessage',
+  estimatedResponseTime: 'estimatedResponseTime',
+  isAvailableOverride: 'isAvailableOverride',
+  autoCloseAfterSlots: 'autoCloseAfterSlots',
+  maxConcurrentOrdersOverride: 'maxConcurrentOrdersOverride',
+  vacationMode: 'vacationMode',
+  vacationStart: 'vacationStart',
+  vacationEnd: 'vacationEnd',
+  timezone: 'timezone',
+  workingHoursStart: 'workingHoursStart',
+  workingHoursEnd: 'workingHoursEnd',
+  workingDaysMask: 'workingDaysMask',
+  autoRespondTemplate: 'autoRespondTemplate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ArtistAvailabilityScalarFieldEnum = (typeof ArtistAvailabilityScalarFieldEnum)[keyof typeof ArtistAvailabilityScalarFieldEnum]
 
 
 export const SocialsScalarFieldEnum = {
@@ -3977,6 +4151,9 @@ export const OrderScalarFieldEnum = {
   deliveryDaysMax: 'deliveryDaysMax',
   revisionsIncluded: 'revisionsIncluded',
   revisionsUsed: 'revisionsUsed',
+  deadlineAt: 'deadlineAt',
+  remindersSent: 'remindersSent',
+  phaseLabel: 'phaseLabel',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4238,6 +4415,7 @@ export const MessageScalarFieldEnum = {
   fileUrl: 'fileUrl',
   fileName: 'fileName',
   isDeleted: 'isDeleted',
+  replyToId: 'replyToId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4255,6 +4433,7 @@ export const NotificationScalarFieldEnum = {
   readAt: 'readAt',
   createdAt: 'createdAt',
   messageId: 'messageId',
+  conversationId: 'conversationId',
   followerId: 'followerId',
   showcaseItemId: 'showcaseItemId',
   orderId: 'orderId',
@@ -4262,6 +4441,20 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const SearchIndexOutboxScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  operation: 'operation',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SearchIndexOutboxScalarFieldEnum = (typeof SearchIndexOutboxScalarFieldEnum)[keyof typeof SearchIndexOutboxScalarFieldEnum]
 
 
 export const TicketScalarFieldEnum = {
@@ -4411,6 +4604,18 @@ export const SettingsOrderByRelevanceFieldEnum = {
 export type SettingsOrderByRelevanceFieldEnum = (typeof SettingsOrderByRelevanceFieldEnum)[keyof typeof SettingsOrderByRelevanceFieldEnum]
 
 
+export const ArtistAvailabilityOrderByRelevanceFieldEnum = {
+  statusMessage: 'statusMessage',
+  estimatedResponseTime: 'estimatedResponseTime',
+  timezone: 'timezone',
+  workingHoursStart: 'workingHoursStart',
+  workingHoursEnd: 'workingHoursEnd',
+  autoRespondTemplate: 'autoRespondTemplate'
+} as const
+
+export type ArtistAvailabilityOrderByRelevanceFieldEnum = (typeof ArtistAvailabilityOrderByRelevanceFieldEnum)[keyof typeof ArtistAvailabilityOrderByRelevanceFieldEnum]
+
+
 export const SocialsOrderByRelevanceFieldEnum = {
   instagram: 'instagram',
   twitter: 'twitter',
@@ -4555,7 +4760,8 @@ export const OrderOrderByRelevanceFieldEnum = {
   id: 'id',
   serviceId: 'serviceId',
   titleSnapshot: 'titleSnapshot',
-  currency: 'currency'
+  currency: 'currency',
+  phaseLabel: 'phaseLabel'
 } as const
 
 export type OrderOrderByRelevanceFieldEnum = (typeof OrderOrderByRelevanceFieldEnum)[keyof typeof OrderOrderByRelevanceFieldEnum]
@@ -4725,7 +4931,8 @@ export const MessageOrderByRelevanceFieldEnum = {
   conversationId: 'conversationId',
   content: 'content',
   fileUrl: 'fileUrl',
-  fileName: 'fileName'
+  fileName: 'fileName',
+  replyToId: 'replyToId'
 } as const
 
 export type MessageOrderByRelevanceFieldEnum = (typeof MessageOrderByRelevanceFieldEnum)[keyof typeof MessageOrderByRelevanceFieldEnum]
@@ -4736,12 +4943,21 @@ export const NotificationOrderByRelevanceFieldEnum = {
   title: 'title',
   body: 'body',
   messageId: 'messageId',
+  conversationId: 'conversationId',
   showcaseItemId: 'showcaseItemId',
   orderId: 'orderId',
   ticketId: 'ticketId'
 } as const
 
 export type NotificationOrderByRelevanceFieldEnum = (typeof NotificationOrderByRelevanceFieldEnum)[keyof typeof NotificationOrderByRelevanceFieldEnum]
+
+
+export const SearchIndexOutboxOrderByRelevanceFieldEnum = {
+  entityId: 'entityId',
+  lastError: 'lastError'
+} as const
+
+export type SearchIndexOutboxOrderByRelevanceFieldEnum = (typeof SearchIndexOutboxOrderByRelevanceFieldEnum)[keyof typeof SearchIndexOutboxOrderByRelevanceFieldEnum]
 
 
 export const TicketOrderByRelevanceFieldEnum = {
@@ -5128,6 +5344,34 @@ export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
+ * Reference to a field of type 'SearchIndexEntity'
+ */
+export type EnumSearchIndexEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SearchIndexEntity'>
+    
+
+
+/**
+ * Reference to a field of type 'SearchIndexEntity[]'
+ */
+export type ListEnumSearchIndexEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SearchIndexEntity[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SearchIndexOperation'
+ */
+export type EnumSearchIndexOperationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SearchIndexOperation'>
+    
+
+
+/**
+ * Reference to a field of type 'SearchIndexOperation[]'
+ */
+export type ListEnumSearchIndexOperationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SearchIndexOperation[]'>
+    
+
+
+/**
  * Reference to a field of type 'TicketType'
  */
 export type EnumTicketTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketType'>
@@ -5297,6 +5541,7 @@ export type GlobalOmitConfig = {
   userModeration?: Prisma.UserModerationOmit
   artistVerificationRequest?: Prisma.ArtistVerificationRequestOmit
   settings?: Prisma.SettingsOmit
+  artistAvailability?: Prisma.ArtistAvailabilityOmit
   socials?: Prisma.SocialsOmit
   otp?: Prisma.otpOmit
   authToken?: Prisma.AuthTokenOmit
@@ -5331,6 +5576,7 @@ export type GlobalOmitConfig = {
   conversationParticipant?: Prisma.ConversationParticipantOmit
   message?: Prisma.MessageOmit
   notification?: Prisma.NotificationOmit
+  searchIndexOutbox?: Prisma.SearchIndexOutboxOmit
   ticket?: Prisma.TicketOmit
   ticketMessage?: Prisma.TicketMessageOmit
   ticketAttachment?: Prisma.TicketAttachmentOmit

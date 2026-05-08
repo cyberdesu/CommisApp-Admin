@@ -57,6 +57,7 @@ export const ModelName = {
   UserModeration: 'UserModeration',
   ArtistVerificationRequest: 'ArtistVerificationRequest',
   Settings: 'Settings',
+  ArtistAvailability: 'ArtistAvailability',
   Socials: 'Socials',
   otp: 'otp',
   AuthToken: 'AuthToken',
@@ -91,6 +92,7 @@ export const ModelName = {
   ConversationParticipant: 'ConversationParticipant',
   Message: 'Message',
   Notification: 'Notification',
+  SearchIndexOutbox: 'SearchIndexOutbox',
   Ticket: 'Ticket',
   TicketMessage: 'TicketMessage',
   TicketAttachment: 'TicketAttachment'
@@ -152,7 +154,8 @@ export const UserScalarFieldEnum = {
   country: 'country',
   isBanned: 'isBanned',
   suspendedUntil: 'suspendedUntil',
-  banReason: 'banReason'
+  banReason: 'banReason',
+  lastSeenAt: 'lastSeenAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -197,6 +200,29 @@ export const SettingsScalarFieldEnum = {
 } as const
 
 export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
+
+
+export const ArtistAvailabilityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  statusMessage: 'statusMessage',
+  estimatedResponseTime: 'estimatedResponseTime',
+  isAvailableOverride: 'isAvailableOverride',
+  autoCloseAfterSlots: 'autoCloseAfterSlots',
+  maxConcurrentOrdersOverride: 'maxConcurrentOrdersOverride',
+  vacationMode: 'vacationMode',
+  vacationStart: 'vacationStart',
+  vacationEnd: 'vacationEnd',
+  timezone: 'timezone',
+  workingHoursStart: 'workingHoursStart',
+  workingHoursEnd: 'workingHoursEnd',
+  workingDaysMask: 'workingDaysMask',
+  autoRespondTemplate: 'autoRespondTemplate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ArtistAvailabilityScalarFieldEnum = (typeof ArtistAvailabilityScalarFieldEnum)[keyof typeof ArtistAvailabilityScalarFieldEnum]
 
 
 export const SocialsScalarFieldEnum = {
@@ -422,6 +448,9 @@ export const OrderScalarFieldEnum = {
   deliveryDaysMax: 'deliveryDaysMax',
   revisionsIncluded: 'revisionsIncluded',
   revisionsUsed: 'revisionsUsed',
+  deadlineAt: 'deadlineAt',
+  remindersSent: 'remindersSent',
+  phaseLabel: 'phaseLabel',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -683,6 +712,7 @@ export const MessageScalarFieldEnum = {
   fileUrl: 'fileUrl',
   fileName: 'fileName',
   isDeleted: 'isDeleted',
+  replyToId: 'replyToId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -700,6 +730,7 @@ export const NotificationScalarFieldEnum = {
   readAt: 'readAt',
   createdAt: 'createdAt',
   messageId: 'messageId',
+  conversationId: 'conversationId',
   followerId: 'followerId',
   showcaseItemId: 'showcaseItemId',
   orderId: 'orderId',
@@ -707,6 +738,20 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const SearchIndexOutboxScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  operation: 'operation',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SearchIndexOutboxScalarFieldEnum = (typeof SearchIndexOutboxScalarFieldEnum)[keyof typeof SearchIndexOutboxScalarFieldEnum]
 
 
 export const TicketScalarFieldEnum = {
@@ -856,6 +901,18 @@ export const SettingsOrderByRelevanceFieldEnum = {
 export type SettingsOrderByRelevanceFieldEnum = (typeof SettingsOrderByRelevanceFieldEnum)[keyof typeof SettingsOrderByRelevanceFieldEnum]
 
 
+export const ArtistAvailabilityOrderByRelevanceFieldEnum = {
+  statusMessage: 'statusMessage',
+  estimatedResponseTime: 'estimatedResponseTime',
+  timezone: 'timezone',
+  workingHoursStart: 'workingHoursStart',
+  workingHoursEnd: 'workingHoursEnd',
+  autoRespondTemplate: 'autoRespondTemplate'
+} as const
+
+export type ArtistAvailabilityOrderByRelevanceFieldEnum = (typeof ArtistAvailabilityOrderByRelevanceFieldEnum)[keyof typeof ArtistAvailabilityOrderByRelevanceFieldEnum]
+
+
 export const SocialsOrderByRelevanceFieldEnum = {
   instagram: 'instagram',
   twitter: 'twitter',
@@ -1000,7 +1057,8 @@ export const OrderOrderByRelevanceFieldEnum = {
   id: 'id',
   serviceId: 'serviceId',
   titleSnapshot: 'titleSnapshot',
-  currency: 'currency'
+  currency: 'currency',
+  phaseLabel: 'phaseLabel'
 } as const
 
 export type OrderOrderByRelevanceFieldEnum = (typeof OrderOrderByRelevanceFieldEnum)[keyof typeof OrderOrderByRelevanceFieldEnum]
@@ -1170,7 +1228,8 @@ export const MessageOrderByRelevanceFieldEnum = {
   conversationId: 'conversationId',
   content: 'content',
   fileUrl: 'fileUrl',
-  fileName: 'fileName'
+  fileName: 'fileName',
+  replyToId: 'replyToId'
 } as const
 
 export type MessageOrderByRelevanceFieldEnum = (typeof MessageOrderByRelevanceFieldEnum)[keyof typeof MessageOrderByRelevanceFieldEnum]
@@ -1181,12 +1240,21 @@ export const NotificationOrderByRelevanceFieldEnum = {
   title: 'title',
   body: 'body',
   messageId: 'messageId',
+  conversationId: 'conversationId',
   showcaseItemId: 'showcaseItemId',
   orderId: 'orderId',
   ticketId: 'ticketId'
 } as const
 
 export type NotificationOrderByRelevanceFieldEnum = (typeof NotificationOrderByRelevanceFieldEnum)[keyof typeof NotificationOrderByRelevanceFieldEnum]
+
+
+export const SearchIndexOutboxOrderByRelevanceFieldEnum = {
+  entityId: 'entityId',
+  lastError: 'lastError'
+} as const
+
+export type SearchIndexOutboxOrderByRelevanceFieldEnum = (typeof SearchIndexOutboxOrderByRelevanceFieldEnum)[keyof typeof SearchIndexOutboxOrderByRelevanceFieldEnum]
 
 
 export const TicketOrderByRelevanceFieldEnum = {

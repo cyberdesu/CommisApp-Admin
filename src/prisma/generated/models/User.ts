@@ -53,6 +53,7 @@ export type UserMinAggregateOutputType = {
   isBanned: boolean | null
   suspendedUntil: Date | null
   banReason: string | null
+  lastSeenAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -74,6 +75,7 @@ export type UserMaxAggregateOutputType = {
   isBanned: boolean | null
   suspendedUntil: Date | null
   banReason: string | null
+  lastSeenAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -95,6 +97,7 @@ export type UserCountAggregateOutputType = {
   isBanned: number
   suspendedUntil: number
   banReason: number
+  lastSeenAt: number
   _all: number
 }
 
@@ -126,6 +129,7 @@ export type UserMinAggregateInputType = {
   isBanned?: true
   suspendedUntil?: true
   banReason?: true
+  lastSeenAt?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -147,6 +151,7 @@ export type UserMaxAggregateInputType = {
   isBanned?: true
   suspendedUntil?: true
   banReason?: true
+  lastSeenAt?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -168,6 +173,7 @@ export type UserCountAggregateInputType = {
   isBanned?: true
   suspendedUntil?: true
   banReason?: true
+  lastSeenAt?: true
   _all?: true
 }
 
@@ -276,6 +282,7 @@ export type UserGroupByOutputType = {
   isBanned: boolean
   suspendedUntil: Date | null
   banReason: string | null
+  lastSeenAt: Date | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -320,11 +327,13 @@ export type UserWhereInput = {
   isBanned?: Prisma.BoolFilter<"User"> | boolean
   suspendedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   banReason?: Prisma.StringNullableFilter<"User"> | string | null
+  lastSeenAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   tokens?: Prisma.XOR<Prisma.AuthTokenNullableScalarRelationFilter, Prisma.AuthTokenWhereInput> | null
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
   socials?: Prisma.XOR<Prisma.SocialsNullableScalarRelationFilter, Prisma.SocialsWhereInput> | null
   otps?: Prisma.OtpListRelationFilter
   settings?: Prisma.XOR<Prisma.SettingsNullableScalarRelationFilter, Prisma.SettingsWhereInput> | null
+  availability?: Prisma.XOR<Prisma.ArtistAvailabilityNullableScalarRelationFilter, Prisma.ArtistAvailabilityWhereInput> | null
   showcases?: Prisma.XOR<Prisma.ShowcaseNullableScalarRelationFilter, Prisma.ShowcaseWhereInput> | null
   workflows?: Prisma.WorkflowListRelationFilter
   interactions?: Prisma.UserInteractionListRelationFilter
@@ -373,11 +382,13 @@ export type UserOrderByWithRelationInput = {
   isBanned?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   banReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   tokens?: Prisma.AuthTokenOrderByWithRelationInput
   refreshTokens?: Prisma.RefreshTokenOrderByRelationAggregateInput
   socials?: Prisma.SocialsOrderByWithRelationInput
   otps?: Prisma.otpOrderByRelationAggregateInput
   settings?: Prisma.SettingsOrderByWithRelationInput
+  availability?: Prisma.ArtistAvailabilityOrderByWithRelationInput
   showcases?: Prisma.ShowcaseOrderByWithRelationInput
   workflows?: Prisma.WorkflowOrderByRelationAggregateInput
   interactions?: Prisma.UserInteractionOrderByRelationAggregateInput
@@ -430,11 +441,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isBanned?: Prisma.BoolFilter<"User"> | boolean
   suspendedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   banReason?: Prisma.StringNullableFilter<"User"> | string | null
+  lastSeenAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   tokens?: Prisma.XOR<Prisma.AuthTokenNullableScalarRelationFilter, Prisma.AuthTokenWhereInput> | null
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
   socials?: Prisma.XOR<Prisma.SocialsNullableScalarRelationFilter, Prisma.SocialsWhereInput> | null
   otps?: Prisma.OtpListRelationFilter
   settings?: Prisma.XOR<Prisma.SettingsNullableScalarRelationFilter, Prisma.SettingsWhereInput> | null
+  availability?: Prisma.XOR<Prisma.ArtistAvailabilityNullableScalarRelationFilter, Prisma.ArtistAvailabilityWhereInput> | null
   showcases?: Prisma.XOR<Prisma.ShowcaseNullableScalarRelationFilter, Prisma.ShowcaseWhereInput> | null
   workflows?: Prisma.WorkflowListRelationFilter
   interactions?: Prisma.UserInteractionListRelationFilter
@@ -483,6 +496,7 @@ export type UserOrderByWithAggregationInput = {
   isBanned?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   banReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -512,6 +526,7 @@ export type UserScalarWhereWithAggregatesInput = {
   isBanned?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   suspendedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   banReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  lastSeenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
 }
 
 export type UserCreateInput = {
@@ -532,11 +547,13 @@ export type UserCreateInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -585,11 +602,13 @@ export type UserUncheckedCreateInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -637,11 +656,13 @@ export type UserUpdateInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -690,11 +711,13 @@ export type UserUncheckedUpdateInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -743,6 +766,7 @@ export type UserCreateManyInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -763,6 +787,7 @@ export type UserUpdateManyMutationInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -784,6 +809,7 @@ export type UserUncheckedUpdateManyInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserOrderByRelevanceInput = {
@@ -811,6 +837,7 @@ export type UserCountOrderByAggregateInput = {
   isBanned?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrder
   banReason?: Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -836,6 +863,7 @@ export type UserMaxOrderByAggregateInput = {
   isBanned?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrder
   banReason?: Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -857,6 +885,7 @@ export type UserMinOrderByAggregateInput = {
   isBanned?: Prisma.SortOrder
   suspendedUntil?: Prisma.SortOrder
   banReason?: Prisma.SortOrder
+  lastSeenAt?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -925,6 +954,20 @@ export type UserUpdateOneRequiredWithoutSettingsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutSettingsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSettingsInput, Prisma.UserUpdateWithoutSettingsInput>, Prisma.UserUncheckedUpdateWithoutSettingsInput>
+}
+
+export type UserCreateNestedOneWithoutAvailabilityInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAvailabilityInput, Prisma.UserUncheckedCreateWithoutAvailabilityInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAvailabilityInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAvailabilityNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAvailabilityInput, Prisma.UserUncheckedCreateWithoutAvailabilityInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAvailabilityInput
+  upsert?: Prisma.UserUpsertWithoutAvailabilityInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAvailabilityInput, Prisma.UserUpdateWithoutAvailabilityInput>, Prisma.UserUncheckedUpdateWithoutAvailabilityInput>
 }
 
 export type UserCreateNestedOneWithoutSocialsInput = {
@@ -1367,11 +1410,13 @@ export type UserCreateWithoutModerationsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -1419,11 +1464,13 @@ export type UserUncheckedCreateWithoutModerationsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -1486,11 +1533,13 @@ export type UserUpdateWithoutModerationsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -1538,11 +1587,13 @@ export type UserUncheckedUpdateWithoutModerationsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -1589,11 +1640,13 @@ export type UserCreateWithoutArtistVerificationInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -1641,11 +1694,13 @@ export type UserUncheckedCreateWithoutArtistVerificationInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -1708,11 +1763,13 @@ export type UserUpdateWithoutArtistVerificationInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -1760,11 +1817,13 @@ export type UserUncheckedUpdateWithoutArtistVerificationInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -1811,10 +1870,12 @@ export type UserCreateWithoutSettingsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -1863,10 +1924,12 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -1930,10 +1993,12 @@ export type UserUpdateWithoutSettingsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -1982,10 +2047,242 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
+  bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedUpdateOneWithoutUserNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutUserNestedInput
+  artistOrders?: Prisma.OrderUncheckedUpdateManyWithoutArtistNestedInput
+  clientOrders?: Prisma.OrderUncheckedUpdateManyWithoutClientNestedInput
+  orderEvents?: Prisma.OrderEventUncheckedUpdateManyWithoutActorNestedInput
+  customRequestsMade?: Prisma.CustomRequestUncheckedUpdateManyWithoutClientNestedInput
+  customRequestsRecv?: Prisma.CustomRequestUncheckedUpdateManyWithoutArtistNestedInput
+  payouts?: Prisma.PayoutUncheckedUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  clientRefunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutClientNestedInput
+  artistRefunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutArtistNestedInput
+  resolvedRefunds?: Prisma.RefundRequestUncheckedUpdateManyWithoutResolvedByNestedInput
+  following?: Prisma.FollowUncheckedUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUncheckedUpdateManyWithoutFollowingNestedInput
+  moderations?: Prisma.UserModerationUncheckedUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUncheckedUpdateManyWithoutReporterNestedInput
+  reportedInTickets?: Prisma.TicketUncheckedUpdateManyWithoutReportedUserNestedInput
+  ticketMessages?: Prisma.TicketMessageUncheckedUpdateManyWithoutSenderUserNestedInput
+}
+
+export type UserCreateWithoutAvailabilityInput = {
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
+  lastSeenAt?: Date | string | null
+  tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
+  workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
+  bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestCreateNestedOneWithoutUserInput
+  services?: Prisma.ServiceCreateNestedManyWithoutUserInput
+  artistOrders?: Prisma.OrderCreateNestedManyWithoutArtistInput
+  clientOrders?: Prisma.OrderCreateNestedManyWithoutClientInput
+  orderEvents?: Prisma.OrderEventCreateNestedManyWithoutActorInput
+  customRequestsMade?: Prisma.CustomRequestCreateNestedManyWithoutClientInput
+  customRequestsRecv?: Prisma.CustomRequestCreateNestedManyWithoutArtistInput
+  payouts?: Prisma.PayoutCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewCreateNestedManyWithoutReviewerInput
+  clientRefunds?: Prisma.RefundRequestCreateNestedManyWithoutClientInput
+  artistRefunds?: Prisma.RefundRequestCreateNestedManyWithoutArtistInput
+  resolvedRefunds?: Prisma.RefundRequestCreateNestedManyWithoutResolvedByInput
+  following?: Prisma.FollowCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowCreateNestedManyWithoutFollowingInput
+  moderations?: Prisma.UserModerationCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationParticipantCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketCreateNestedManyWithoutReporterInput
+  reportedInTickets?: Prisma.TicketCreateNestedManyWithoutReportedUserInput
+  ticketMessages?: Prisma.TicketMessageCreateNestedManyWithoutSenderUserInput
+}
+
+export type UserUncheckedCreateWithoutAvailabilityInput = {
+  id?: number
+  email: string
+  passwordHash: string
+  name?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: string
+  username: string
+  subId: string
+  verified?: boolean
+  verifiedArtists?: boolean
+  avatar?: string | null
+  banner?: string | null
+  bio?: string | null
+  country?: string | null
+  isBanned?: boolean
+  suspendedUntil?: Date | string | null
+  banReason?: string | null
+  lastSeenAt?: Date | string | null
+  tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
+  otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
+  workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
+  interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
+  bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
+  profileSearches?: Prisma.ProfileSearchRecordUncheckedCreateNestedManyWithoutSearchedUserInput
+  artistVerification?: Prisma.ArtistVerificationRequestUncheckedCreateNestedOneWithoutUserInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutUserInput
+  artistOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutArtistInput
+  clientOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutClientInput
+  orderEvents?: Prisma.OrderEventUncheckedCreateNestedManyWithoutActorInput
+  customRequestsMade?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutClientInput
+  customRequestsRecv?: Prisma.CustomRequestUncheckedCreateNestedManyWithoutArtistInput
+  payouts?: Prisma.PayoutUncheckedCreateNestedManyWithoutArtistInput
+  artistReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutArtistInput
+  clientReviews?: Prisma.ServiceReviewUncheckedCreateNestedManyWithoutReviewerInput
+  clientRefunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutClientInput
+  artistRefunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutArtistInput
+  resolvedRefunds?: Prisma.RefundRequestUncheckedCreateNestedManyWithoutResolvedByInput
+  following?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowerInput
+  followers?: Prisma.FollowUncheckedCreateNestedManyWithoutFollowingInput
+  moderations?: Prisma.UserModerationUncheckedCreateNestedManyWithoutUserInput
+  conversations?: Prisma.ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  tickets?: Prisma.TicketUncheckedCreateNestedManyWithoutReporterInput
+  reportedInTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutReportedUserInput
+  ticketMessages?: Prisma.TicketMessageUncheckedCreateNestedManyWithoutSenderUserInput
+}
+
+export type UserCreateOrConnectWithoutAvailabilityInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAvailabilityInput, Prisma.UserUncheckedCreateWithoutAvailabilityInput>
+}
+
+export type UserUpsertWithoutAvailabilityInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAvailabilityInput, Prisma.UserUncheckedUpdateWithoutAvailabilityInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAvailabilityInput, Prisma.UserUncheckedCreateWithoutAvailabilityInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAvailabilityInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAvailabilityInput, Prisma.UserUncheckedUpdateWithoutAvailabilityInput>
+}
+
+export type UserUpdateWithoutAvailabilityInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
+  workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
+  interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
+  bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
+  profileSearches?: Prisma.ProfileSearchRecordUpdateManyWithoutSearchedUserNestedInput
+  artistVerification?: Prisma.ArtistVerificationRequestUpdateOneWithoutUserNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutUserNestedInput
+  artistOrders?: Prisma.OrderUpdateManyWithoutArtistNestedInput
+  clientOrders?: Prisma.OrderUpdateManyWithoutClientNestedInput
+  orderEvents?: Prisma.OrderEventUpdateManyWithoutActorNestedInput
+  customRequestsMade?: Prisma.CustomRequestUpdateManyWithoutClientNestedInput
+  customRequestsRecv?: Prisma.CustomRequestUpdateManyWithoutArtistNestedInput
+  payouts?: Prisma.PayoutUpdateManyWithoutArtistNestedInput
+  artistReviews?: Prisma.ServiceReviewUpdateManyWithoutArtistNestedInput
+  clientReviews?: Prisma.ServiceReviewUpdateManyWithoutReviewerNestedInput
+  clientRefunds?: Prisma.RefundRequestUpdateManyWithoutClientNestedInput
+  artistRefunds?: Prisma.RefundRequestUpdateManyWithoutArtistNestedInput
+  resolvedRefunds?: Prisma.RefundRequestUpdateManyWithoutResolvedByNestedInput
+  following?: Prisma.FollowUpdateManyWithoutFollowerNestedInput
+  followers?: Prisma.FollowUpdateManyWithoutFollowingNestedInput
+  moderations?: Prisma.UserModerationUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ConversationParticipantUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  tickets?: Prisma.TicketUpdateManyWithoutReporterNestedInput
+  reportedInTickets?: Prisma.TicketUpdateManyWithoutReportedUserNestedInput
+  ticketMessages?: Prisma.TicketMessageUpdateManyWithoutSenderUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAvailabilityInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  subId?: Prisma.StringFieldUpdateOperationsInput | string
+  verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  verifiedArtists?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banner?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
+  otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -2033,10 +2330,12 @@ export type UserCreateWithoutSocialsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -2085,10 +2384,12 @@ export type UserUncheckedCreateWithoutSocialsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -2152,10 +2453,12 @@ export type UserUpdateWithoutSocialsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -2204,10 +2507,12 @@ export type UserUncheckedUpdateWithoutSocialsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -2255,10 +2560,12 @@ export type UserCreateWithoutOtpsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -2307,10 +2614,12 @@ export type UserUncheckedCreateWithoutOtpsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -2374,10 +2683,12 @@ export type UserUpdateWithoutOtpsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -2426,10 +2737,12 @@ export type UserUncheckedUpdateWithoutOtpsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -2477,10 +2790,12 @@ export type UserCreateWithoutTokensInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -2529,10 +2844,12 @@ export type UserUncheckedCreateWithoutTokensInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -2596,10 +2913,12 @@ export type UserUpdateWithoutTokensInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -2648,10 +2967,12 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -2699,10 +3020,12 @@ export type UserCreateWithoutRefreshTokensInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -2751,10 +3074,12 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -2818,10 +3143,12 @@ export type UserUpdateWithoutRefreshTokensInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -2870,10 +3197,12 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -2921,11 +3250,13 @@ export type UserCreateWithoutShowcasesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
@@ -2973,11 +3304,13 @@ export type UserUncheckedCreateWithoutShowcasesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
@@ -3040,11 +3373,13 @@ export type UserUpdateWithoutShowcasesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
@@ -3092,11 +3427,13 @@ export type UserUncheckedUpdateWithoutShowcasesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
@@ -3143,11 +3480,13 @@ export type UserCreateWithoutServicesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -3195,11 +3534,13 @@ export type UserUncheckedCreateWithoutServicesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -3262,11 +3603,13 @@ export type UserUpdateWithoutServicesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -3314,11 +3657,13 @@ export type UserUncheckedUpdateWithoutServicesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -3365,11 +3710,13 @@ export type UserCreateWithoutCustomRequestsRecvInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -3417,11 +3764,13 @@ export type UserUncheckedCreateWithoutCustomRequestsRecvInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -3473,11 +3822,13 @@ export type UserCreateWithoutCustomRequestsMadeInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -3525,11 +3876,13 @@ export type UserUncheckedCreateWithoutCustomRequestsMadeInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -3592,11 +3945,13 @@ export type UserUpdateWithoutCustomRequestsRecvInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -3644,11 +3999,13 @@ export type UserUncheckedUpdateWithoutCustomRequestsRecvInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -3706,11 +4063,13 @@ export type UserUpdateWithoutCustomRequestsMadeInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -3758,11 +4117,13 @@ export type UserUncheckedUpdateWithoutCustomRequestsMadeInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -3809,11 +4170,13 @@ export type UserCreateWithoutArtistOrdersInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -3861,11 +4224,13 @@ export type UserUncheckedCreateWithoutArtistOrdersInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -3917,11 +4282,13 @@ export type UserCreateWithoutClientOrdersInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -3969,11 +4336,13 @@ export type UserUncheckedCreateWithoutClientOrdersInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -4036,11 +4405,13 @@ export type UserUpdateWithoutArtistOrdersInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -4088,11 +4459,13 @@ export type UserUncheckedUpdateWithoutArtistOrdersInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -4150,11 +4523,13 @@ export type UserUpdateWithoutClientOrdersInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -4202,11 +4577,13 @@ export type UserUncheckedUpdateWithoutClientOrdersInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -4253,11 +4630,13 @@ export type UserCreateWithoutPayoutsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -4305,11 +4684,13 @@ export type UserUncheckedCreateWithoutPayoutsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -4372,11 +4753,13 @@ export type UserUpdateWithoutPayoutsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -4424,11 +4807,13 @@ export type UserUncheckedUpdateWithoutPayoutsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -4475,11 +4860,13 @@ export type UserCreateWithoutOrderEventsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -4527,11 +4914,13 @@ export type UserUncheckedCreateWithoutOrderEventsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -4594,11 +4983,13 @@ export type UserUpdateWithoutOrderEventsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -4646,11 +5037,13 @@ export type UserUncheckedUpdateWithoutOrderEventsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -4697,11 +5090,13 @@ export type UserCreateWithoutClientRefundsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -4749,11 +5144,13 @@ export type UserUncheckedCreateWithoutClientRefundsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -4805,11 +5202,13 @@ export type UserCreateWithoutArtistRefundsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -4857,11 +5256,13 @@ export type UserUncheckedCreateWithoutArtistRefundsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -4913,11 +5314,13 @@ export type UserCreateWithoutResolvedRefundsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -4965,11 +5368,13 @@ export type UserUncheckedCreateWithoutResolvedRefundsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -5032,11 +5437,13 @@ export type UserUpdateWithoutClientRefundsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -5084,11 +5491,13 @@ export type UserUncheckedUpdateWithoutClientRefundsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -5146,11 +5555,13 @@ export type UserUpdateWithoutArtistRefundsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -5198,11 +5609,13 @@ export type UserUncheckedUpdateWithoutArtistRefundsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -5260,11 +5673,13 @@ export type UserUpdateWithoutResolvedRefundsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -5312,11 +5727,13 @@ export type UserUncheckedUpdateWithoutResolvedRefundsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -5363,11 +5780,13 @@ export type UserCreateWithoutArtistReviewsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -5415,11 +5834,13 @@ export type UserUncheckedCreateWithoutArtistReviewsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -5471,11 +5892,13 @@ export type UserCreateWithoutClientReviewsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -5523,11 +5946,13 @@ export type UserUncheckedCreateWithoutClientReviewsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -5590,11 +6015,13 @@ export type UserUpdateWithoutArtistReviewsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -5642,11 +6069,13 @@ export type UserUncheckedUpdateWithoutArtistReviewsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -5704,11 +6133,13 @@ export type UserUpdateWithoutClientReviewsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -5756,11 +6187,13 @@ export type UserUncheckedUpdateWithoutClientReviewsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -5807,11 +6240,13 @@ export type UserCreateWithoutWorkflowsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
@@ -5859,11 +6294,13 @@ export type UserUncheckedCreateWithoutWorkflowsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
@@ -5926,11 +6363,13 @@ export type UserUpdateWithoutWorkflowsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
@@ -5978,11 +6417,13 @@ export type UserUncheckedUpdateWithoutWorkflowsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
@@ -6029,11 +6470,13 @@ export type UserCreateWithoutInteractionsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutUserInput
@@ -6081,11 +6524,13 @@ export type UserUncheckedCreateWithoutInteractionsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutUserInput
@@ -6148,11 +6593,13 @@ export type UserUpdateWithoutInteractionsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUpdateManyWithoutUserNestedInput
@@ -6200,11 +6647,13 @@ export type UserUncheckedUpdateWithoutInteractionsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutUserNestedInput
@@ -6251,11 +6700,13 @@ export type UserCreateWithoutFollowingInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -6303,11 +6754,13 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -6359,11 +6812,13 @@ export type UserCreateWithoutFollowersInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -6411,11 +6866,13 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -6478,11 +6935,13 @@ export type UserUpdateWithoutFollowingInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -6530,11 +6989,13 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -6592,11 +7053,13 @@ export type UserUpdateWithoutFollowersInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -6644,11 +7107,13 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -6695,11 +7160,13 @@ export type UserCreateWithoutBookmarksInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -6747,11 +7214,13 @@ export type UserUncheckedCreateWithoutBookmarksInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -6814,11 +7283,13 @@ export type UserUpdateWithoutBookmarksInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -6866,11 +7337,13 @@ export type UserUncheckedUpdateWithoutBookmarksInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -6917,11 +7390,13 @@ export type UserCreateWithoutProfileSearchesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -6969,11 +7444,13 @@ export type UserUncheckedCreateWithoutProfileSearchesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -7036,11 +7513,13 @@ export type UserUpdateWithoutProfileSearchesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -7088,11 +7567,13 @@ export type UserUncheckedUpdateWithoutProfileSearchesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -7139,11 +7620,13 @@ export type UserCreateWithoutConversationsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -7191,11 +7674,13 @@ export type UserUncheckedCreateWithoutConversationsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -7258,11 +7743,13 @@ export type UserUpdateWithoutConversationsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -7310,11 +7797,13 @@ export type UserUncheckedUpdateWithoutConversationsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -7361,11 +7850,13 @@ export type UserCreateWithoutSentMessagesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -7413,11 +7904,13 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -7480,11 +7973,13 @@ export type UserUpdateWithoutSentMessagesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -7532,11 +8027,13 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -7583,11 +8080,13 @@ export type UserCreateWithoutNotificationsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -7635,11 +8134,13 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -7702,11 +8203,13 @@ export type UserUpdateWithoutNotificationsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -7754,11 +8257,13 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -7805,11 +8310,13 @@ export type UserCreateWithoutTicketsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -7857,11 +8364,13 @@ export type UserUncheckedCreateWithoutTicketsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -7913,11 +8422,13 @@ export type UserCreateWithoutReportedInTicketsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -7965,11 +8476,13 @@ export type UserUncheckedCreateWithoutReportedInTicketsInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -8032,11 +8545,13 @@ export type UserUpdateWithoutTicketsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -8084,11 +8599,13 @@ export type UserUncheckedUpdateWithoutTicketsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -8146,11 +8663,13 @@ export type UserUpdateWithoutReportedInTicketsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -8198,11 +8717,13 @@ export type UserUncheckedUpdateWithoutReportedInTicketsInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -8249,11 +8770,13 @@ export type UserCreateWithoutTicketMessagesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsCreateNestedOneWithoutUserInput
   otps?: Prisma.otpCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionCreateNestedManyWithoutUserInput
@@ -8301,11 +8824,13 @@ export type UserUncheckedCreateWithoutTicketMessagesInput = {
   isBanned?: boolean
   suspendedUntil?: Date | string | null
   banReason?: string | null
+  lastSeenAt?: Date | string | null
   tokens?: Prisma.AuthTokenUncheckedCreateNestedOneWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   socials?: Prisma.SocialsUncheckedCreateNestedOneWithoutUserInput
   otps?: Prisma.otpUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingsUncheckedCreateNestedOneWithoutUserInput
+  availability?: Prisma.ArtistAvailabilityUncheckedCreateNestedOneWithoutUserInput
   showcases?: Prisma.ShowcaseUncheckedCreateNestedOneWithoutUserInput
   workflows?: Prisma.WorkflowUncheckedCreateNestedManyWithoutUserInput
   interactions?: Prisma.UserInteractionUncheckedCreateNestedManyWithoutUserInput
@@ -8368,11 +8893,13 @@ export type UserUpdateWithoutTicketMessagesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUpdateManyWithoutUserNestedInput
@@ -8420,11 +8947,13 @@ export type UserUncheckedUpdateWithoutTicketMessagesInput = {
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   suspendedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tokens?: Prisma.AuthTokenUncheckedUpdateOneWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   socials?: Prisma.SocialsUncheckedUpdateOneWithoutUserNestedInput
   otps?: Prisma.otpUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingsUncheckedUpdateOneWithoutUserNestedInput
+  availability?: Prisma.ArtistAvailabilityUncheckedUpdateOneWithoutUserNestedInput
   showcases?: Prisma.ShowcaseUncheckedUpdateOneWithoutUserNestedInput
   workflows?: Prisma.WorkflowUncheckedUpdateManyWithoutUserNestedInput
   interactions?: Prisma.UserInteractionUncheckedUpdateManyWithoutUserNestedInput
@@ -8737,11 +9266,13 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isBanned?: boolean
   suspendedUntil?: boolean
   banReason?: boolean
+  lastSeenAt?: boolean
   tokens?: boolean | Prisma.User$tokensArgs<ExtArgs>
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   socials?: boolean | Prisma.User$socialsArgs<ExtArgs>
   otps?: boolean | Prisma.User$otpsArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  availability?: boolean | Prisma.User$availabilityArgs<ExtArgs>
   showcases?: boolean | Prisma.User$showcasesArgs<ExtArgs>
   workflows?: boolean | Prisma.User$workflowsArgs<ExtArgs>
   interactions?: boolean | Prisma.User$interactionsArgs<ExtArgs>
@@ -8791,6 +9322,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isBanned?: boolean
   suspendedUntil?: boolean
   banReason?: boolean
+  lastSeenAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -8812,6 +9344,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isBanned?: boolean
   suspendedUntil?: boolean
   banReason?: boolean
+  lastSeenAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -8833,15 +9366,17 @@ export type UserSelectScalar = {
   isBanned?: boolean
   suspendedUntil?: boolean
   banReason?: boolean
+  lastSeenAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "createdAt" | "updatedAt" | "role" | "username" | "subId" | "verified" | "verifiedArtists" | "avatar" | "banner" | "bio" | "country" | "isBanned" | "suspendedUntil" | "banReason", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "createdAt" | "updatedAt" | "role" | "username" | "subId" | "verified" | "verifiedArtists" | "avatar" | "banner" | "bio" | "country" | "isBanned" | "suspendedUntil" | "banReason" | "lastSeenAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tokens?: boolean | Prisma.User$tokensArgs<ExtArgs>
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   socials?: boolean | Prisma.User$socialsArgs<ExtArgs>
   otps?: boolean | Prisma.User$otpsArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  availability?: boolean | Prisma.User$availabilityArgs<ExtArgs>
   showcases?: boolean | Prisma.User$showcasesArgs<ExtArgs>
   workflows?: boolean | Prisma.User$workflowsArgs<ExtArgs>
   interactions?: boolean | Prisma.User$interactionsArgs<ExtArgs>
@@ -8882,6 +9417,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     socials: Prisma.$SocialsPayload<ExtArgs> | null
     otps: Prisma.$otpPayload<ExtArgs>[]
     settings: Prisma.$SettingsPayload<ExtArgs> | null
+    availability: Prisma.$ArtistAvailabilityPayload<ExtArgs> | null
     showcases: Prisma.$ShowcasePayload<ExtArgs> | null
     workflows: Prisma.$WorkflowPayload<ExtArgs>[]
     interactions: Prisma.$UserInteractionPayload<ExtArgs>[]
@@ -8929,6 +9465,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     isBanned: boolean
     suspendedUntil: Date | null
     banReason: string | null
+    lastSeenAt: Date | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -9328,6 +9865,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   socials<T extends Prisma.User$socialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$socialsArgs<ExtArgs>>): Prisma.Prisma__SocialsClient<runtime.Types.Result.GetResult<Prisma.$SocialsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   otps<T extends Prisma.User$otpsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$otpsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$otpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.Prisma__SettingsClient<runtime.Types.Result.GetResult<Prisma.$SettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  availability<T extends Prisma.User$availabilityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$availabilityArgs<ExtArgs>>): Prisma.Prisma__ArtistAvailabilityClient<runtime.Types.Result.GetResult<Prisma.$ArtistAvailabilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   showcases<T extends Prisma.User$showcasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$showcasesArgs<ExtArgs>>): Prisma.Prisma__ShowcaseClient<runtime.Types.Result.GetResult<Prisma.$ShowcasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   workflows<T extends Prisma.User$workflowsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$workflowsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkflowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   interactions<T extends Prisma.User$interactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$interactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9402,6 +9940,7 @@ export interface UserFieldRefs {
   readonly isBanned: Prisma.FieldRef<"User", 'Boolean'>
   readonly suspendedUntil: Prisma.FieldRef<"User", 'DateTime'>
   readonly banReason: Prisma.FieldRef<"User", 'String'>
+  readonly lastSeenAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
 
@@ -9897,6 +10436,25 @@ export type User$settingsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   include?: Prisma.SettingsInclude<ExtArgs> | null
   where?: Prisma.SettingsWhereInput
+}
+
+/**
+ * User.availability
+ */
+export type User$availabilityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ArtistAvailability
+   */
+  select?: Prisma.ArtistAvailabilitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ArtistAvailability
+   */
+  omit?: Prisma.ArtistAvailabilityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ArtistAvailabilityInclude<ExtArgs> | null
+  where?: Prisma.ArtistAvailabilityWhereInput
 }
 
 /**

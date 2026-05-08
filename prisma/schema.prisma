@@ -18,16 +18,16 @@ datasource db {
 // ======================================
 
 model AdminUser {
-  id              Int             @id @default(autoincrement())
-  email           String          @unique
+  id              Int              @id @default(autoincrement())
+  email           String           @unique
   passwordHash    String
   name            String
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   sessions        AdminSession[]
   moderations     UserModeration[]
-  assignedTickets Ticket[]        @relation("TicketAssignedAdmin")
-  ticketMessages  TicketMessage[] @relation("TicketMessageAdminSender")
+  assignedTickets Ticket[]         @relation("TicketAssignedAdmin")
+  ticketMessages  TicketMessage[]  @relation("TicketMessageAdminSender")
 
   @@map("admin_users")
 }
@@ -119,6 +119,7 @@ enum OrderSource {
 
 enum PaymentStatus {
   PENDING
+  PROCESSING
   COMPLETED
   FAILED
   REFUNDED
@@ -188,6 +189,17 @@ enum MessageType {
   SYSTEM
 }
 
+enum SearchIndexEntity {
+  SERVICE
+  SHOWCASE
+  PROFILE
+}
+
+enum SearchIndexOperation {
+  UPSERT
+  DELETE
+}
+
 enum NotificationType {
   // Existing — used by chat/notification system
   NEW_MESSAGE
@@ -198,10 +210,12 @@ enum NotificationType {
   // New — for service/order features
   ORDER_CREATED
   ORDER_UPDATED
+  ORDER_DEADLINE_REMINDER
   SERVICE_PAUSED
   SERVICE_PUBLISHED
   ARTIST_VERIFIED
   REVIEW_RECEIVED
+  // Tickets / support
   TICKET_REPLY
   TICKET_STATUS_CHANGED
   TICKET_RESOLVED
@@ -239,68 +253,76 @@ enum TicketSenderRole {
 // ======================================
 
 model User {
-  id              Int               @id @default(autoincrement())
-  email           String            @unique
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
   passwordHash    String
   name            String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  role            String            @default("user")
-  username        String            @unique
-  subId           String            @unique
-  verified        Boolean           @default(false)
-  verifiedArtists Boolean           @default(false)
-  avatar          String?           @default("avatars/default.jpg")
-  banner          String?           @default("banners/default.jpg")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  role            String   @default("user")
+  username        String   @unique
+  subId           String   @unique
+  verified        Boolean  @default(false)
+  verifiedArtists Boolean  @default(false)
+  avatar          String?  @default("avatars/default.jpg")
+  banner          String?  @default("banners/default.jpg")
   bio             String?
   country         String?
 
   // Auth & Settings
-  tokens          AuthToken?
-  refreshTokens   RefreshToken[]
-  socials         Socials?
-  otps            otp[]
-  settings        Settings?
+  tokens        AuthToken?
+  refreshTokens RefreshToken[]
+  socials       Socials?
+  otps          otp[]
+  settings      Settings?
+  availability  ArtistAvailability?
 
   // Portfolio & Discovery
-  showcases       Showcase?
-  workflows       Workflow[]
-  interactions    UserInteraction[]
-  bookmarks       Bookmark[]
-  profileSearches ProfileSearchRecord[] @relation("ProfileSearches")
+  showcases          Showcase?
+  workflows          Workflow[]
+  interactions       UserInteraction[]
+  bookmarks          Bookmark[]
+  profileSearches    ProfileSearchRecord[]      @relation("ProfileSearches")
   artistVerification ArtistVerificationRequest?
 
   // Services & Orders
-  services            Service[]
-  artistOrders        Order[]          @relation("ArtistOrders")
-  clientOrders        Order[]          @relation("ClientOrders")
-  orderEvents         OrderEvent[]     @relation("OrderEventActor")
-  customRequestsMade  CustomRequest[]  @relation("CustomRequestClient")
-  customRequestsRecv  CustomRequest[]  @relation("CustomRequestArtist")
-  payouts             Payout[]         @relation("ArtistPayouts")
-  artistReviews       ServiceReview[]  @relation("ArtistReviews")
-  clientReviews       ServiceReview[]  @relation("ClientReviews")
-  clientRefunds       RefundRequest[]  @relation("ClientRefunds")
-  artistRefunds       RefundRequest[]  @relation("ArtistRefunds")
-  resolvedRefunds     RefundRequest[]  @relation("RefundResolver")
+  services           Service[]
+  artistOrders       Order[]         @relation("ArtistOrders")
+  clientOrders       Order[]         @relation("ClientOrders")
+  orderEvents        OrderEvent[]    @relation("OrderEventActor")
+  customRequestsMade CustomRequest[] @relation("CustomRequestClient")
+  customRequestsRecv CustomRequest[] @relation("CustomRequestArtist")
+  payouts            Payout[]        @relation("ArtistPayouts")
+  artistReviews      ServiceReview[] @relation("ArtistReviews")
+  clientReviews      ServiceReview[] @relation("ClientReviews")
+  clientRefunds      RefundRequest[] @relation("ClientRefunds")
+  artistRefunds      RefundRequest[] @relation("ArtistRefunds")
+  resolvedRefunds    RefundRequest[] @relation("RefundResolver")
 
   // Social graph
-  following       Follow[]          @relation("Following")
-  followers       Follow[]          @relation("Followers")
+  following Follow[] @relation("Following")
+  followers Follow[] @relation("Followers")
 
   // Moderation
-  isBanned        Boolean           @default(false)
-  suspendedUntil  DateTime?
-  banReason       String?
-  moderations     UserModeration[]
+  isBanned       Boolean          @default(false)
+  suspendedUntil DateTime?
+  banReason      String?
+  moderations    UserModeration[]
+
+  // Presence — last time user's last socket disconnected from any namespace.
+  // Null means never connected. Updated only on transition to fully offline
+  // (multi-tab aware), so this approximates "last seen online".
+  lastSeenAt DateTime?
 
   // Chat & Notifications
-  conversations   ConversationParticipant[]
-  sentMessages    Message[]
-  notifications   Notification[]
-  tickets         Ticket[]        @relation("TicketReporter")
-  reportedInTickets Ticket[]     @relation("TicketReportedUser")
-  ticketMessages  TicketMessage[] @relation("TicketMessageUserSender")
+  conversations ConversationParticipant[]
+  sentMessages  Message[]
+  notifications Notification[]
+
+  // Support tickets
+  tickets           Ticket[]        @relation("TicketReporter")
+  reportedInTickets Ticket[]        @relation("TicketReportedUser")
+  ticketMessages    TicketMessage[] @relation("TicketMessageUserSender")
 
   @@index([email])
   @@index([username])
@@ -316,8 +338,8 @@ model UserModeration {
   adminId   Int
   createdAt DateTime         @default(now())
 
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  admin     AdminUser        @relation(fields: [adminId], references: [id])
+  user  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  admin AdminUser @relation(fields: [adminId], references: [id])
 
   @@index([userId, createdAt])
   @@index([adminId])
@@ -339,7 +361,7 @@ model ArtistVerificationRequest {
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([status, requestedAt])
   @@map("artist_verification_requests")
@@ -355,6 +377,44 @@ model Settings {
   updatedAt    DateTime     @updatedAt
 
   @@map("settings")
+}
+
+// Artist-only availability/profile preferences. Created lazily on first PUT.
+// Default values mean: open (override true), no vacation, working all 7 days,
+// 'Within 24 hours' ETA, UTC timezone, no working hours / autorespond template.
+// `workingDaysMask`: bit0=Mon … bit6=Sun. 127 = all days.
+model ArtistAvailability {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  statusMessage              String? @db.VarChar(200)
+  estimatedResponseTime      String  @default("Within 24 hours") @db.VarChar(60)
+  isAvailableOverride        Boolean @default(true)
+  autoCloseAfterSlots        Boolean @default(false)
+  // Manual override of max concurrent orders. Null = derived from sum of
+  // slotsTotal across OPEN services. When set, takes precedence regardless
+  // of services config. Range 1..50 enforced at DTO/service layer.
+  maxConcurrentOrdersOverride Int?
+
+  vacationMode  Boolean   @default(false)
+  vacationStart DateTime? @db.Date
+  vacationEnd   DateTime? @db.Date
+
+  timezone String @default("UTC") @db.VarChar(64)
+
+  workingHoursStart String? @db.VarChar(5)
+  workingHoursEnd   String? @db.VarChar(5)
+  workingDaysMask   Int     @default(127)
+
+  autoRespondTemplate String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Vacation enforcement query (filter active vacationers).
+  @@index([vacationMode, vacationStart, vacationEnd])
+  @@map("artist_availability")
 }
 
 model Socials {
@@ -413,35 +473,35 @@ model Showcase {
 }
 
 model ShowcaseItem {
-  id                         String             @id @default(uuid())
+  id                         String                   @id @default(uuid())
   title                      String
   description                Json
-  imageCount                 Int                @default(0)
-  isDraft                    Boolean            @default(false)
-  isFromVerifiedCommission   Boolean            @default(false)
+  imageCount                 Int                      @default(0)
+  isDraft                    Boolean                  @default(false)
+  isFromVerifiedCommission   Boolean                  @default(false)
   commissionId               String?
-  containsMatureContent      Boolean            @default(false)
-  contentWarnings            Json               @default("{}")
-  likeCount                  Int                @default(0)
-  viewCount                  Int                @default(0)
-  boostConfig                Json               @default("{}")
-  hasTaggedCharacterProfiles Boolean            @default(false)
-  taggedCharacterProfiles    Json               @default("[]")
-  createdAt                  DateTime           @default(now())
-  updatedAt                  DateTime           @updatedAt
-  isUsingCombinedQuery       Boolean            @default(true)
+  containsMatureContent      Boolean                  @default(false)
+  contentWarnings            Json                     @default("{}")
+  likeCount                  Int                      @default(0)
+  viewCount                  Int                      @default(0)
+  boostConfig                Json                     @default("{}")
+  hasTaggedCharacterProfiles Boolean                  @default(false)
+  taggedCharacterProfiles    Json                     @default("[]")
+  createdAt                  DateTime                 @default(now())
+  updatedAt                  DateTime                 @updatedAt
+  isUsingCombinedQuery       Boolean                  @default(true)
   document_vectors           Unsupported("tsvector")?
 
-  showcaseId                 String
-  showcase                   Showcase           @relation(fields: [showcaseId], references: [id], onDelete: Cascade)
+  showcaseId String
+  showcase   Showcase @relation(fields: [showcaseId], references: [id], onDelete: Cascade)
 
-  tags                       Tag[]
-  publicViews                PublicViewRecord[]
-  bookmarkedBy               Bookmark[]
-  showcaseFiles              ShowcaseFile[]
-  interactions               UserInteraction[]
-  serviceSamples             ServiceSample[]
-  tickets                    Ticket[]
+  tags           Tag[]
+  publicViews    PublicViewRecord[]
+  bookmarkedBy   Bookmark[]
+  showcaseFiles  ShowcaseFile[]
+  interactions   UserInteraction[]
+  serviceSamples ServiceSample[]
+  tickets        Ticket[]
 
   @@index([likeCount, createdAt])
   @@index([document_vectors], type: Gin)
@@ -475,51 +535,51 @@ model Tag {
 // ======================================
 
 model Service {
-  id                    String             @id @default(uuid())
-  userId                Int
-  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(uuid())
+  userId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  title                 String
-  slug                  String?
-  shortDescription      String
-  description           Json?
-  coverImageUrl         String?
+  title            String
+  slug             String?
+  shortDescription String
+  description      Json?
+  coverImageUrl    String?
 
-  basePrice             Decimal            @db.Decimal(10, 2)
-  currency              String             @default("USD")
+  basePrice Decimal @db.Decimal(10, 2)
+  currency  String  @default("USD")
 
-  deliveryDaysMin       Int?
-  deliveryDaysMax       Int?
-  revisionsIncluded     Int                @default(0)
+  deliveryDaysMin   Int?
+  deliveryDaysMax   Int?
+  revisionsIncluded Int  @default(0)
 
-  requestMode           ServiceRequestMode @default(MANUAL_REVIEW)
-  status                ServiceStatus      @default(DRAFT)
+  requestMode ServiceRequestMode @default(MANUAL_REVIEW)
+  status      ServiceStatus      @default(DRAFT)
 
-  slotsEnabled          Boolean            @default(false)
-  slotsTotal            Int?
-  slotsUsed             Int                @default(0)
+  slotsEnabled Boolean @default(false)
+  slotsTotal   Int?
+  slotsUsed    Int     @default(0)
 
-  isNSFWAllowed         Boolean            @default(false)
-  isCommercialAllowed   Boolean            @default(false)
+  isNSFWAllowed       Boolean @default(false)
+  isCommercialAllowed Boolean @default(false)
 
-  canDo                 String?
-  cannotDo              String?
+  canDo    String?
+  cannotDo String?
 
   // Denormalized review aggregates (updated atomically in createReview tx)
-  reviewCount           Int                @default(0)
-  ratingSum             Int                @default(0)
-  avgRating             Decimal?           @db.Decimal(3, 2)
+  reviewCount Int      @default(0)
+  ratingSum   Int      @default(0)
+  avgRating   Decimal? @db.Decimal(3, 2)
 
-  createdAt             DateTime           @default(now())
-  updatedAt             DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  addons                ServiceAddon[]
-  categories            Tag[]
-  questions             ServiceQuestion[]
-  samples               ServiceSample[]
-  policies              ServicePolicy[]
-  orders                Order[]
-  reviews               ServiceReview[]
+  addons     ServiceAddon[]
+  categories Tag[]
+  questions  ServiceQuestion[]
+  samples    ServiceSample[]
+  policies   ServicePolicy[]
+  orders     Order[]
+  reviews    ServiceReview[]
 
   @@unique([userId, slug])
   @@index([userId, status])
@@ -531,66 +591,66 @@ model Service {
 }
 
 model ServiceAddon {
-  id          String   @id @default(uuid())
-  serviceId   String
-  service     Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  id        String  @id @default(uuid())
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
   name        String
   description String?
-  price       Decimal  @db.Decimal(10, 2)
-  currency    String   @default("USD")
-  isActive    Boolean  @default(true)
-  position    Int      @default(0)
+  price       Decimal @db.Decimal(10, 2)
+  currency    String  @default("USD")
+  isActive    Boolean @default(true)
+  position    Int     @default(0)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([serviceId, position])
 }
 
 model ServiceQuestion {
-  id          String              @id @default(uuid())
-  serviceId   String
-  service     Service             @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  id        String  @id @default(uuid())
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
-  label       String
-  helperText  String?
-  type        ServiceQuestionType @default(SHORT_TEXT)
-  isRequired  Boolean             @default(false)
-  options     Json?
-  position    Int                 @default(0)
+  label      String
+  helperText String?
+  type       ServiceQuestionType @default(SHORT_TEXT)
+  isRequired Boolean             @default(false)
+  options    Json?
+  position   Int                 @default(0)
 
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([serviceId, position])
 }
 
 model ServicePolicy {
-  id         String   @id @default(uuid())
-  serviceId  String
-  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  id        String  @id @default(uuid())
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 
-  title      String
-  content    String
-  position   Int      @default(0)
+  title    String
+  content  String
+  position Int    @default(0)
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([serviceId, position])
 }
 
 model ServiceSample {
-  id             String       @id @default(uuid())
+  id             String @id @default(uuid())
   serviceId      String
   showcaseItemId String
 
-  service        Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  showcaseItem   ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
+  service      Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  showcaseItem ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
 
-  position       Int          @default(0)
-  createdAt      DateTime     @default(now())
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
 
   @@unique([serviceId, showcaseItemId])
   @@index([serviceId, position])
@@ -602,55 +662,67 @@ model ServiceSample {
 // ======================================
 
 model CustomRequest {
-  id              String      @id @default(uuid())
-  artistId        Int
-  clientId        Int?
-  status          OrderStatus @default(PENDING)
-  title           String?
-  message         String
-  attachments     Json?
-  budget          Decimal?    @db.Decimal(10, 2)
-  currency        String      @default("USD")
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id          String      @id @default(uuid())
+  artistId    Int
+  clientId    Int?
+  status      OrderStatus @default(PENDING)
+  title       String?
+  message     String
+  attachments Json?
+  budget      Decimal?    @db.Decimal(10, 2)
+  currency    String      @default("USD")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 
-  artist          User        @relation("CustomRequestArtist", fields: [artistId], references: [id], onDelete: Cascade)
-  client          User?       @relation("CustomRequestClient", fields: [clientId], references: [id], onDelete: SetNull)
+  artist User  @relation("CustomRequestArtist", fields: [artistId], references: [id], onDelete: Cascade)
+  client User? @relation("CustomRequestClient", fields: [clientId], references: [id], onDelete: SetNull)
 
   @@index([artistId, status, createdAt(sort: Desc)])
   @@index([clientId, status, createdAt(sort: Desc)])
 }
 
 model Order {
-  id              String      @id @default(uuid())
-  serviceId       String?
-  artistId        Int
-  clientId        Int?
-  source          OrderSource @default(SERVICE)
-  status          OrderStatus @default(PENDING)
+  id        String      @id @default(uuid())
+  serviceId String?
+  artistId  Int
+  clientId  Int?
+  source    OrderSource @default(SERVICE)
+  status    OrderStatus @default(PENDING)
 
-  titleSnapshot   String?
-  briefSnapshot   Json
-  priceSnapshot   Decimal     @db.Decimal(10, 2)
-  currency        String      @default("USD")
+  titleSnapshot String?
+  briefSnapshot Json
+  priceSnapshot Decimal @db.Decimal(10, 2)
+  currency      String  @default("USD")
 
-  deliveryDaysMin    Int?
-  deliveryDaysMax    Int?
-  revisionsIncluded  Int         @default(0)
-  revisionsUsed      Int         @default(0)
+  deliveryDaysMin   Int?
+  deliveryDaysMax   Int?
+  revisionsIncluded Int  @default(0)
+  revisionsUsed     Int  @default(0)
 
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  // Deadline tracking. `deadlineAt` is set when the order first transitions
+  // to IN_PROGRESS (= now + deliveryDaysMax) and stays fixed afterwards.
+  // `remindersSent` is a level counter for the deadline-reminder cron:
+  //   0 = none, 1 = 48h pre, 2 = 24h pre, 3 = overdue.
+  deadlineAt    DateTime?
+  remindersSent Int       @default(0)
 
-  service         Service?       @relation(fields: [serviceId], references: [id], onDelete: SetNull)
-  artist          User           @relation("ArtistOrders", fields: [artistId], references: [id], onDelete: Cascade)
-  client          User?          @relation("ClientOrders", fields: [clientId], references: [id], onDelete: SetNull)
-  payments        Payment[]
-  notifications   Notification[] @relation("OrderNotifications")
-  conversation    Conversation?  @relation("OrderConversation")
-  events          OrderEvent[]
-  review          ServiceReview?
-  refunds         RefundRequest[]
+  // Free-form phase label set by artist (e.g. "Sketch", "Lineart", "Color").
+  // Display-only granularity beyond `status`. Null = no granular phase set.
+  phaseLabel String? @db.VarChar(32)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  service       Service?       @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  artist        User           @relation("ArtistOrders", fields: [artistId], references: [id], onDelete: Cascade)
+  client        User?          @relation("ClientOrders", fields: [clientId], references: [id], onDelete: SetNull)
+  payments      Payment[]
+  notifications Notification[] @relation("OrderNotifications")
+  conversation  Conversation?  @relation("OrderConversation")
+  events        OrderEvent[]
+  review        ServiceReview?
+  tickets       Ticket[]
+  refunds       RefundRequest[]
 
   @@index([artistId, status, createdAt(sort: Desc)])
   @@index([artistId, createdAt(sort: Desc), id(sort: Desc)], map: "Order_artistId_createdAt_id_desc_idx")
@@ -658,35 +730,37 @@ model Order {
   @@index([artistId, status, updatedAt(sort: Desc)], map: "Order_artistId_status_updatedAt_desc_idx")
   @@index([clientId, status, createdAt(sort: Desc)])
   @@index([serviceId])
+  // Cron query: fetch IN_PROGRESS orders with upcoming/overdue deadlines.
+  @@index([status, deadlineAt])
 }
 
 model Payment {
-  id              String          @id @default(uuid())
-  orderId         String
-  order           Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id      String @id @default(uuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  provider        PaymentProvider @default(PAYPAL)
-  status          PaymentStatus   @default(PENDING)
+  provider PaymentProvider @default(PAYPAL)
+  status   PaymentStatus   @default(PENDING)
 
-  paypalOrderId   String?         @unique
+  paypalOrderId   String? @unique
   paypalCaptureId String?
 
-  amount          Decimal         @db.Decimal(10, 2)
-  platformFee     Decimal         @db.Decimal(10, 2) @default(0)
-  artistNet       Decimal         @db.Decimal(10, 2) @default(0)
-  paypalFee       Decimal         @db.Decimal(10, 2) @default(0)
+  amount            Decimal   @db.Decimal(10, 2)
+  platformFee       Decimal   @default(0) @db.Decimal(10, 2)
+  artistNet         Decimal   @default(0) @db.Decimal(10, 2)
+  paypalFee         Decimal   @default(0) @db.Decimal(10, 2)
   paypalFeeCurrency String?
-  paypalNetAmount Decimal         @db.Decimal(10, 2) @default(0)
+  paypalNetAmount   Decimal   @default(0) @db.Decimal(10, 2)
   paypalNetCurrency String?
   paypalFeeSyncedAt DateTime?
-  currency        String          @default("USD")
+  currency          String    @default("USD")
 
-  paidAt          DateTime?
-  refundedAt      DateTime?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  paidAt     DateTime?
+  refundedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  refundRequests  RefundRequest[]
+  refundRequests RefundRequest[]
 
   @@index([orderId])
   @@index([paypalOrderId])
@@ -695,12 +769,12 @@ model Payment {
 }
 
 model Payout {
-  id                String       @id @default(uuid())
-  artistId          Int
-  artist            User         @relation("ArtistPayouts", fields: [artistId], references: [id], onDelete: Cascade)
+  id       String @id @default(uuid())
+  artistId Int
+  artist   User   @relation("ArtistPayouts", fields: [artistId], references: [id], onDelete: Cascade)
 
-  amount            Decimal      @db.Decimal(10, 2)
-  currency          String       @default("USD")
+  amount   Decimal @db.Decimal(10, 2)
+  currency String  @default("USD")
 
   status            PayoutStatus @default(PENDING)
   paypalEmail       String
@@ -708,7 +782,7 @@ model Payout {
   paypalItemId      String?
   paypalBatchStatus String?
   paypalItemStatus  String?
-  paypalFee         Decimal      @db.Decimal(10, 2) @default(0)
+  paypalFee         Decimal      @default(0) @db.Decimal(10, 2)
   paypalFeeCurrency String?
   paypalFeeSyncedAt DateTime?
 
@@ -716,8 +790,8 @@ model Payout {
   reviewedByAdminId Int?
   reviewNote        String?
 
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([artistId, createdAt(sort: Desc)])
   @@index([status, createdAt(sort: Desc)])
@@ -725,9 +799,9 @@ model Payout {
 }
 
 model OrderEvent {
-  id          String         @id @default(uuid())
-  orderId     String
-  order       Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id      String @id @default(uuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   type        OrderEventType
   description String
@@ -735,7 +809,7 @@ model OrderEvent {
   actor       User?          @relation("OrderEventActor", fields: [actorId], references: [id], onDelete: SetNull)
   metadata    Json?
 
-  createdAt   DateTime       @default(now())
+  createdAt DateTime @default(now())
 
   @@index([orderId, createdAt(sort: Desc)])
   @@map("order_events")
@@ -792,22 +866,22 @@ model RefundRequest {
 // ======================================
 
 model ServiceReview {
-  id         String   @id @default(uuid())
-  orderId    String   @unique
+  id         String @id @default(uuid())
+  orderId    String @unique
   serviceId  String
   artistId   Int
   reviewerId Int?
 
-  rating     Int
-  comment    String?
-  isVisible  Boolean  @default(true)
+  rating    Int
+  comment   String?
+  isVisible Boolean @default(true)
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
 
-  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  service  Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  artist   User     @relation("ArtistReviews", fields: [artistId], references: [id], onDelete: Cascade)
-  reviewer User?    @relation("ClientReviews", fields: [reviewerId], references: [id], onDelete: SetNull)
+  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  service  Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  artist   User    @relation("ArtistReviews", fields: [artistId], references: [id], onDelete: Cascade)
+  reviewer User?   @relation("ClientReviews", fields: [reviewerId], references: [id], onDelete: SetNull)
 
   // Hot path: list reviews for a service, chronological
   @@index([serviceId, isVisible, createdAt(sort: Desc)])
@@ -817,7 +891,6 @@ model ServiceReview {
   @@index([artistId, isVisible, rating(sort: Desc), createdAt(sort: Desc)], map: "ServiceReview_artist_top_idx")
   // Artist studio list
   @@index([artistId, isVisible, createdAt(sort: Desc)])
-
   @@map("service_reviews")
 }
 
@@ -834,8 +907,8 @@ model Workflow {
   subPhases SubPhase[]
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("workflows")
   @@index([userId])
+  @@map("workflows")
 }
 
 model SubPhase {
@@ -858,14 +931,14 @@ model SubPhase {
 // ======================================
 
 model UserInteraction {
-  id              Int          @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   userId          Int
   showcaseItemId  String
   interactionType String
-  createdAt       DateTime     @default(now())
+  createdAt       DateTime @default(now())
 
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  showcaseItem    ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  showcaseItem ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, showcaseItemId, interactionType])
   @@index([userId, interactionType, createdAt])
@@ -876,8 +949,8 @@ model Follow {
   followingId Int
   createdAt   DateTime @default(now())
 
-  follower    User     @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
-  following   User     @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
+  follower  User @relation("Following", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Followers", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@id([followerId, followingId])
   @@index([followerId])
@@ -885,13 +958,13 @@ model Follow {
 }
 
 model Bookmark {
-  id             Int          @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   userId         Int
   showcaseItemId String
-  createdAt      DateTime     @default(now())
+  createdAt      DateTime @default(now())
 
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  showcaseItem   ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  showcaseItem ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, showcaseItemId])
   @@index([userId, createdAt])
@@ -902,13 +975,13 @@ model Bookmark {
 // ======================================
 
 model PublicViewRecord {
-  id             Int          @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   showcaseItemId String
   fingerprint    String
-  createdAt      DateTime     @default(now())
+  createdAt      DateTime @default(now())
   country        String?
 
-  showcaseItem   ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
+  showcaseItem ShowcaseItem @relation(fields: [showcaseItemId], references: [id], onDelete: Cascade)
 
   @@index([showcaseItemId, fingerprint, createdAt])
 }
@@ -930,7 +1003,7 @@ model ProfileSearchRecord {
   fingerprint    String
   createdAt      DateTime @default(now())
 
-  searchedUser   User     @relation("ProfileSearches", fields: [searchedUserId], references: [id], onDelete: Cascade)
+  searchedUser User @relation("ProfileSearches", fields: [searchedUserId], references: [id], onDelete: Cascade)
 
   @@index([searchedUserId, createdAt])
   @@index([searchedUserId, fingerprint, createdAt])
@@ -972,24 +1045,25 @@ model Conversation {
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
 
-  order        Order?                   @relation("OrderConversation", fields: [orderId], references: [id], onDelete: Cascade)
-  participants ConversationParticipant[]
-  messages     Message[]
+  order         Order?                    @relation("OrderConversation", fields: [orderId], references: [id], onDelete: Cascade)
+  participants  ConversationParticipant[]
+  messages      Message[]
+  notifications Notification[]            @relation("ConversationNotifications")
 
   @@map("conversations")
 }
 
 model ConversationParticipant {
-  id               String    @id @default(cuid())
-  conversationId   String
-  userId           Int
-  joinedAt         DateTime  @default(now())
-  leftAt           DateTime?
+  id             String    @id @default(cuid())
+  conversationId String
+  userId         Int
+  joinedAt       DateTime  @default(now())
+  leftAt         DateTime?
 
-  unreadCount      Int       @default(0)
-  lastMessageAt    DateTime?
-  lastMessageText  String?
-  lastReadAt       DateTime?
+  unreadCount     Int       @default(0)
+  lastMessageAt   DateTime?
+  lastMessageText String?
+  lastReadAt      DateTime?
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1009,16 +1083,21 @@ model Message {
   fileUrl        String?
   fileName       String?
   isDeleted      Boolean     @default(false)
+  replyToId      String?
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sender       User?        @relation(fields: [senderId], references: [id], onDelete: SetNull)
 
+  replyTo Message?  @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies Message[] @relation("MessageReplies")
+
   notifications Notification[]
 
   @@index([conversationId, createdAt(sort: Desc)])
   @@index([senderId, createdAt(sort: Desc)])
+  @@index([replyToId])
   @@map("messages")
 }
 
@@ -1033,20 +1112,49 @@ model Notification {
   createdAt DateTime         @default(now())
 
   messageId      String?
+  conversationId String?
   followerId     Int?
   showcaseItemId String?
   orderId        String?
   ticketId       String?
 
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  message Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
-  order   Order?   @relation("OrderNotifications", fields: [orderId], references: [id], onDelete: Cascade)
-  ticket  Ticket?  @relation("TicketNotifications", fields: [ticketId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message      Message?      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation("ConversationNotifications", fields: [conversationId], references: [id], onDelete: Cascade)
+  order        Order?        @relation("OrderNotifications", fields: [orderId], references: [id], onDelete: Cascade)
+  ticket       Ticket?       @relation("TicketNotifications", fields: [ticketId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt(sort: Desc)])
   @@index([userId, isRead, createdAt(sort: Desc)])
   @@map("notifications")
 }
+
+// ======================================
+// SEARCH / ELASTICSEARCH OUTBOX
+// ======================================
+// Durable queue for ES index sync. Each mutation writes a row; a worker
+// drains pending rows on a schedule, retries on failure, and deletes on
+// success. Keeps request latency off the ES critical path and survives
+// restarts / ES downtime.
+
+model SearchIndexOutbox {
+  id         BigInt               @id @default(autoincrement())
+  entityType SearchIndexEntity
+  entityId   String
+  operation  SearchIndexOperation
+  attempts   Int                  @default(0)
+  lastError  String?
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+
+  @@index([attempts, createdAt])
+  @@index([entityType, entityId])
+  @@map("search_index_outbox")
+}
+
+// ======================================
+// SUPPORT TICKETS / REPORTING
+// ======================================
 
 model Ticket {
   id          String         @id @default(cuid())
@@ -1063,11 +1171,11 @@ model Ticket {
   assignedAdminId Int?
   assignedAdmin   AdminUser? @relation("TicketAssignedAdmin", fields: [assignedAdminId], references: [id], onDelete: SetNull)
 
+  // Optional context links — populated based on `type`
   reportedUserId Int?
-  reportedUser   User? @relation("TicketReportedUser", fields: [reportedUserId], references: [id], onDelete: SetNull)
-
-  orderId String?
-
+  reportedUser   User?         @relation("TicketReportedUser", fields: [reportedUserId], references: [id], onDelete: SetNull)
+  orderId        String?
+  order          Order?        @relation(fields: [orderId], references: [id], onDelete: SetNull)
   showcaseItemId String?
   showcaseItem   ShowcaseItem? @relation(fields: [showcaseItemId], references: [id], onDelete: SetNull)
 

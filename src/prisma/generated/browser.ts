@@ -48,6 +48,11 @@ export type ArtistVerificationRequest = Prisma.ArtistVerificationRequestModel
  */
 export type Settings = Prisma.SettingsModel
 /**
+ * Model ArtistAvailability
+ * 
+ */
+export type ArtistAvailability = Prisma.ArtistAvailabilityModel
+/**
  * Model Socials
  * 
  */
@@ -217,6 +222,11 @@ export type Message = Prisma.MessageModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model SearchIndexOutbox
+ * 
+ */
+export type SearchIndexOutbox = Prisma.SearchIndexOutboxModel
 /**
  * Model Ticket
  * 
