@@ -2,11 +2,22 @@ import "server-only"
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { resolveAppEnv } from '@/lib/env/database-url-core';
 
 export type AdminUser = NonNullable<Awaited<ReturnType<typeof prisma.adminUser.findUnique>>>;
 
 export const SESSION_COOKIE_NAME = 'admin_session';
-const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const SESSION_ABSOLUTE_MAX_MS = 12 * 60 * 60 * 1000; // 12 hours from createdAt
+const SESSION_IDLE_WINDOW_MS = 60 * 60 * 1000; // 1 hour of inactivity
+const SESSION_SLIDE_THRESHOLD_MS = 15 * 60 * 1000; // slide when <45m left
+
+function shouldUseSecureCookie() {
+  return (
+    resolveAppEnv() === 'prod' ||
+    process.env.NODE_ENV === 'production' ||
+    process.env.COOKIE_SECURE === 'true'
+  );
+}
 
 async function findValidSession(sessionId: string) {
   const session = await prisma.adminSession.findUnique({
@@ -14,11 +25,33 @@ async function findValidSession(sessionId: string) {
     include: { admin: true },
   });
 
-  if (!session || session.expiresAt < new Date()) {
-    if (session) {
-      await prisma.adminSession.delete({ where: { id: session.id } });
-    }
+  if (!session) return null;
+
+  const now = Date.now();
+  const absoluteExpiresAt = session.createdAt.getTime() + SESSION_ABSOLUTE_MAX_MS;
+  const idleExpiresAt = session.expiresAt.getTime();
+
+  if (now >= idleExpiresAt || now >= absoluteExpiresAt) {
+    await prisma.adminSession.delete({ where: { id: session.id } }).catch(() => {});
     return null;
+  }
+
+  const slideTarget = Math.min(now + SESSION_IDLE_WINDOW_MS, absoluteExpiresAt);
+  const remainingMs = idleExpiresAt - now;
+  const idleConsumedMs = SESSION_IDLE_WINDOW_MS - remainingMs;
+
+  if (
+    idleConsumedMs >= SESSION_SLIDE_THRESHOLD_MS &&
+    slideTarget > idleExpiresAt
+  ) {
+    const slidExpiresAt = new Date(slideTarget);
+    await prisma.adminSession
+      .update({
+        where: { id: session.id },
+        data: { expiresAt: slidExpiresAt },
+      })
+      .catch(() => {});
+    session.expiresAt = slidExpiresAt;
   }
 
   return session;
@@ -28,7 +61,7 @@ export async function createSession(admin: AdminUser): Promise<string> {
   const session = await prisma.adminSession.create({
     data: {
       adminId: admin.id,
-      expiresAt: new Date(Date.now() + SESSION_DURATION_MS),
+      expiresAt: new Date(Date.now() + SESSION_IDLE_WINDOW_MS),
     },
   });
   return session.id;
@@ -63,9 +96,9 @@ export function setSessionCookie(response: NextResponse, sessionId: string) {
     value: sessionId,
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: shouldUseSecureCookie(),
     path: '/',
-    maxAge: SESSION_DURATION_MS / 1000,
+    maxAge: SESSION_ABSOLUTE_MAX_MS / 1000,
   });
 }
 
@@ -75,7 +108,7 @@ export function clearSessionCookie(response: NextResponse) {
     value: '',
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: shouldUseSecureCookie(),
     path: '/',
     maxAge: 0,
   });

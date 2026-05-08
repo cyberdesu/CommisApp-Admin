@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { apiClient } from "@/lib/api/client"
-import { clearSession } from "@/lib/auth/token-storage"
 
 export function LogoutButton() {
   const router = useRouter()
@@ -14,7 +13,6 @@ export function LogoutButton() {
     try {
       await apiClient.post("/auth/logout")
     } finally {
-      clearSession()
       router.replace("/login")
       router.refresh()
     }

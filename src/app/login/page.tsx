@@ -31,8 +31,9 @@ type LoginValues = z.infer<typeof loginSchema>;
 
 type LoginResponse = {
   data?: {
-    accessToken?: string;
-    refreshToken?: string;
+    id: number;
+    email: string;
+    name: string;
   };
 };
 
