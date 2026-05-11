@@ -102,10 +102,16 @@ class MinioHelper {
         ? parsedPort
         : parsedEndpoint.port
 
+    const region =
+      process.env.MINIO_REGION ||
+      process.env.RUSTFS_REGION ||
+      process.env.AWS_REGION
+
     this.client = new MinioClient({
       endPoint: parsedEndpoint.endPoint,
       useSSL,
       ...(port ? { port } : {}),
+      ...(region ? { region } : {}),
       accessKey,
       secretKey,
     })
