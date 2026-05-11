@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { useAdminRealtime } from "@/hooks/use-admin-realtime";
 import { apiClient } from "@/lib/api/client";
 import type {
-  AdminOrderAnalytics,
   AdminOrderStats,
   AdminOrderStatus,
 } from "@/lib/user-orders.types";
@@ -67,24 +66,7 @@ export function useOrdersStats() {
   });
 }
 
-export function useOrdersAnalytics(scopedUserId: number | null) {
-  return useQuery({
-    queryKey: ["orders-analytics", { scopedUserId }],
-    queryFn: async () => {
-      const response = await apiClient.get<AdminOrderAnalytics>(
-        "/orders/analytics",
-        {
-          params: {
-            ...(scopedUserId ? { userId: scopedUserId } : {}),
-          },
-        },
-      );
-      return response.data;
-    },
-  });
-}
-
-export function useOrderIntervention(onSettled?: () => void) {
+export function useOrderIntervention(onSuccess?: () => void) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: {
@@ -104,7 +86,7 @@ export function useOrderIntervention(onSettled?: () => void) {
       void queryClient.invalidateQueries({ queryKey: ["orders"] });
       void queryClient.invalidateQueries({ queryKey: ["orders-stats"] });
       void queryClient.invalidateQueries({ queryKey: ["user-detail"] });
-      onSettled?.();
+      onSuccess?.();
     },
     onError: (error) => {
       if (axios.isAxiosError<{ message?: string }>(error)) {
@@ -123,7 +105,6 @@ export function useOrdersRealtime() {
     onEvent: () => {
       void queryClient.invalidateQueries({ queryKey: ["orders"] });
       void queryClient.invalidateQueries({ queryKey: ["orders-stats"] });
-      void queryClient.invalidateQueries({ queryKey: ["orders-analytics"] });
       void queryClient.invalidateQueries({ queryKey: ["user-detail"] });
     },
   });

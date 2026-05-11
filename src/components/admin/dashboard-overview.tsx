@@ -208,14 +208,12 @@ export function DashboardOverview() {
             </div>
           </CardHeader>
 
-          <CardContent className="h-96 min-h-[320px] pt-6">
+          <CardContent className="pt-6">
             {isMounted ? (
-              <div className="h-full min-h-[320px] w-full min-w-0">
+              <div className="w-full min-w-0">
                 <ResponsiveContainer
                   width="100%"
-                  height="100%"
-                  minWidth={0}
-                  minHeight={320}
+                  height={320}
                   debounce={50}
                 >
                   <AreaChart
@@ -317,7 +315,7 @@ export function DashboardOverview() {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="h-full animate-pulse rounded-xl border border-border/70 bg-secondary/45" />
+              <div className="h-[320px] animate-pulse rounded-xl border border-border/70 bg-secondary/45" />
             )}
           </CardContent>
         </Card>

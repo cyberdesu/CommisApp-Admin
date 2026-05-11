@@ -26,7 +26,7 @@ export function formatDate(value: string, withTime = true) {
 export function formatMoney(amount: string, currency: string) {
   const numeric = Number(amount);
   if (!Number.isFinite(numeric)) return `${currency} ${amount}`;
-  return new Intl.NumberFormat("id-ID", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
     minimumFractionDigits: 2,
@@ -34,51 +34,104 @@ export function formatMoney(amount: string, currency: string) {
   }).format(numeric);
 }
 
-export function getOrderStatusBadgeClass(status: AdminOrderStatus) {
+export function getStatusLabel(status: AdminOrderStatus | string): string {
   switch (status) {
     case "PENDING":
-      return "border-zinc-200 bg-zinc-100 text-zinc-700";
+      return "Pending";
     case "ACCEPTED":
-      return "border-blue-200 bg-blue-50 text-blue-700";
+      return "Accepted";
     case "IN_PROGRESS":
-      return "border-orange-200 bg-orange-50 text-orange-700";
+      return "In progress";
     case "WAITING_FOR_CLIENT":
-      return "border-amber-200 bg-amber-50 text-amber-700";
+      return "Waiting for client";
     case "DELIVERED":
-      return "border-violet-200 bg-violet-50 text-violet-700";
+      return "Delivered";
     case "COMPLETED":
-      return "border-emerald-200 bg-emerald-50 text-emerald-700";
+      return "Completed";
     case "CANCELLED":
-      return "border-red-200 bg-red-50 text-red-700";
+      return "Cancelled";
     case "REJECTED":
-      return "border-rose-200 bg-rose-50 text-rose-700";
+      return "Rejected";
+    case "REFUNDED":
+      return "Refunded";
     default:
-      return "border-zinc-200 bg-zinc-50 text-zinc-700";
+      return String(status);
   }
 }
 
-export function getAttentionBadgeClass(level: "info" | "warning" | "critical") {
+export function getStatusPillClass(status: AdminOrderStatus | string) {
+  switch (status) {
+    case "PENDING":
+      return "bg-muted text-muted-foreground";
+    case "ACCEPTED":
+      return "bg-blue-50 text-blue-800";
+    case "IN_PROGRESS":
+      return "bg-primary/15 text-primary";
+    case "WAITING_FOR_CLIENT":
+      return "bg-amber-50 text-amber-800";
+    case "DELIVERED":
+      return "bg-violet-50 text-violet-800";
+    case "COMPLETED":
+      return "bg-emerald-50 text-emerald-800";
+    case "CANCELLED":
+    case "REJECTED":
+    case "REFUNDED":
+      return "bg-rose-50 text-rose-800";
+    default:
+      return "bg-muted text-muted-foreground";
+  }
+}
+
+export function getStatusDotClass(status: AdminOrderStatus | string) {
+  switch (status) {
+    case "PENDING":
+      return "bg-muted-foreground";
+    case "ACCEPTED":
+      return "bg-blue-500";
+    case "IN_PROGRESS":
+      return "bg-primary";
+    case "WAITING_FOR_CLIENT":
+      return "bg-amber-500";
+    case "DELIVERED":
+      return "bg-violet-500";
+    case "COMPLETED":
+      return "bg-emerald-500";
+    case "CANCELLED":
+    case "REJECTED":
+    case "REFUNDED":
+      return "bg-rose-500";
+    default:
+      return "bg-muted-foreground";
+  }
+}
+
+export function getFlagPillClass(level: "info" | "warning" | "critical") {
   switch (level) {
     case "info":
-      return "border-sky-200 bg-sky-50 text-sky-700";
+      return "bg-sky-50 text-sky-800";
     case "warning":
-      return "border-amber-200 bg-amber-50 text-amber-700";
+      return "bg-amber-50 text-amber-900";
     case "critical":
-      return "border-red-200 bg-red-50 text-red-700";
+      return "bg-rose-50 text-rose-800";
   }
 }
 
 export function getTimelineTone(item: UserOrderTimelineItem) {
-  if (item.isAdminIntervention) return "border-sky-200 bg-sky-50";
+  if (item.isAdminIntervention) return "admin";
   if (item.type === "REVISION_REQUESTED" || item.toStatus === "DELIVERED") {
-    return "border-amber-200 bg-amber-50";
+    return "warn";
   }
-  if (item.toStatus === "COMPLETED") return "border-emerald-200 bg-emerald-50";
-  return "border-zinc-200 bg-zinc-50";
+  if (item.toStatus === "COMPLETED") return "complete";
+  return "default";
 }
 
-export function getOrderProgressLabel(order: UserOrderOverview) {
-  return `${order.revisionsUsed}/${order.revisionsIncluded} revisions`;
+export function getRevisionState(order: UserOrderOverview) {
+  const used = order.revisionsUsed;
+  const total = order.revisionsIncluded;
+  const danger = total > 0 && used > total;
+  const warn = total > 0 && used === total;
+  const pct = total > 0 ? Math.min(100, (used / total) * 100) : 0;
+  return { used, total, danger, warn, pct };
 }
 
 export function formatDeliveryWindow(min?: number | null, max?: number | null) {
@@ -86,4 +139,9 @@ export function formatDeliveryWindow(min?: number | null, max?: number | null) {
   if (min) return `${min}+ days`;
   if (max) return `up to ${max} days`;
   return "Flexible";
+}
+
+export function daysBetween(fromIso: string, toDate: Date = new Date()) {
+  const diff = toDate.getTime() - new Date(fromIso).getTime();
+  return Math.max(0, Math.floor(diff / 86_400_000));
 }
