@@ -70,4 +70,14 @@ export type ShowcaseDetailResponse = {
   data: ShowcaseDetailData;
 };
 
-export const PAGE_SIZE = 10;
+export type ShowcaseTab =
+  | "ALL"
+  | "PUBLISHED"
+  | "DRAFTS"
+  | "COMMISSION"
+  | "MATURE"
+  | "VERIFIED";
+
+export type ShowcaseView = "GRID" | "TABLE";
+
+export const PAGE_SIZE = 12;

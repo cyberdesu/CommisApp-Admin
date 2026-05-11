@@ -1,33 +1,6 @@
 "use client";
 
-import {
-  ChevronLeft,
-  ChevronRight,
-  Eye,
-  Filter,
-  MoreHorizontal,
-  Search,
-  ShieldAlert,
-  ShieldCheck,
-  Star,
-  Trash2,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import { Bookmark, Eye, Heart, ShieldCheck, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -36,263 +9,192 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import {
+  compactNumber,
+  formatRelativeTime,
+} from "../_lib/helpers";
 import type { ShowcaseItem } from "../_lib/types";
-import { ShowcasesTableSkeleton } from "./ShowcasesTableSkeleton";
+import { ShowcaseThumbnail } from "./ShowcaseThumbnail";
 
 export function ShowcasesTable({
-  showcases,
-  isLoading,
-  isFetching,
-  hasHistory,
-  hasNextPage,
-  nextCursor,
-  searchInput,
-  onSearchInputChange,
-  onSearchSubmit,
-  onPrev,
-  onNext,
-  onViewDetail,
+  items,
+  onView,
+  onModerate,
+  onDelete,
 }: {
-  showcases: ShowcaseItem[];
-  isLoading: boolean;
-  isFetching: boolean;
-  hasHistory: boolean;
-  hasNextPage: boolean;
-  nextCursor: string | null;
-  searchInput: string;
-  onSearchInputChange: (v: string) => void;
-  onSearchSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  onPrev: () => void;
-  onNext: (next: string) => void;
-  onViewDetail: (id: string) => void;
+  items: ShowcaseItem[];
+  onView: (id: string) => void;
+  onModerate: (item: ShowcaseItem) => void;
+  onDelete: (item: ShowcaseItem) => void;
 }) {
+  if (items.length === 0) {
+    return (
+      <div className="py-16 text-center text-sm text-muted-foreground">
+        No showcases match current filters.
+      </div>
+    );
+  }
+
   return (
-    <Card className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      <CardHeader className="flex flex-col gap-4 border-b border-border/70 pb-5 pt-6 lg:flex-row lg:items-center lg:justify-between">
-        <div className="space-y-1">
-          <CardTitle className="text-xl font-bold tracking-tight text-foreground">
-            All Works
-          </CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">
-            Review showcase catalogs from all users arranged chronologically.
-          </CardDescription>
-        </div>
+    <div className="overflow-x-auto">
+      <Table className="min-w-[1100px]">
+        <TableHeader>
+          <TableRow className="border-border/60 bg-muted/30 hover:bg-muted/30">
+            <TableHead className="px-5 py-3 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              Work
+            </TableHead>
+            <TableHead className="px-5 py-3 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              Author
+            </TableHead>
+            <TableHead className="px-5 py-3 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              Engagement
+            </TableHead>
+            <TableHead className="px-5 py-3 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              Status
+            </TableHead>
+            <TableHead className="px-5 py-3 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              Created
+            </TableHead>
+            <TableHead className="w-[180px] px-5 py-3 text-right text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              Actions
+            </TableHead>
+          </TableRow>
+        </TableHeader>
 
-        <form
-          onSubmit={onSearchSubmit}
-          className="flex w-full gap-3 sm:max-w-md"
-        >
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 size-4.5 -translate-y-1/2 text-foreground/40" />
-            <Input
-              value={searchInput}
-              onChange={(e) => onSearchInputChange(e.target.value)}
-              placeholder="Search showcase title..."
-              className="h-10 rounded-lg border-border bg-card pl-10 text-sm placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/20 shadow-sm"
-            />
-          </div>
-          <Button
-            type="submit"
-            className="h-10 rounded-lg bg-primary px-5 font-semibold text-primary-foreground transition-all hover:bg-primary/90 shadow-sm"
-          >
-            Search
-          </Button>
-        </form>
-      </CardHeader>
-
-      <CardContent className="p-0">
-        {isLoading ? (
-          <div className="p-6">
-            <ShowcasesTableSkeleton />
-          </div>
-        ) : showcases.length === 0 ? (
-          <div className="flex flex-col items-center justify-center border-t border-dashed border-border bg-secondary/30 px-6 py-20 text-center">
-            <div className="flex size-16 items-center justify-center rounded-3xl bg-secondary/55 text-muted-foreground shadow-inner">
-              <Filter className="size-8" />
-            </div>
-            <h3 className="mt-5 text-lg font-semibold text-foreground">
-              No showcases found
-            </h3>
-            <p className="mt-2 max-w-sm text-sm leading-relaxed text-foreground/50">
-              Your search yielded no results. Try using different keywords or
-              clear the filters.
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-secondary/70">
-                <TableRow className="border-border/70 hover:bg-transparent">
-                  <TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                    Showcase Info
-                  </TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                    Author
-                  </TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                    Stats
-                  </TableHead>
-                  <TableHead className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                    Status
-                  </TableHead>
-                  <TableHead className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                    Action
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {showcases.map((item) => (
-                  <TableRow
-                    key={item.id}
-                    className="border-border/70 transition-colors hover:bg-secondary/30"
-                  >
-                    <TableCell className="px-6 py-4 align-top">
-                      <div className="min-w-0 space-y-2">
-                        <p className="truncate font-semibold text-foreground">
-                          {item.title || "Untitled Showcase"}
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {item.tags.slice(0, 3).map((tag, idx) => (
-                            <Badge
-                              key={idx}
-                              variant="outline"
-                              className="rounded-full border-border bg-secondary/45 px-2 py-0 text-[10px] font-medium text-foreground/60"
-                            >
-                              #{tag.nameTag}
-                            </Badge>
-                          ))}
-                          {item.tags.length > 3 && (
-                            <Badge
-                              variant="outline"
-                              className="rounded-full border-border bg-secondary/45 px-2 py-0 text-[10px] font-medium text-foreground/60"
-                            >
-                              +{item.tags.length - 3}
-                            </Badge>
-                          )}
-                        </div>
+        <TableBody>
+          {items.map((item) => {
+            const initials = item.showcase.user.username
+              .slice(0, 2)
+              .toUpperCase();
+            return (
+              <TableRow
+                key={item.id}
+                className="border-border/40 transition hover:bg-muted/30"
+              >
+                <TableCell className="px-5 py-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg">
+                      <ShowcaseThumbnail
+                        src={null}
+                        alt={item.title}
+                        seed={item.id}
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="truncate text-[13.5px] font-semibold">
+                        {item.title || "Untitled showcase"}
                       </div>
-                    </TableCell>
-
-                    <TableCell className="px-6 py-4 align-top">
-                      <div className="space-y-1">
-                        <p className="truncate font-medium text-foreground">
-                          @{item.showcase.user.username}
-                        </p>
-                        {item.showcase.isVerified && (
-                          <Badge className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
-                            <ShieldCheck className="mr-1 size-3" />
-                            Verified Author
-                          </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="px-6 py-4 align-top">
-                      <div className="flex items-center gap-4 text-sm font-medium text-foreground/70">
-                        <span className="flex items-center gap-1.5" title="Views">
-                          <Eye className="size-4 text-foreground/40" />
-                          {item.viewCount}
+                      <div className="mt-0.5 flex items-center gap-1.5 text-[11.5px] text-muted-foreground">
+                        <span className="font-mono">
+                          #{item.id.slice(0, 8)}
                         </span>
-                        <span className="flex items-center gap-1.5" title="Likes">
-                          <Star className="size-4 text-primary" />
-                          {item.likeCount}
-                        </span>
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="px-6 py-4 align-top">
-                      <div className="flex flex-col gap-2">
-                        {item.isDraft ? (
-                          <Badge className="w-fit rounded-full bg-secondary/70 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:bg-secondary">
-                            Draft
-                          </Badge>
-                        ) : (
-                          <Badge className="w-fit rounded-full bg-sidebar px-2.5 py-0.5 text-sidebar-foreground text-[10px] font-bold uppercase tracking-widest hover:bg-sidebar/90">
-                            Published
-                          </Badge>
-                        )}
-                        {item.isFromVerifiedCommission && (
-                          <Badge className="w-fit rounded-full border-primary/25 bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-primary hover:bg-primary/15">
-                            Commission
-                          </Badge>
+                        {item.tags.length > 0 && (
+                          <>
+                            <span className="size-1 rounded-full bg-muted-foreground/60" />
+                            <span className="truncate">
+                              {item.tags
+                                .slice(0, 2)
+                                .map((t) => `#${t.nameTag}`)
+                                .join(" ")}
+                            </span>
+                          </>
                         )}
                       </div>
-                    </TableCell>
-
-                    <TableCell className="px-6 py-4 text-right align-top">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger
-                          render={
-                            <Button
-                              variant="outline"
-                              size="icon-sm"
-                              className="rounded-[10px] border-border bg-card transition-all hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
-                            />
-                          }
-                        >
-                          <MoreHorizontal className="size-4" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          align="end"
-                          className="w-48 rounded-2xl border border-border bg-card p-1.5 shadow-xl"
-                        >
-                          <DropdownMenuItem
-                            className="rounded-xl px-3 py-2 text-sm font-medium text-foreground focus:bg-primary/10 focus:text-primary"
-                            onClick={() => onViewDetail(item.id)}
-                          >
-                            <Eye className="mr-2 size-4" />
-                            View detail
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="rounded-xl px-3 py-2 text-sm font-medium text-foreground focus:bg-primary/10 focus:text-primary">
-                            <ShieldAlert className="mr-2 size-4" />
-                            Moderate content
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="rounded-xl px-3 py-2 text-sm font-medium text-red-600 focus:bg-red-50 focus:text-red-700">
-                            <Trash2 className="mr-2 size-4" />
-                            Delete showcase
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
-
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-border bg-secondary/50 px-6 py-4 sm:flex-row">
-          <p className="text-sm font-medium text-foreground/50">
-            Showing <span className="text-foreground">{showcases.length}</span>{" "}
-            items in this batch
-          </p>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              className="rounded-xl border-border bg-card shadow-sm hover:border-primary/35"
-              disabled={!hasHistory || isFetching}
-              onClick={onPrev}
-            >
-              <ChevronLeft className="mr-1 size-4" />
-              Prev
-            </Button>
-            <div className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground shadow-sm">
-              Cursor Mode
-            </div>
-            <Button
-              variant="outline"
-              className="rounded-xl border-border bg-card shadow-sm hover:border-primary/35"
-              disabled={!hasNextPage || !nextCursor || isFetching}
-              onClick={() => nextCursor && onNext(nextCursor)}
-            >
-              Next
-              <ChevronRight className="ml-1 size-4" />
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="px-5 py-3">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/15 font-mono text-[10px] font-bold text-primary">
+                      {initials}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="truncate text-[12.5px] font-semibold">
+                        @{item.showcase.user.username}
+                      </div>
+                      <div
+                        className={cn(
+                          "text-[10.5px] font-semibold",
+                          item.showcase.isVerified
+                            ? "text-emerald-700"
+                            : "text-muted-foreground",
+                        )}
+                      >
+                        {item.showcase.isVerified ? "Verified" : "Unverified"}
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="px-5 py-3">
+                  <div className="flex items-center gap-3 text-[12.5px] tabular-nums text-muted-foreground">
+                    <span className="inline-flex items-center gap-1">
+                      <Eye className="size-3" />
+                      {compactNumber(item.viewCount)}
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <Heart className="size-3" />
+                      {compactNumber(item.likeCount)}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-muted-foreground/60">
+                      <Bookmark className="size-3" />—
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell className="px-5 py-3">
+                  <div className="flex flex-wrap gap-1">
+                    {item.isDraft ? (
+                      <span className="inline-flex items-center rounded bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
+                        Draft
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded bg-slate-900 px-2 py-0.5 text-[11px] font-semibold text-white">
+                        Published
+                      </span>
+                    )}
+                    {item.isFromVerifiedCommission && (
+                      <span className="inline-flex items-center gap-1 rounded bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                        <ShieldCheck className="size-3" />
+                        Commission
+                      </span>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell className="px-5 py-3 font-mono text-[12px] text-muted-foreground">
+                  {formatRelativeTime(item.createdAt)}
+                </TableCell>
+                <TableCell className="px-5 py-3 text-right">
+                  <div className="flex justify-end gap-1">
+                    <button
+                      type="button"
+                      onClick={() => onView(item.id)}
+                      className="inline-flex items-center rounded-lg border border-border bg-card px-2.5 py-1.5 text-[11.5px] font-semibold text-foreground transition hover:border-primary/40 hover:text-primary"
+                    >
+                      View
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onModerate(item)}
+                      title="Moderate"
+                      className="inline-flex size-8 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:border-primary/40 hover:text-primary"
+                    >
+                      <ShieldCheck className="size-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onDelete(item)}
+                      title="Delete"
+                      className="inline-flex size-8 items-center justify-center rounded-lg border border-border bg-card text-rose-600 transition hover:border-rose-300 hover:bg-rose-50"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
