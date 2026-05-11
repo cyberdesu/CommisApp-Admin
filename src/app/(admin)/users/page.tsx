@@ -35,7 +35,7 @@ import {
 import { toast } from "sonner";
 
 import { apiClient } from "@/lib/api/client";
-import { sanitizeImageSource } from "@/lib/security/url-safety";
+import { resolveMediaUrl } from "@/lib/media";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -179,10 +179,6 @@ const PAGE_SIZE = 10;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function resolveMediaUrl(path?: string | null): string | null {
-  return sanitizeImageSource(path);
-}
-
 function getRoleConfig(role: string): {
   className: string;
   dot: string;
@@ -270,6 +266,7 @@ function UserAvatar({
   size?: "sm" | "md" | "lg";
 }) {
   const avatarUrl = resolveMediaUrl(user.avatar);
+  const [loadFailed, setLoadFailed] = useState(false);
   const fallback = (
     user.name?.trim()?.[0] ||
     user.username?.trim()?.[0] ||
@@ -282,11 +279,12 @@ function UserAvatar({
     lg: "size-16 text-lg rounded-3xl",
   }[size];
 
-  if (avatarUrl) {
+  if (avatarUrl && !loadFailed) {
     return (
       <img
         src={avatarUrl}
         alt={user.name ?? user.username}
+        onError={() => setLoadFailed(true)}
         className={cn(
           "border border-black/10 object-cover",
           sizeClass,

@@ -23,7 +23,7 @@ import {
 
 import { apiClient } from "@/lib/api/client";
 import { useAdminRealtime } from "@/hooks/use-admin-realtime";
-import { sanitizeImageSource } from "@/lib/security/url-safety";
+import { resolveMediaUrl } from "@/lib/media";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -229,15 +229,17 @@ function UserAvatar({
   name: string;
   size?: "sm" | "md";
 }) {
-  const safeSrc = sanitizeImageSource(src);
+  const safeSrc = resolveMediaUrl(src);
+  const [loadFailed, setLoadFailed] = useState(false);
   const sizeClass = size === "sm" ? "size-8" : "size-10";
   const textClass = size === "sm" ? "text-[10px]" : "text-xs";
 
-  if (safeSrc) {
+  if (safeSrc && !loadFailed) {
     return (
       <img
         src={safeSrc}
         alt={name}
+        onError={() => setLoadFailed(true)}
         className={cn(sizeClass, "shrink-0 rounded-full object-cover")}
         loading="lazy"
         decoding="async"
@@ -812,7 +814,7 @@ function MessageView({
                               {msg.fileUrl && (
                                 <img
                                   src={
-                                    sanitizeImageSource(msg.fileUrl) ?? undefined
+                                    resolveMediaUrl(msg.fileUrl) ?? undefined
                                   }
                                   alt={msg.fileName ?? "Image"}
                                   className="max-h-60 max-w-full rounded-lg object-contain"

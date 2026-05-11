@@ -21,7 +21,7 @@ import {
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { apiClient } from "@/lib/api/client";
-import { sanitizeImageSource } from "@/lib/security/url-safety";
+import { resolveMediaUrl } from "@/lib/media";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -529,7 +529,7 @@ export default function ShowcasesPage() {
                   <div className="mt-2 flex items-center gap-3">
                     {detail.showcase.user.avatar ? (
                       <img
-                        src={sanitizeImageSource(detail.showcase.user.avatar) ?? undefined}
+                        src={resolveMediaUrl(detail.showcase.user.avatar) ?? undefined}
                         alt={detail.showcase.user.username}
                         className="size-8 rounded-full object-cover"
                         loading="lazy"
@@ -636,7 +636,7 @@ export default function ShowcasesPage() {
                     </p>
                     <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
                       {detail.showcaseFiles.map((file) => {
-                        const safeSrc = sanitizeImageSource(file.url);
+                        const safeSrc = resolveMediaUrl(file.url);
                         return (
                           <div
                             key={file.id}
