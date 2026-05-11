@@ -97,10 +97,13 @@ class MinioHelper {
 
     const portValue = process.env.MINIO_PORT
     const parsedPort = portValue ? Number(portValue) : undefined
-    const port =
+    const rawPort =
       parsedPort && Number.isFinite(parsedPort) && parsedPort > 0
         ? parsedPort
         : parsedEndpoint.port
+    const isDefaultPort =
+      rawPort !== undefined && ((useSSL && rawPort === 443) || (!useSSL && rawPort === 80))
+    const port = isDefaultPort ? undefined : rawPort
 
     const region =
       process.env.MINIO_REGION ||
