@@ -28,6 +28,7 @@ model AdminUser {
   moderations     UserModeration[]
   assignedTickets Ticket[]         @relation("TicketAssignedAdmin")
   ticketMessages  TicketMessage[]  @relation("TicketMessageAdminSender")
+  conversationFlags ConversationFlag[] @relation("ConversationFlagger")
 
   @@map("admin_users")
 }
@@ -246,6 +247,27 @@ enum TicketPriority {
 enum TicketSenderRole {
   USER
   ADMIN
+}
+
+enum ConversationFlagReason {
+  HARASSMENT
+  NSFW
+  OFF_PLATFORM_PAYMENT
+  SCAM
+  OTHER
+}
+
+enum ConversationFlagSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ConversationFlagStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+  DISMISSED
 }
 
 // ======================================
@@ -1042,6 +1064,8 @@ model Conversation {
   type      ConversationType @default(DIRECT)
   name      String?
   orderId   String?          @unique
+  lockedAt  DateTime?
+  lockedBy  Int?
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
 
@@ -1049,8 +1073,30 @@ model Conversation {
   participants  ConversationParticipant[]
   messages      Message[]
   notifications Notification[]            @relation("ConversationNotifications")
+  flags         ConversationFlag[]
 
   @@map("conversations")
+}
+
+model ConversationFlag {
+  id             String                   @id @default(cuid())
+  conversationId String
+  conversation   Conversation             @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  flaggedByAdmin Int
+  flagger        AdminUser                @relation("ConversationFlagger", fields: [flaggedByAdmin], references: [id], onDelete: Cascade)
+  reason         ConversationFlagReason
+  severity       ConversationFlagSeverity
+  note           String
+  status         ConversationFlagStatus   @default(OPEN)
+  resolutionNote String?
+  resolvedAt     DateTime?
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  @@index([conversationId, createdAt(sort: Desc)])
+  @@index([status, createdAt(sort: Desc)])
+  @@index([flaggedByAdmin])
+  @@map("conversation_flags")
 }
 
 model ConversationParticipant {

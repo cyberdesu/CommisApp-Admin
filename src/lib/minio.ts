@@ -194,6 +194,23 @@ class MinioHelper {
     return url
   }
 
+  async removeObject(objectName?: string | null, bucket = DEFAULT_BUCKET_NAME) {
+    if (!objectName) return false
+    const sanitizedInput = sanitizeImageSource(objectName)
+    if (!sanitizedInput) return false
+    if (this.isAbsoluteUrl(sanitizedInput)) return false
+    const normalizedObjectName = this.normalizeObjectName(sanitizedInput)
+    if (!normalizedObjectName) return false
+    const client = this.getClient()
+    if (!client) return false
+    try {
+      await client.removeObject(bucket, normalizedObjectName)
+      return true
+    } catch {
+      return false
+    }
+  }
+
   async getFile(objectName?: string | null, bucket = DEFAULT_BUCKET_NAME) {
     if (!objectName) return objectName ?? null
 

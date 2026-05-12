@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   ChevronRight,
   Download,
+  Loader2,
   ShieldAlert,
   Ticket,
   Trash2,
@@ -18,10 +19,14 @@ export function ChatDetailsPane({
   conversation,
   onFlag,
   onPurge,
+  onOpenTicket,
+  isOpeningTicket,
 }: {
   conversation: ConversationDetail | null;
   onFlag: () => void;
   onPurge: () => void;
+  onOpenTicket: () => void;
+  isOpeningTicket?: boolean;
 }) {
   if (!conversation) {
     return (
@@ -151,9 +156,15 @@ export function ChatDetailsPane({
             onClick={onFlag}
           />
           <ModAction
-            icon={<Ticket className="size-3.5" />}
-            label="Open ticket"
-            onClick={() => toast.info("Open ticket coming soon")}
+            icon={
+              isOpeningTicket ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <Ticket className="size-3.5" />
+              )
+            }
+            label={isOpeningTicket ? "Opening…" : "Open ticket"}
+            onClick={onOpenTicket}
           />
           <ModAction
             icon={<Download className="size-3.5" />}

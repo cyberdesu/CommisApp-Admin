@@ -19,6 +19,11 @@ import {
 } from "./_components/FlagConversationModal";
 import { MessageView } from "./_components/MessageView";
 import { PurgeConversationModal } from "./_components/PurgeConversationModal";
+import {
+  useFlagConversation,
+  useOpenTicket,
+  usePurgeConversation,
+} from "./_hooks/useChatMutations";
 import type { ConversationDetail } from "./_lib/types";
 
 export default function ChatsPage() {
@@ -39,12 +44,14 @@ export default function ChatsPage() {
   const [flagReason, setFlagReason] = useState<FlagReason>("HARASSMENT");
   const [flagSeverity, setFlagSeverity] = useState<FlagSeverity>("HIGH");
   const [flagNote, setFlagNote] = useState("");
-  const [flagPending, setFlagPending] = useState(false);
 
   const [purgeOpen, setPurgeOpen] = useState(false);
   const [purgeConfirm, setPurgeConfirm] = useState("");
   const [purgeReason, setPurgeReason] = useState("");
-  const [purgePending, setPurgePending] = useState(false);
+
+  const flagMutation = useFlagConversation();
+  const purgeMutation = usePurgeConversation();
+  const openTicketMutation = useOpenTicket();
 
   useEffect(() => {
     setSelected(deepLinked);
@@ -96,16 +103,20 @@ export default function ChatsPage() {
   }
 
   function submitFlag() {
+    if (!selected) return;
     if (flagNote.trim().length < 3) {
       toast.error("Please add a short internal note");
       return;
     }
-    setFlagPending(true);
-    setTimeout(() => {
-      setFlagPending(false);
-      toast.info("Conversation flagged (backend pending)");
-      setFlagOpen(false);
-    }, 400);
+    flagMutation.mutate(
+      {
+        id: selected,
+        reason: flagReason,
+        severity: flagSeverity,
+        note: flagNote.trim(),
+      },
+      { onSuccess: () => setFlagOpen(false) },
+    );
   }
 
   function openPurge() {
@@ -115,12 +126,38 @@ export default function ChatsPage() {
   }
 
   function submitPurge() {
-    setPurgePending(true);
-    setTimeout(() => {
-      setPurgePending(false);
-      toast.info("Conversation purged (backend pending)");
-      setPurgeOpen(false);
-    }, 400);
+    if (!selected) return;
+    purgeMutation.mutate(
+      {
+        id: selected,
+        confirm: purgeConfirm.trim(),
+        reason: purgeReason.trim(),
+      },
+      {
+        onSuccess: () => {
+          setPurgeOpen(false);
+          setSelected(null);
+          setDetail(null);
+          syncQuery(null);
+        },
+      },
+    );
+  }
+
+  function openTicketFromConversation() {
+    if (!selected || !detail) return;
+    const title =
+      detail.name ??
+      detail.participants
+        .slice(0, 2)
+        .map((p) => p.user.username)
+        .join(" ↔ ");
+    openTicketMutation.mutate({
+      id: selected,
+      subject: `Chat moderation: ${title}`.slice(0, 200),
+      description: `Admin escalated conversation ${selected} (${detail.type}, ${detail.messageCount} messages) for moderation review.`,
+      priority: "NORMAL",
+    });
   }
 
   return (
@@ -164,6 +201,8 @@ export default function ChatsPage() {
             conversation={detail}
             onFlag={openFlag}
             onPurge={openPurge}
+            onOpenTicket={openTicketFromConversation}
+            isOpeningTicket={openTicketMutation.isPending}
           />
         </div>
       </section>
@@ -178,7 +217,7 @@ export default function ChatsPage() {
         note={flagNote}
         setNote={setFlagNote}
         onSubmit={submitFlag}
-        isSubmitting={flagPending}
+        isSubmitting={flagMutation.isPending}
       />
 
       <PurgeConversationModal
@@ -190,7 +229,7 @@ export default function ChatsPage() {
         reason={purgeReason}
         setReason={setPurgeReason}
         onSubmit={submitPurge}
-        isSubmitting={purgePending}
+        isSubmitting={purgeMutation.isPending}
       />
     </div>
   );
