@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import {
   compactNumber,
   formatRelativeTime,
+  getThumbUrl,
 } from "../_lib/helpers";
 import type { ShowcaseItem } from "../_lib/types";
 import { ShowcaseThumbnail } from "./ShowcaseThumbnail";
@@ -76,7 +77,7 @@ export function ShowcasesTable({
                   <div className="flex min-w-0 items-center gap-3">
                     <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg">
                       <ShowcaseThumbnail
-                        src={null}
+                        src={getThumbUrl(item)}
                         alt={item.title}
                         seed={item.id}
                       />

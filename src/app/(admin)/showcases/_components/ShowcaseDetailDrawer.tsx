@@ -53,7 +53,7 @@ export function ShowcaseDetailDrawer({
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="flex h-full w-full flex-col gap-0 border-l border-border bg-card p-0 sm:max-w-[880px]"
+        className="flex h-full flex-col gap-0 border-l border-border bg-card p-0 data-[side=right]:w-full data-[side=right]:sm:max-w-[880px]"
       >
         <div className="flex items-start justify-between gap-4 border-b border-border/60 px-6 py-5">
           <SheetHeader className="gap-1 p-0">

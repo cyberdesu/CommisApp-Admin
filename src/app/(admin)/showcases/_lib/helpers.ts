@@ -104,6 +104,11 @@ export function hashSeed(value: string): number {
   return h;
 }
 
+export function getThumbUrl(item: ShowcaseItem): string | null {
+  const first = item.showcaseFiles?.find((f) => f.type.startsWith("image"));
+  return first?.url ?? null;
+}
+
 export function detailToItem(detail: ShowcaseDetailData): ShowcaseItem {
   return {
     id: detail.id,

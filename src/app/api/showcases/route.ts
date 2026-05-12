@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
+import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 import prisma from "@/lib/prisma";
 
 const DEFAULT_LIMIT = 10;
@@ -146,11 +147,32 @@ export async function GET(req: NextRequest) {
             nameTag: true,
           },
         },
+        showcaseFiles: {
+          select: {
+            id: true,
+            url: true,
+            type: true,
+          },
+          orderBy: { createdAt: "asc" },
+          take: 1,
+        },
       },
     });
 
     const hasNextPage = rows.length > limit;
-    const slice = hasNextPage ? rows.slice(0, limit) : rows;
+    const sliceRaw = hasNextPage ? rows.slice(0, limit) : rows;
+
+    const slice = await Promise.all(
+      sliceRaw.map(async (row) => {
+        const files = await Promise.all(
+          row.showcaseFiles.map(async (file) => ({
+            ...file,
+            url: (await minio.getFile(file.url, MINIO_BUCKET_NAME)) ?? file.url,
+          })),
+        );
+        return { ...row, showcaseFiles: files };
+      }),
+    );
     const lastItem = slice[slice.length - 1];
     const nextCursor = hasNextPage && lastItem
       ? encodeCursor({

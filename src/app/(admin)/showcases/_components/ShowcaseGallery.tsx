@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import {
   compactNumber,
   formatRelativeTime,
+  getThumbUrl,
 } from "../_lib/helpers";
 import type { ShowcaseItem } from "../_lib/types";
 import { ShowcaseThumbnail } from "./ShowcaseThumbnail";
@@ -77,7 +78,7 @@ function GalleryCard({
         aria-label={`View ${item.title}`}
       >
         <ShowcaseThumbnail
-          src={null}
+          src={getThumbUrl(item)}
           alt={item.title}
           seed={item.id}
         />

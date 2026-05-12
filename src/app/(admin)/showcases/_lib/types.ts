@@ -15,6 +15,7 @@ export type ShowcaseItem = {
     };
   };
   tags: { nameTag: string }[];
+  showcaseFiles?: { id: string; url: string; type: string }[];
 };
 
 export type ShowcasesResponse = {
