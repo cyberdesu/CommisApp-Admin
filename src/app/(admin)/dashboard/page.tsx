@@ -1,97 +1,180 @@
-import Link from "next/link";
-import { Activity, ArrowUpRight, Sparkles } from "lucide-react";
+"use client";
 
-import { DashboardOverview } from "@/components/admin/dashboard-overview";
-import { Badge } from "@/components/ui/badge";
+import { useMemo, useState } from "react";
+
+import { AttentionQueues } from "./_components/AttentionQueues";
+import { CategoryMix } from "./_components/CategoryMix";
+import { CriticalActivity } from "./_components/CriticalActivity";
+import { GmvChartPanel } from "./_components/GmvChartPanel";
+import { KpiStrip } from "./_components/KpiStrip";
+import { OrderFunnel } from "./_components/OrderFunnel";
+import { PageHead } from "./_components/PageHead";
+import { SystemHealth } from "./_components/SystemHealth";
+import { TopArtists } from "./_components/TopArtists";
+import { useDashboardData } from "./_hooks/useDashboardData";
+import {
+  buildSparkSamples,
+  compactCurrency,
+  compactNumber,
+  formatPct,
+} from "./_lib/helpers";
+import type { DashboardRange, KpiCellData } from "./_lib/types";
 
 export default function DashboardPage() {
+  const [range, setRange] = useState<DashboardRange>("7d");
+  const [lastRefreshAt, setLastRefreshAt] = useState<Date | null>(() => new Date());
+
+  const {
+    financeQuery,
+    ordersStatsQuery,
+    ordersAnalyticsQuery,
+    payoutStatsQuery,
+    artistRequestsQuery,
+    refetchAll,
+    isLoading,
+  } = useDashboardData();
+
+  const finance = financeQuery.data?.finance;
+  const ordersStats = ordersStatsQuery.data;
+  const ordersAnalytics = ordersAnalyticsQuery.data;
+  const payouts = payoutStatsQuery.data;
+  const artistPendingTotal = artistRequestsQuery.data ?? 0;
+
+  const primary = finance?.revenue?.[0];
+  const gmv = primary ? Number.parseFloat(primary.grossVolume) || 0 : 0;
+  const fees = primary ? Number.parseFloat(primary.platformFees) || 0 : 0;
+  const netToArtists = primary
+    ? Number.parseFloat(primary.artistPayouts) || 0
+    : 0;
+  const currency = primary?.currency ?? "USD";
+
+  const totalOrders = ordersStats?.total ?? 0;
+  const activeOrders = ordersStats?.active ?? 0;
+  const completedPayments = finance?.completedPayments ?? 0;
+  const refundRateRaw =
+    totalOrders > 0 && ordersStats
+      ? ((ordersStats.total -
+          ordersStats.active -
+          ordersStats.delivered -
+          ordersStats.completed) /
+          totalOrders) *
+        100
+      : 0;
+  const refundRate = Math.max(0, refundRateRaw);
+
+  const userTotal = financeQuery.data?.totalUsers ?? 0;
+  const artistTotal = financeQuery.data?.verifiedArtistCount ?? 0;
+
+  const kpiCells: KpiCellData[] = useMemo(
+    () => [
+      {
+        key: "gmv",
+        label: `GMV · ${range}`,
+        value: compactCurrency(gmv, currency),
+        sub: "Gross volume",
+        accent: undefined,
+        spark: buildSparkSamples("gmv"),
+      },
+      {
+        key: "fees",
+        label: "Platform fees",
+        value: compactCurrency(fees, currency),
+        sub: gmv > 0 ? `${((fees / gmv) * 100).toFixed(1)}% of GMV` : "—",
+        accent: "primary",
+        spark: buildSparkSamples("fees"),
+      },
+      {
+        key: "orders",
+        label: `Orders · ${range}`,
+        value: compactNumber(totalOrders),
+        sub: `${activeOrders} active`,
+        spark: buildSparkSamples("orders"),
+      },
+      {
+        key: "users",
+        label: `Total users`,
+        value: compactNumber(userTotal),
+        sub: `${compactNumber(artistTotal)} verified artists`,
+        spark: buildSparkSamples("users"),
+      },
+      {
+        key: "conversion",
+        label: "Completed payments",
+        value: compactNumber(completedPayments),
+        sub: "Captured by PayPal",
+        spark: buildSparkSamples("conversion"),
+      },
+      {
+        key: "refund",
+        label: "Cancelled rate",
+        value: formatPct(refundRate, 1),
+        sub: "Cancelled / refunded share",
+        accent: "rose",
+        spark: buildSparkSamples("refund"),
+      },
+    ],
+    [
+      range,
+      gmv,
+      currency,
+      fees,
+      totalOrders,
+      activeOrders,
+      userTotal,
+      artistTotal,
+      completedPayments,
+      refundRate,
+    ],
+  );
+
+  function handleRefresh() {
+    refetchAll();
+    setLastRefreshAt(new Date());
+  }
+
   return (
-    <div className="space-y-8">
-      <section className="bg-admin-surface overflow-hidden rounded-2xl border border-border/80 p-6 shadow-sm md:p-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl space-y-4">
-            <Badge className="rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/15">
-              <Sparkles className="mr-1.5 inline-block size-3.5" />
-              Admin Command Center
-            </Badge>
+    <div className="space-y-5">
+      <PageHead
+        range={range}
+        onRangeChange={setRange}
+        onRefresh={handleRefresh}
+        isRefreshing={isLoading}
+        lastRefreshAt={lastRefreshAt}
+      />
 
-            <div className="space-y-3">
-              <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                Dashboard overview
-              </h1>
-              <p className="max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">
-                Monitor app performance, operational activities, and key business
-                insights in one modern, neat, and focused view.
-              </p>
-            </div>
+      <KpiStrip cells={kpiCells} />
 
-            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground sm:text-sm">
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-3 py-1.5">
-                <Activity className="size-4 text-primary" />
-                Live performance monitoring
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-3 py-1.5">
-                <ArrowUpRight className="size-4 text-primary" />
-                Updated every 5 minutes
-              </div>
-            </div>
-          </div>
+      <AttentionQueues
+        pendingPayouts={payouts?.pending ?? 0}
+        artistVerifications={artistPendingTotal}
+        refundRequests={0}
+        openTickets={0}
+      />
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
-            <div className="rounded-xl border border-border bg-card/80 p-4">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Conversion
-              </p>
-              <div className="mt-3 flex items-end justify-between gap-3">
-                <div>
-                  <p className="text-2xl font-semibold text-foreground">18.4%</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    +2.1% from last week
-                  </p>
-                </div>
-                <div className="rounded-md bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold text-emerald-700 border border-emerald-100">
-                  Strong
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-border bg-card/80 p-4">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Response Rate
-              </p>
-              <div className="mt-3 flex items-end justify-between gap-3">
-                <div>
-                  <p className="text-2xl font-semibold text-foreground">96.2%</p>
-                  <p className="mt-1 text-xs text-muted-foreground">SLA remains stable</p>
-                </div>
-                <div className="rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary">
-                  Healthy
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <section className="grid gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
+        <GmvChartPanel
+          gmv={gmv}
+          fees={fees}
+          netToArtists={netToArtists}
+          ordersCount={totalOrders}
+          currency={currency}
+        />
+        <CriticalActivity
+          pendingPayouts={payouts?.pending ?? 0}
+          refundRequests={0}
+          artistVerifications={artistPendingTotal}
+        />
       </section>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-lg font-semibold tracking-tight text-foreground">
-            Business snapshot
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Summary of key metrics and latest performance trends.
-          </p>
-        </div>
+      <section className="grid gap-4 lg:grid-cols-2">
+        <OrderFunnel stats={ordersStats} />
+        <TopArtists analytics={ordersAnalytics} />
+      </section>
 
-        <Link
-          href="/analytics"
-          className="inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-sm font-medium whitespace-nowrap text-foreground shadow-sm transition-all outline-none select-none hover:border-primary/35 hover:bg-primary/10"
-        >
-          Open Revenue Analytics
-        </Link>
-      </div>
-
-      <DashboardOverview />
+      <section className="grid gap-4 lg:grid-cols-2">
+        <CategoryMix analytics={ordersAnalytics} />
+        <SystemHealth />
+      </section>
     </div>
   );
 }
