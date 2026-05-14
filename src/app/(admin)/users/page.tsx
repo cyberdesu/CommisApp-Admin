@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Download, Plus, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
@@ -28,8 +28,7 @@ export default function UsersPage() {
   // ── Filters / pagination state ──────────────────────────────────────────────
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [cursorHistory, setCursorHistory] = useState<Array<string | null>>([]);
+  const [page, setPage] = useState(1);
   const [roleFilter, setRoleFilter] = useState("all");
   const [verifiedFilter, setVerifiedFilter] = useState("all");
 
@@ -60,7 +59,7 @@ export default function UsersPage() {
 
   // ── Data ────────────────────────────────────────────────────────────────────
   const usersQuery = useUsersList({
-    cursor,
+    page,
     search,
     roleFilter,
     verifiedFilter,
@@ -73,12 +72,18 @@ export default function UsersPage() {
   // ── Derived ─────────────────────────────────────────────────────────────────
   const users = usersQuery.data?.data ?? [];
   const meta = usersQuery.data?.meta;
-  const hasNextPage = meta?.hasNextPage ?? false;
-  const nextCursor = meta?.nextCursor ?? null;
   const activeDetail = detailQuery.data;
   const pendingArtistRequests = artistRequestsMetaQuery.data?.meta?.total ?? 0;
   const hasActiveFilters =
     search !== "" || roleFilter !== "all" || verifiedFilter !== "all";
+
+  useEffect(() => {
+    if (!meta) return;
+    if (meta.page !== page) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPage(meta.page);
+    }
+  }, [meta, page]);
 
   const deleteConfirmValid = useMemo(
     () =>
@@ -89,8 +94,7 @@ export default function UsersPage() {
 
   // ── Handlers ────────────────────────────────────────────────────────────────
   function resetPagination() {
-    setCursor(null);
-    setCursorHistory([]);
+    setPage(1);
   }
 
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -179,19 +183,6 @@ export default function UsersPage() {
     );
   }
 
-  function handlePrev() {
-    if (cursorHistory.length === 0) return;
-    const nextHistory = [...cursorHistory];
-    const previousCursor = nextHistory.pop() ?? null;
-    setCursorHistory(nextHistory);
-    setCursor(previousCursor);
-  }
-
-  function handleNext(next: string) {
-    setCursorHistory((current) => [...current, cursor]);
-    setCursor(next);
-  }
-
   return (
     <div className="space-y-6">
       {/* Page head */}
@@ -274,12 +265,11 @@ export default function UsersPage() {
           users={users}
           isLoading={usersQuery.isLoading}
           hasActiveFilters={hasActiveFilters}
-          hasNextPage={hasNextPage}
-          nextCursor={nextCursor}
-          hasHistory={cursorHistory.length > 0}
+          page={meta?.page ?? page}
+          totalPages={meta?.totalPages ?? page}
+          total={meta?.total ?? 0}
           isFetching={usersQuery.isFetching}
-          onPrev={handlePrev}
-          onNext={handleNext}
+          onPageChange={setPage}
           onView={handleOpenView}
           onEdit={handleOpenEdit}
           onToggleVerify={(u) => mutations.quickToggleVerify.mutate(u)}

@@ -49,9 +49,11 @@ export type UsersResponse = {
   data: UserItem[];
   meta: {
     limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
     hasNextPage: boolean;
-    nextCursor: string | null;
-    cursor: string | null;
+    hasPreviousPage: boolean;
   };
 };
 

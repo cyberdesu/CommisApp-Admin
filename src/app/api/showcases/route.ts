@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { parsePositiveInt } from "@/lib/admin-api";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
@@ -18,11 +19,6 @@ const VALID_TABS = [
   "VERIFIED",
 ] as const;
 type ShowcaseTabFilter = (typeof VALID_TABS)[number];
-
-function parsePositiveInt(value: string | null, fallback: number) {
-  const parsed = Number.parseInt(value ?? "", 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
-}
 
 function isOneOf<T extends readonly string[]>(
   value: string,

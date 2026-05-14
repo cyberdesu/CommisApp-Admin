@@ -1,12 +1,8 @@
 "use client";
 
-import {
-  BadgeCheck,
-  ChevronLeft,
-  ChevronRight,
-  CheckCircle2,
-} from "lucide-react";
+import { BadgeCheck, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Pagination } from "@/components/ui/pagination";
 import {
   formatDate,
   getFinancePreview,
@@ -22,12 +18,11 @@ export function UsersTable({
   users,
   isLoading,
   hasActiveFilters,
-  hasNextPage,
-  nextCursor,
-  hasHistory,
+  page,
+  totalPages,
+  total,
   isFetching,
-  onPrev,
-  onNext,
+  onPageChange,
   onView,
   onEdit,
   onToggleVerify,
@@ -38,12 +33,11 @@ export function UsersTable({
   users: UserItem[];
   isLoading: boolean;
   hasActiveFilters: boolean;
-  hasNextPage: boolean;
-  nextCursor: string | null;
-  hasHistory: boolean;
+  page: number;
+  totalPages: number;
+  total: number;
   isFetching: boolean;
-  onPrev: () => void;
-  onNext: (next: string) => void;
+  onPageChange: (next: number) => void;
   onView: (u: UserItem) => void;
   onEdit: (u: UserItem) => void;
   onToggleVerify: (u: UserItem) => void;
@@ -180,35 +174,23 @@ export function UsersTable({
         </table>
       </div>
 
-      <div className="flex items-center justify-between gap-3 border-t border-border/60 px-5 py-3 text-[12.5px] text-muted-foreground">
+      <div className="flex flex-col items-start justify-between gap-3 border-t border-border/60 px-5 py-3 text-[12.5px] text-muted-foreground sm:flex-row sm:items-center">
         <span>
-          Showing{" "}
+          Page{" "}
+          <strong className="font-semibold text-foreground">{page}</strong> of{" "}
+          <strong className="font-semibold text-foreground">{totalPages}</strong>{" "}
+          ·{" "}
           <strong className="font-semibold text-foreground">
-            {users.length}
+            {total.toLocaleString("en-US")}
           </strong>{" "}
           users
         </span>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            className="inline-flex size-8 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
-            disabled={!hasHistory || isFetching}
-            onClick={onPrev}
-          >
-            <ChevronLeft className="size-3.5" />
-          </button>
-          <span className="font-mono text-xs text-muted-foreground">
-            Cursor mode
-          </span>
-          <button
-            type="button"
-            className="inline-flex size-8 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
-            disabled={!hasNextPage || !nextCursor || isFetching}
-            onClick={() => nextCursor && onNext(nextCursor)}
-          >
-            <ChevronRight className="size-3.5" />
-          </button>
-        </div>
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          disabled={isFetching}
+        />
       </div>
     </>
   );

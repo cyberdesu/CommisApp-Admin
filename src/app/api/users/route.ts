@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { parsePositiveInt } from "@/lib/admin-api";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
@@ -9,25 +10,11 @@ import { getUserFinanceSummaries } from "@/lib/user-finance";
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
 
-function parsePositiveInt(value: string | null, fallback: number) {
-  const parsed = Number.parseInt(value ?? "", 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
-}
-
 function parseBooleanFilter(value: string | null) {
   if (!value || value === "all") return undefined;
   if (value === "true") return true;
   if (value === "false") return false;
   return undefined;
-}
-
-function parseCursor(value: string | null) {
-  if (!value) return null;
-
-  const parsed = Number.parseInt(value, 10);
-  if (!Number.isFinite(parsed) || parsed <= 0) return null;
-
-  return parsed;
 }
 
 export async function GET(req: NextRequest) {
@@ -48,7 +35,7 @@ export async function GET(req: NextRequest) {
       DEFAULT_LIMIT,
     );
     const limit = Math.min(requestedLimit, MAX_LIMIT);
-    const cursor = parseCursor(searchParams.get("cursor"));
+    const requestedPage = parsePositiveInt(searchParams.get("page"), 1);
 
     const search = (searchParams.get("search") || "").trim();
     const role = (searchParams.get("role") || "").trim();
@@ -60,7 +47,7 @@ export async function GET(req: NextRequest) {
     const requestLogger = logger.child({
       adminId: admin.id,
       limit,
-      hasCursor: Boolean(cursor),
+      page: requestedPage,
       hasSearch: Boolean(search),
       searchLength: search.length,
       role: role || "all",
@@ -89,10 +76,15 @@ export async function GET(req: NextRequest) {
         : {}),
     };
 
+    const total = await prisma.user.count({ where: whereClause });
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const page = Math.min(requestedPage, totalPages);
+    const skip = (page - 1) * limit;
+
     const rows = await prisma.user.findMany({
       where: whereClause,
-      take: limit + 1,
-      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      take: limit,
+      skip,
       orderBy: { id: "desc" },
       select: {
         id: true,
@@ -112,22 +104,16 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const hasNextPage = rows.length > limit;
-    const slice = hasNextPage ? rows.slice(0, limit) : rows;
-
     const [data, financeByUserId] = await Promise.all([
-      minio.enrichUsersMedia(slice, MINIO_BUCKET_NAME),
-      getUserFinanceSummaries(slice.map((user) => user.id)),
+      minio.enrichUsersMedia(rows, MINIO_BUCKET_NAME),
+      getUserFinanceSummaries(rows.map((user) => user.id)),
     ]);
-
-    const nextCursor = hasNextPage
-      ? String(slice[slice.length - 1]?.id ?? "")
-      : null;
 
     requestLogger.info("Fetched users list", {
       resultCount: data.length,
-      hasNextPage,
-      nextCursor,
+      page,
+      totalPages,
+      total,
     });
 
     return NextResponse.json({
@@ -137,9 +123,11 @@ export async function GET(req: NextRequest) {
       })),
       meta: {
         limit,
-        hasNextPage,
-        nextCursor,
-        cursor: cursor ? String(cursor) : null,
+        page,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
       },
       filters: {
         search,
