@@ -1,16 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  AlertTriangle,
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Wallet,
-} from "lucide-react";
+import { AlertTriangle, CheckCircle2, Search, Wallet } from "lucide-react";
 import { toast } from "sonner";
 
 import { apiClient } from "@/lib/api/client";
@@ -24,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -66,9 +60,11 @@ type PayoutsResponse = {
   data: PayoutItem[];
   meta: {
     limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
     hasNextPage: boolean;
-    nextCursor: string | null;
-    cursor: string | null;
+    hasPreviousPage: boolean;
   };
   filters: {
     status: string;
@@ -112,8 +108,7 @@ function statusBadgeClass(status: string) {
 export default function PayoutsPage() {
   const queryClient = useQueryClient();
 
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [cursorHistory, setCursorHistory] = useState<Array<string | null>>([]);
+  const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<
@@ -121,17 +116,28 @@ export default function PayoutsPage() {
   >("PENDING");
 
   const payoutsQuery = useQuery({
-    queryKey: ["payouts", { cursor, search, status }],
+    queryKey: ["payouts", { page, search, status }],
     queryFn: async () => {
       const response = await apiClient.get<PayoutsResponse>("/payouts", {
         params: {
           limit: PAGE_SIZE,
-          ...(cursor ? { cursor } : {}),
+          page,
           search,
           status,
         },
       });
       return response.data;
+    },
+    placeholderData: (previous, previousQuery) => {
+      if (!previous || !previousQuery) return undefined;
+      const prev = previousQuery.queryKey[1] as {
+        page: number;
+        search: string;
+        status: string;
+      };
+      return prev.search === search && prev.status === status
+        ? previous
+        : undefined;
     },
   });
 
@@ -182,14 +188,19 @@ export default function PayoutsPage() {
 
   const rows = payoutsQuery.data?.data ?? [];
   const meta = payoutsQuery.data?.meta;
-  const hasNextPage = meta?.hasNextPage ?? false;
-  const nextCursor = meta?.nextCursor ?? null;
   const stats = statsQuery.data;
+
+  useEffect(() => {
+    if (!meta) return;
+    if (meta.page !== page) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPage(meta.page);
+    }
+  }, [meta, page]);
 
   function submitSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setCursor(null);
-    setCursorHistory([]);
+    setPage(1);
     setSearch(searchInput.trim());
   }
 
@@ -282,11 +293,8 @@ export default function PayoutsPage() {
               value={status}
               onValueChange={(value) => {
                 if (!value) return;
-                setStatus(
-                  value as "ALL" | "PENDING" | "SENT" | "FRAUD",
-                );
-                setCursor(null);
-                setCursorHistory([]);
+                setStatus(value as "ALL" | "PENDING" | "SENT" | "FRAUD");
+                setPage(1);
               }}
             >
               <SelectTrigger className="h-10 w-full rounded-lg border-border bg-card text-sm sm:w-[180px]">
@@ -423,50 +431,29 @@ export default function PayoutsPage() {
             </div>
           )}
 
-          <div className="flex flex-col items-center justify-between gap-4 border-t border-border bg-secondary/50 px-6 py-4 sm:flex-row">
+          <div className="flex flex-col items-start justify-between gap-3 border-t border-border bg-secondary/50 px-6 py-4 sm:flex-row sm:items-center">
             <p className="text-sm font-medium text-foreground/50">
-              Showing{" "}
-              <span className="text-foreground">{rows.length}</span> payouts
-              in this batch
+              Page{" "}
+              <span className="font-semibold text-foreground">
+                {meta?.page ?? page}
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-foreground">
+                {meta?.totalPages ?? 1}
+              </span>{" "}
+              ·{" "}
+              <span className="font-semibold text-foreground">
+                {(meta?.total ?? 0).toLocaleString("en-US")}
+              </span>{" "}
+              {status === "ALL" ? "" : `${status.toLowerCase()} `}payouts
             </p>
 
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                className="rounded-xl border-border bg-card shadow-sm hover:border-primary/35"
-                disabled={
-                  cursorHistory.length === 0 || payoutsQuery.isFetching
-                }
-                onClick={() => {
-                  if (cursorHistory.length === 0) return;
-                  const nextHistory = [...cursorHistory];
-                  const previousCursor = nextHistory.pop() ?? null;
-                  setCursorHistory(nextHistory);
-                  setCursor(previousCursor);
-                }}
-              >
-                <ChevronLeft className="mr-1 size-4" />
-                Prev
-              </Button>
-              <div className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground shadow-sm">
-                Cursor Mode
-              </div>
-              <Button
-                variant="outline"
-                className="rounded-xl border-border bg-card shadow-sm hover:border-primary/35"
-                disabled={
-                  !hasNextPage || !nextCursor || payoutsQuery.isFetching
-                }
-                onClick={() => {
-                  if (!nextCursor) return;
-                  setCursorHistory((current) => [...current, cursor]);
-                  setCursor(nextCursor);
-                }}
-              >
-                Next
-                <ChevronRight className="ml-1 size-4" />
-              </Button>
-            </div>
+            <Pagination
+              page={meta?.page ?? page}
+              totalPages={meta?.totalPages ?? 1}
+              onPageChange={setPage}
+              disabled={payoutsQuery.isFetching}
+            />
           </div>
         </CardContent>
       </Card>

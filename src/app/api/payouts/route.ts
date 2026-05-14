@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
       DEFAULT_LIMIT,
     );
     const limit = Math.min(requestedLimit, MAX_LIMIT);
-    const cursor = searchParams.get("cursor") || null;
+    const requestedPage = parsePositiveInt(searchParams.get("page"), 1);
 
     const statusRaw = (searchParams.get("status") || "PENDING")
       .trim()
@@ -51,14 +51,12 @@ export async function GET(req: NextRequest) {
       : "PENDING";
 
     const search = normalizeAdminSearch(searchParams.get("search"));
-    const summaryOnly = searchParams.get("summary") === "1";
     const requestLogger = logger.child({
       adminId: admin.id,
       status,
       search: search || null,
-      cursor,
+      page: requestedPage,
       limit,
-      summaryOnly,
     });
 
     const statusFilter =
@@ -85,24 +83,16 @@ export async function GET(req: NextRequest) {
         : {}),
     };
 
-    if (summaryOnly) {
-      const total = await prisma.payout.count({ where });
-      requestLogger.info("Fetched payout summary", {
-        total,
-      });
-
-      return NextResponse.json({
-        data: [],
-        meta: { total },
-        filters: { status, search },
-      }, { headers: ADMIN_PRIVATE_RESPONSE_HEADERS });
-    }
+    const total = await prisma.payout.count({ where });
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const page = Math.min(requestedPage, totalPages);
+    const skip = (page - 1) * limit;
 
     const payouts = await prisma.payout.findMany({
       where,
-      take: limit + 1,
-      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
-      orderBy: { createdAt: "desc" },
+      take: limit,
+      skip,
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       include: {
         artist: {
           select: {
@@ -116,19 +106,14 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const hasNextPage = payouts.length > limit;
-    const slice = hasNextPage ? payouts.slice(0, limit) : payouts;
-    const nextCursor = hasNextPage
-      ? slice[slice.length - 1]?.id ?? null
-      : null;
-
     requestLogger.info("Fetched payout list", {
-      resultCount: slice.length,
-      hasNextPage,
-      nextCursor,
+      resultCount: payouts.length,
+      page,
+      totalPages,
+      total,
     });
 
-    const data = slice.map((payout) => ({
+    const data = payouts.map((payout) => ({
       id: payout.id,
       artistId: payout.artistId,
       amount: payout.amount.toFixed(2),
@@ -152,9 +137,11 @@ export async function GET(req: NextRequest) {
       data,
       meta: {
         limit,
-        hasNextPage,
-        nextCursor,
-        cursor,
+        page,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
       },
       filters: { status, search },
     }, { headers: ADMIN_PRIVATE_RESPONSE_HEADERS });
