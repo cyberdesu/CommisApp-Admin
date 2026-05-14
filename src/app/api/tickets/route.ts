@@ -34,7 +34,7 @@ function parseEnum<T extends string>(
 
 function parseSortField(value: string | null): SortField {
   const allowed: SortField[] = ["createdAt", "updatedAt", "lastReplyAt"];
-  return allowed.includes(value as SortField) ? (value as SortField) : "createdAt";
+  return allowed.includes(value as SortField) ? (value as SortField) : "updatedAt";
 }
 
 function parseSortOrder(value: string | null): SortOrder {
@@ -96,7 +96,7 @@ export async function GET(req: NextRequest) {
         where,
         skip,
         take: limit,
-        orderBy: { [sortBy]: sortOrder },
+        orderBy: [{ [sortBy]: sortOrder }, { id: "desc" }],
         select: {
           id: true,
           type: true,
