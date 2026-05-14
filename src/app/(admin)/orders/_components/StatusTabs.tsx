@@ -22,6 +22,7 @@ export function StatusTabs({
     ...ADMIN_ORDER_STATUS_OPTIONS.map((s) => ({
       key: s as StatusFilter,
       label: getStatusLabel(s),
+      count: stats?.byStatus?.[s],
     })),
   ];
 

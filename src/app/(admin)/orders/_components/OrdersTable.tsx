@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  ChevronLeft,
-  ChevronRight,
-  Clock3,
-  Eye,
-  MessageSquare,
-} from "lucide-react";
+import { Clock3, Eye, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { UserOrderOverview } from "@/lib/user-orders.types";
+import { Pagination } from "@/components/ui/pagination";
 import {
   formatDate,
   formatMoney,
@@ -24,22 +19,20 @@ export function OrdersTable({
   rows,
   isLoading,
   isFetching,
-  hasHistory,
-  hasNextPage,
-  nextCursor,
-  onPrev,
-  onNext,
+  page,
+  totalPages,
+  total,
+  onPageChange,
   onReview,
   onOpenChat,
 }: {
   rows: UserOrderOverview[];
   isLoading: boolean;
   isFetching: boolean;
-  hasHistory: boolean;
-  hasNextPage: boolean;
-  nextCursor: string | null;
-  onPrev: () => void;
-  onNext: (next: string) => void;
+  page: number;
+  totalPages: number;
+  total: number;
+  onPageChange: (next: number) => void;
   onReview: (o: UserOrderOverview) => void;
   onOpenChat: (conversationId: string) => void;
 }) {
@@ -218,33 +211,23 @@ export function OrdersTable({
         </table>
       </div>
 
-      <div className="flex items-center justify-between gap-3 border-t border-border/60 px-5 py-3 text-[12.5px] text-muted-foreground">
+      <div className="flex flex-col items-start justify-between gap-3 border-t border-border/60 px-5 py-3 text-[12.5px] text-muted-foreground sm:flex-row sm:items-center">
         <span>
-          Showing{" "}
+          Page{" "}
+          <strong className="font-semibold text-foreground">{page}</strong> of{" "}
+          <strong className="font-semibold text-foreground">{totalPages}</strong>{" "}
+          ·{" "}
           <strong className="font-semibold text-foreground">
-            {rows.length}
+            {total.toLocaleString("en-US")}
           </strong>{" "}
           orders
         </span>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            disabled={!hasHistory || isFetching}
-            onClick={onPrev}
-            className="inline-flex size-8 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <ChevronLeft className="size-3.5" />
-          </button>
-          <span className="font-mono text-xs">Cursor mode</span>
-          <button
-            type="button"
-            disabled={!hasNextPage || !nextCursor || isFetching}
-            onClick={() => nextCursor && onNext(nextCursor)}
-            className="inline-flex size-8 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <ChevronRight className="size-3.5" />
-          </button>
-        </div>
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          disabled={isFetching}
+        />
       </div>
     </>
   );

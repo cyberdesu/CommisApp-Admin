@@ -243,6 +243,17 @@ function buildAttentionFlags(params: {
       level: "info",
     });
   }
+  if (
+    attentionFlags.length === 0 &&
+    params.revisionsIncluded > 0 &&
+    params.revisionsUsed >= 1
+  ) {
+    attentionFlags.push({
+      code: "REVISIONS_IN_USE",
+      label: `Revisions in use (${params.revisionsUsed}/${params.revisionsIncluded})`,
+      level: "info",
+    });
+  }
 
   return attentionFlags;
 }
@@ -480,7 +491,7 @@ export async function getUserOrdersDetail(
 
 export async function getAdminOrdersList(params: {
   limit: number;
-  cursor?: string | null;
+  page?: number;
   status?: AdminOrderStatus | "ALL";
   source?: "SERVICE" | "CUSTOM_REQUEST" | "ALL";
   attention?: "ALL" | "FLAGGED" | "CLEAN";
@@ -491,6 +502,7 @@ export async function getAdminOrdersList(params: {
     Math.max(1, params.limit),
     ADMIN_ORDER_PAGE_LIMIT_MAX,
   );
+  const requestedPage = Math.max(1, params.page ?? 1);
   const search = params.search?.trim() || "";
 
   const userSearchFilters: Prisma.UserWhereInput[] = search
@@ -500,6 +512,21 @@ export async function getAdminOrdersList(params: {
         { name: { contains: search, mode: "insensitive" } },
       ]
     : [];
+
+  const attentionWhere: Prisma.OrderWhereInput | null =
+    params.attention === "FLAGGED"
+      ? {
+          revisionsIncluded: { gt: 0 },
+          revisionsUsed: { gte: 1 },
+        }
+      : params.attention === "CLEAN"
+        ? {
+            OR: [
+              { revisionsIncluded: { equals: 0 } },
+              { revisionsUsed: { equals: 0 } },
+            ],
+          }
+        : null;
 
   const where: Prisma.OrderWhereInput = {
     ...(params.status && params.status !== "ALL"
@@ -513,6 +540,7 @@ export async function getAdminOrdersList(params: {
           OR: [{ artistId: params.userId }, { clientId: params.userId }],
         }
       : {}),
+    ...(attentionWhere ?? {}),
     ...(search
       ? {
           AND: [
@@ -556,17 +584,20 @@ export async function getAdminOrdersList(params: {
       : {}),
   };
 
+  const total = await prisma.order.count({ where });
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const page = Math.min(requestedPage, totalPages);
+  const skip = (page - 1) * limit;
+
   const rows = await prisma.order.findMany({
     where,
-    take: limit + 1,
-    ...(params.cursor ? { cursor: { id: params.cursor }, skip: 1 } : {}),
-    orderBy: { id: "desc" },
+    take: limit,
+    skip,
+    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
     select: orderOverviewSelect,
   });
 
-  const hasNextPage = rows.length > limit;
-  const slice = hasNextPage ? rows.slice(0, limit) : rows;
-  const orderIds = slice.map((order) => order.id);
+  const orderIds = rows.map((order) => order.id);
 
   const [events, completedPayments] = await Promise.all([
     orderIds.length === 0
@@ -602,76 +633,66 @@ export async function getAdminOrdersList(params: {
   ]);
 
   const overviews = buildOrderOverviews({
-    orders: slice,
+    orders: rows,
     events,
     completedPayments,
   });
 
-  const filteredOrders =
-    params.attention === "FLAGGED"
-      ? overviews.filter((order) => order.attentionFlags.length > 0)
-      : params.attention === "CLEAN"
-        ? overviews.filter((order) => order.attentionFlags.length === 0)
-        : overviews;
-
   return {
-    orders: filteredOrders,
-    hasNextPage,
-    nextCursor: hasNextPage ? slice[slice.length - 1]?.id ?? null : null,
+    orders: overviews,
+    total,
+    page,
+    totalPages,
+    hasNextPage: page < totalPages,
+    hasPreviousPage: page > 1,
   };
 }
 
 export async function getAdminOrderStats(): Promise<AdminOrderStats> {
-  const [total, active, delivered, completed, attention] = await Promise.all([
-    prisma.order.count(),
-    prisma.order.count({
-      where: {
-        status: {
-          in: [...ACTIVE_ORDER_STATUSES],
-        },
-      },
+  const [statusGroups, attention] = await Promise.all([
+    prisma.order.groupBy({
+      by: ["status"],
+      _count: { _all: true },
     }),
     prisma.order.count({
       where: {
-        status: "DELIVERED",
-      },
-    }),
-    prisma.order.count({
-      where: {
-        status: "COMPLETED",
-      },
-    }),
-    prisma.order.count({
-      where: {
-        OR: [
-          {
-            revisionsIncluded: {
-              gt: 0,
-            },
-            revisionsUsed: {
-              gte: 1,
-            },
-          },
-          {
-            status: "DELIVERED",
-            revisionsIncluded: {
-              gt: 0,
-            },
-            revisionsUsed: {
-              gte: 1,
-            },
-          },
-        ],
+        revisionsIncluded: { gt: 0 },
+        revisionsUsed: { gte: 1 },
       },
     }),
   ]);
 
+  const byStatus: Record<AdminOrderStatus, number> = {
+    PENDING: 0,
+    ACCEPTED: 0,
+    IN_PROGRESS: 0,
+    WAITING_FOR_CLIENT: 0,
+    DELIVERED: 0,
+    COMPLETED: 0,
+    CANCELLED: 0,
+    REJECTED: 0,
+    REFUNDED: 0,
+  };
+
+  let total = 0;
+  for (const group of statusGroups) {
+    const count = group._count._all;
+    byStatus[group.status as AdminOrderStatus] = count;
+    total += count;
+  }
+
+  const active = [...ACTIVE_ORDER_STATUSES].reduce(
+    (sum, status) => sum + byStatus[status],
+    0,
+  );
+
   return {
     total,
     active,
-    delivered,
-    completed,
+    delivered: byStatus.DELIVERED,
+    completed: byStatus.COMPLETED,
     attention,
+    byStatus,
   };
 }
 

@@ -19,31 +19,50 @@ import {
   type StatusFilter,
 } from "../_lib/types";
 
+type OrdersFilterKey = {
+  search: string;
+  status: StatusFilter;
+  source: SourceFilter;
+  attention: AttentionFilter;
+  scopedUserId: number | null;
+};
+
+function buildFilterKey(params: OrdersFilterKey): OrdersFilterKey {
+  return {
+    search: params.search,
+    status: params.status,
+    source: params.source,
+    attention: params.attention,
+    scopedUserId: params.scopedUserId,
+  };
+}
+
+function filtersEqual(left: OrdersFilterKey, right: OrdersFilterKey) {
+  return (
+    left.search === right.search &&
+    left.status === right.status &&
+    left.source === right.source &&
+    left.attention === right.attention &&
+    left.scopedUserId === right.scopedUserId
+  );
+}
+
 export function useOrdersList(params: {
-  cursor: string | null;
+  page: number;
   search: string;
   status: StatusFilter;
   source: SourceFilter;
   attention: AttentionFilter;
   scopedUserId: number | null;
 }) {
+  const filters = buildFilterKey(params);
   return useQuery({
-    queryKey: [
-      "orders",
-      {
-        cursor: params.cursor,
-        search: params.search,
-        status: params.status,
-        source: params.source,
-        attention: params.attention,
-        scopedUserId: params.scopedUserId,
-      },
-    ],
+    queryKey: ["orders", { page: params.page, ...filters }],
     queryFn: async () => {
       const response = await apiClient.get<OrdersResponse>("/orders", {
         params: {
           limit: PAGE_SIZE,
-          ...(params.cursor ? { cursor: params.cursor } : {}),
+          page: params.page,
           ...(params.search ? { search: params.search } : {}),
           status: params.status,
           source: params.source,
@@ -52,6 +71,21 @@ export function useOrdersList(params: {
         },
       });
       return response.data;
+    },
+    placeholderData: (previous, previousQuery) => {
+      if (!previous || !previousQuery) return undefined;
+      const prevPayload = previousQuery.queryKey[1] as
+        | (OrdersFilterKey & { page: number })
+        | undefined;
+      if (!prevPayload) return undefined;
+      const prevFilters: OrdersFilterKey = {
+        search: prevPayload.search,
+        status: prevPayload.status,
+        source: prevPayload.source,
+        attention: prevPayload.attention,
+        scopedUserId: prevPayload.scopedUserId,
+      };
+      return filtersEqual(prevFilters, filters) ? previous : undefined;
     },
   });
 }

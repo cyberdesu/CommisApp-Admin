@@ -16,6 +16,7 @@ export type UserOrderAttentionLevel = "info" | "warning" | "critical";
 export type UserOrderAttentionFlag = {
   code:
     | "REPEATED_DELIVERY"
+    | "REVISIONS_IN_USE"
     | "REVISION_LIMIT_REACHED"
     | "REVISION_LIMIT_EXCEEDED"
     | "DELIVERED_WITH_NO_REVISION_LEFT"
@@ -94,8 +95,11 @@ export type UserOrdersDetail = {
 
 export type AdminOrdersListResult = {
   orders: UserOrderOverview[];
+  total: number;
+  page: number;
+  totalPages: number;
   hasNextPage: boolean;
-  nextCursor: string | null;
+  hasPreviousPage: boolean;
 };
 
 export type AdminOrderStats = {
@@ -104,6 +108,7 @@ export type AdminOrderStats = {
   delivered: number;
   completed: number;
   attention: number;
+  byStatus: Record<AdminOrderStatus, number>;
 };
 
 export type OrderAnalyticsParty = {

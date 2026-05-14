@@ -22,6 +22,7 @@ const VALID_STATUSES = [
   "COMPLETED",
   "CANCELLED",
   "REJECTED",
+  "REFUNDED",
 ] as const;
 const VALID_SOURCES = ["ALL", "SERVICE", "CUSTOM_REQUEST"] as const;
 const VALID_ATTENTION = ["ALL", "FLAGGED", "CLEAN"] as const;
@@ -64,7 +65,7 @@ export async function GET(req: NextRequest) {
       DEFAULT_LIMIT,
     );
     const limit = Math.min(requestedLimit, MAX_LIMIT);
-    const cursor = searchParams.get("cursor") || null;
+    const page = parsePositiveInt(searchParams.get("page"), 1);
     const search = normalizeAdminSearch(searchParams.get("search"));
     const userId = parseOptionalUserId(searchParams.get("userId"));
 
@@ -95,7 +96,7 @@ export async function GET(req: NextRequest) {
     const requestLogger = logger.child({
       adminId: admin.id,
       limit,
-      cursor,
+      page,
       status,
       source,
       attention,
@@ -106,7 +107,7 @@ export async function GET(req: NextRequest) {
 
     const result = await getAdminOrdersList({
       limit,
-      cursor,
+      page,
       status,
       source,
       attention,
@@ -116,17 +117,20 @@ export async function GET(req: NextRequest) {
 
     requestLogger.info("Fetched admin order list", {
       resultCount: result.orders.length,
-      hasNextPage: result.hasNextPage,
-      nextCursor: result.nextCursor,
+      page: result.page,
+      totalPages: result.totalPages,
+      total: result.total,
     });
 
     return NextResponse.json({
       data: result.orders,
       meta: {
         limit,
+        page: result.page,
+        total: result.total,
+        totalPages: result.totalPages,
         hasNextPage: result.hasNextPage,
-        nextCursor: result.nextCursor,
-        cursor,
+        hasPreviousPage: result.hasPreviousPage,
       },
       filters: {
         search,

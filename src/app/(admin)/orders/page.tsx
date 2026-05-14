@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AlertTriangle, Download } from "lucide-react";
 import { toast } from "sonner";
@@ -39,8 +39,7 @@ export default function OrdersPage() {
     return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
   }, [searchParams]);
 
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [cursorHistory, setCursorHistory] = useState<Array<string | null>>([]);
+  const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("ALL");
@@ -58,7 +57,7 @@ export default function OrdersPage() {
   const [interventionNote, setInterventionNote] = useState("");
 
   const ordersQuery = useOrdersList({
-    cursor,
+    page,
     search,
     status,
     source,
@@ -77,13 +76,21 @@ export default function OrdersPage() {
 
   const rows = ordersQuery.data?.data ?? [];
   const meta = ordersQuery.data?.meta;
-  const hasNextPage = meta?.hasNextPage ?? false;
-  const nextCursor = meta?.nextCursor ?? null;
   const stats = statsQuery.data;
 
+  useEffect(() => {
+    if (!meta) return;
+    if (meta.page !== page) {
+      // Sync client state when server clamps page (e.g., totalPages drops
+      // after invalidation). Required so query key matches the actual page
+      // returned by the server.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPage(meta.page);
+    }
+  }, [meta, page]);
+
   function resetPagination() {
-    setCursor(null);
-    setCursorHistory([]);
+    setPage(1);
   }
 
   function submitSearch(event: React.FormEvent<HTMLFormElement>) {
@@ -146,19 +153,6 @@ export default function OrdersPage() {
         : {}),
       note,
     });
-  }
-
-  function handlePrev() {
-    if (cursorHistory.length === 0) return;
-    const nextHistory = [...cursorHistory];
-    const previousCursor = nextHistory.pop() ?? null;
-    setCursorHistory(nextHistory);
-    setCursor(previousCursor);
-  }
-
-  function handleNext(next: string) {
-    setCursorHistory((current) => [...current, cursor]);
-    setCursor(next);
   }
 
   function changeFilter<T>(setter: (v: T) => void) {
@@ -262,11 +256,10 @@ export default function OrdersPage() {
           rows={rows}
           isLoading={ordersQuery.isLoading}
           isFetching={ordersQuery.isFetching}
-          hasHistory={cursorHistory.length > 0}
-          hasNextPage={hasNextPage}
-          nextCursor={nextCursor}
-          onPrev={handlePrev}
-          onNext={handleNext}
+          page={meta?.page ?? page}
+          totalPages={meta?.totalPages ?? 1}
+          total={meta?.total ?? 0}
+          onPageChange={setPage}
           onReview={openOrder}
           onOpenChat={openOrderChat}
         />

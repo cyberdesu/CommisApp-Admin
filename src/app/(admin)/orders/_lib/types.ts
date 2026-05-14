@@ -7,9 +7,11 @@ export type OrdersResponse = {
   data: UserOrderOverview[];
   meta: {
     limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
     hasNextPage: boolean;
-    nextCursor: string | null;
-    cursor: string | null;
+    hasPreviousPage: boolean;
   };
   filters: {
     search: string;
@@ -46,4 +48,5 @@ export const ADMIN_ORDER_STATUS_OPTIONS: AdminOrderStatus[] = [
   "COMPLETED",
   "CANCELLED",
   "REJECTED",
+  "REFUNDED",
 ];
