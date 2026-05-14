@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { DeleteShowcaseModal } from "./_components/DeleteShowcaseModal";
@@ -20,7 +20,7 @@ import {
   useShowcaseDetail,
   useShowcasesList,
 } from "./_hooks/useShowcasesData";
-import { detailToItem, matchesTab } from "./_lib/helpers";
+import { detailToItem } from "./_lib/helpers";
 import type {
   ShowcaseItem,
   ShowcaseTab,
@@ -30,8 +30,7 @@ import type {
 export default function ShowcasesPage() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [cursorHistory, setCursorHistory] = useState<Array<string | null>>([]);
+  const [page, setPage] = useState(1);
   const [tab, setTab] = useState<ShowcaseTab>("ALL");
   const [view, setView] = useState<ShowcaseView>("GRID");
 
@@ -49,7 +48,7 @@ export default function ShowcasesPage() {
   const [deleteConfirm, setDeleteConfirm] = useState("");
   const [deletePending, setDeletePending] = useState(false);
 
-  const showcasesQuery = useShowcasesList({ cursor, search });
+  const showcasesQuery = useShowcasesList({ page, search, tab });
   const detailQuery = useShowcaseDetail(detailId);
 
   const showcases = useMemo(
@@ -57,36 +56,29 @@ export default function ShowcasesPage() {
     [showcasesQuery.data?.data],
   );
   const meta = showcasesQuery.data?.meta;
-  const hasNextPage = meta?.hasNextPage ?? false;
-  const nextCursor = meta?.nextCursor ?? null;
+  const stats = showcasesQuery.data?.stats;
 
-  const filtered = useMemo(
-    () => showcases.filter((s) => matchesTab(s, tab)),
-    [showcases, tab],
-  );
+  useEffect(() => {
+    if (!meta) return;
+    if (meta.page !== page) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPage(meta.page);
+    }
+  }, [meta, page]);
 
   function resetPagination() {
-    setCursor(null);
-    setCursorHistory([]);
+    setPage(1);
+  }
+
+  function changeTab(next: ShowcaseTab) {
+    setTab(next);
+    resetPagination();
   }
 
   function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     resetPagination();
     setSearch(searchInput.trim());
-  }
-
-  function handlePrev() {
-    if (cursorHistory.length === 0) return;
-    const nextHistory = [...cursorHistory];
-    const previousCursor = nextHistory.pop() ?? null;
-    setCursorHistory(nextHistory);
-    setCursor(previousCursor);
-  }
-
-  function handleNext(next: string) {
-    setCursorHistory((current) => [...current, cursor]);
-    setCursor(next);
   }
 
   function openDetail(id: string) {
@@ -144,7 +136,7 @@ export default function ShowcasesPage() {
                 Showcase directory
               </h3>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                Filter by status, verifikasi, atau content flag. Cursor-paginated.
+                Filter by status, verifikasi, atau content flag.
               </p>
             </div>
             <ShowcaseToolbar
@@ -155,7 +147,7 @@ export default function ShowcasesPage() {
               onViewChange={setView}
             />
           </div>
-          <ShowcaseTabs tab={tab} onChange={setTab} items={showcases} />
+          <ShowcaseTabs tab={tab} onChange={changeTab} stats={stats} />
         </div>
 
         {showcasesQuery.isLoading ? (
@@ -164,14 +156,14 @@ export default function ShowcasesPage() {
           </div>
         ) : view === "GRID" ? (
           <ShowcaseGallery
-            items={filtered}
+            items={showcases}
             onView={openDetail}
             onModerate={openModerate}
             onDelete={openDelete}
           />
         ) : (
           <ShowcasesTable
-            items={filtered}
+            items={showcases}
             onView={openDetail}
             onModerate={openModerate}
             onDelete={openDelete}
@@ -179,13 +171,11 @@ export default function ShowcasesPage() {
         )}
 
         <PaginationBar
-          loadedCount={showcases.length}
-          hasHistory={cursorHistory.length > 0}
-          hasNextPage={hasNextPage}
-          nextCursor={nextCursor}
+          page={meta?.page ?? page}
+          totalPages={meta?.totalPages ?? 1}
+          total={meta?.total ?? 0}
           isFetching={showcasesQuery.isFetching}
-          onPrev={handlePrev}
-          onNext={handleNext}
+          onPageChange={setPage}
         />
       </section>
 

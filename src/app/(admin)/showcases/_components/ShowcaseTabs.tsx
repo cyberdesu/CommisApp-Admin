@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { matchesTab, tabLabel } from "../_lib/helpers";
-import type { ShowcaseItem, ShowcaseTab } from "../_lib/types";
+import { tabLabel } from "../_lib/helpers";
+import type { ShowcaseTab, ShowcaseTabStats } from "../_lib/types";
 
 const TABS: ShowcaseTab[] = [
   "ALL",
@@ -16,17 +16,17 @@ const TABS: ShowcaseTab[] = [
 export function ShowcaseTabs({
   tab,
   onChange,
-  items,
+  stats,
 }: {
   tab: ShowcaseTab;
   onChange: (t: ShowcaseTab) => void;
-  items: ShowcaseItem[];
+  stats: ShowcaseTabStats | undefined;
 }) {
   return (
     <div className="inline-flex flex-wrap gap-1 rounded-xl border border-border bg-background p-[5px]">
       {TABS.map((t) => {
         const on = tab === t;
-        const count = items.filter((it) => matchesTab(it, t)).length;
+        const count = stats?.[t];
         return (
           <button
             key={t}
@@ -44,7 +44,7 @@ export function ShowcaseTabs({
                 on ? "text-primary" : "text-muted-foreground/70",
               )}
             >
-              {count}
+              {typeof count === "number" ? count.toLocaleString("en-US") : "—"}
             </span>
           </button>
         );

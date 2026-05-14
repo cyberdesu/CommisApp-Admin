@@ -48,7 +48,7 @@ export function matchesTab(item: ShowcaseItem, tab: ShowcaseTab): boolean {
     case "COMMISSION":
       return item.isFromVerifiedCommission;
     case "MATURE":
-      return false; // batch items lack containsMatureContent — needs detail fetch
+      return item.containsMatureContent;
     case "VERIFIED":
       return item.showcase.isVerified;
   }
@@ -115,6 +115,7 @@ export function detailToItem(detail: ShowcaseDetailData): ShowcaseItem {
     title: detail.title,
     isDraft: detail.isDraft,
     isFromVerifiedCommission: detail.isFromVerifiedCommission,
+    containsMatureContent: detail.containsMatureContent,
     likeCount: detail.likeCount,
     viewCount: detail.viewCount,
     createdAt: detail.createdAt,

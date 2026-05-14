@@ -4,46 +4,49 @@ import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@/prisma/generated/client";
 
-const DEFAULT_LIMIT = 10;
+const DEFAULT_LIMIT = 12;
 const MAX_LIMIT = 100;
 
-type ShowcaseCursor = {
-  createdAt: Date;
-  id: string;
-};
+const VALID_TABS = [
+  "ALL",
+  "PUBLISHED",
+  "DRAFTS",
+  "COMMISSION",
+  "MATURE",
+  "VERIFIED",
+] as const;
+type ShowcaseTabFilter = (typeof VALID_TABS)[number];
 
 function parsePositiveInt(value: string | null, fallback: number) {
   const parsed = Number.parseInt(value ?? "", 10);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
-function encodeCursor(cursor: ShowcaseCursor) {
-  return Buffer.from(
-    JSON.stringify({
-      createdAt: cursor.createdAt.toISOString(),
-      id: cursor.id,
-    }),
-  ).toString("base64url");
+function isOneOf<T extends readonly string[]>(
+  value: string,
+  allowed: T,
+): value is T[number] {
+  return (allowed as readonly string[]).includes(value);
 }
 
-function parseCursor(value: string | null): ShowcaseCursor | null {
-  if (!value) return null;
-
-  try {
-    const raw = Buffer.from(value, "base64url").toString("utf8");
-    const parsed = JSON.parse(raw) as { createdAt?: string; id?: string };
-    if (!parsed?.createdAt || !parsed?.id) return null;
-
-    const createdAt = new Date(parsed.createdAt);
-    if (Number.isNaN(createdAt.getTime())) return null;
-
-    return {
-      createdAt,
-      id: parsed.id,
-    };
-  } catch {
-    return null;
+function buildTabWhere(
+  tab: ShowcaseTabFilter,
+): Prisma.ShowcaseItemWhereInput | null {
+  switch (tab) {
+    case "ALL":
+      return null;
+    case "PUBLISHED":
+      return { isDraft: false };
+    case "DRAFTS":
+      return { isDraft: true };
+    case "COMMISSION":
+      return { isFromVerifiedCommission: true };
+    case "MATURE":
+      return { containsMatureContent: true };
+    case "VERIFIED":
+      return { showcase: { is: { isVerified: true } } };
   }
 }
 
@@ -65,68 +68,85 @@ export async function GET(req: NextRequest) {
       DEFAULT_LIMIT,
     );
     const limit = Math.min(requestedLimit, MAX_LIMIT);
+    const requestedPage = parsePositiveInt(searchParams.get("page"), 1);
     const search = (searchParams.get("search") || "").trim();
-    const summaryOnly = searchParams.get("summary") === "1";
-    const cursorRaw = searchParams.get("cursor");
-    const cursor = parseCursor(cursorRaw);
+
+    const tabRaw = (searchParams.get("tab") || "ALL").trim().toUpperCase();
+    const tab: ShowcaseTabFilter = isOneOf(tabRaw, VALID_TABS)
+      ? tabRaw
+      : "ALL";
+
     const requestLogger = logger.child({
       adminId: admin.id,
       limit,
-      hasCursor: Boolean(cursor),
+      page: requestedPage,
+      tab,
       hasSearch: Boolean(search),
       searchLength: search.length,
-      summaryOnly,
     });
 
-    const baseWhere = search
-      ? { title: { contains: search, mode: "insensitive" as const } }
+    const baseWhere: Prisma.ShowcaseItemWhereInput = search
+      ? { title: { contains: search, mode: "insensitive" } }
       : {};
 
-    if (summaryOnly) {
-      const total = await prisma.showcaseItem.count({ where: baseWhere });
-      requestLogger.info("Fetched showcase summary", { total });
-      return NextResponse.json({
-        data: [],
-        meta: {
-          total,
-          page: 1,
-          limit: 0,
-          totalPages: 1,
-        },
-      });
-    }
-
-    const where = cursor
-      ? {
-          AND: [
-            baseWhere,
-            {
-              OR: [
-                { createdAt: { lt: cursor.createdAt } },
-                {
-                  AND: [
-                    { createdAt: cursor.createdAt },
-                    { id: { lt: cursor.id } },
-                  ],
-                },
-              ],
-            },
-          ],
-        }
+    const tabWhere = buildTabWhere(tab);
+    const where: Prisma.ShowcaseItemWhereInput = tabWhere
+      ? { AND: [baseWhere, tabWhere] }
       : baseWhere;
+
+    const [
+      allCount,
+      publishedCount,
+      draftsCount,
+      commissionCount,
+      matureCount,
+      verifiedCount,
+    ] = await prisma.$transaction([
+      prisma.showcaseItem.count({ where: baseWhere }),
+      prisma.showcaseItem.count({
+        where: { AND: [baseWhere, { isDraft: false }] },
+      }),
+      prisma.showcaseItem.count({
+        where: { AND: [baseWhere, { isDraft: true }] },
+      }),
+      prisma.showcaseItem.count({
+        where: { AND: [baseWhere, { isFromVerifiedCommission: true }] },
+      }),
+      prisma.showcaseItem.count({
+        where: { AND: [baseWhere, { containsMatureContent: true }] },
+      }),
+      prisma.showcaseItem.count({
+        where: {
+          AND: [baseWhere, { showcase: { is: { isVerified: true } } }],
+        },
+      }),
+    ]);
+
+    const stats: Record<ShowcaseTabFilter, number> = {
+      ALL: allCount,
+      PUBLISHED: publishedCount,
+      DRAFTS: draftsCount,
+      COMMISSION: commissionCount,
+      MATURE: matureCount,
+      VERIFIED: verifiedCount,
+    };
+
+    const total = stats[tab];
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const page = Math.min(requestedPage, totalPages);
+    const skip = (page - 1) * limit;
 
     const rows = await prisma.showcaseItem.findMany({
       where,
-      take: limit + 1,
-      orderBy: [
-        { createdAt: "desc" },
-        { id: "desc" },
-      ],
+      take: limit,
+      skip,
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
       select: {
         id: true,
         title: true,
         isDraft: true,
         isFromVerifiedCommission: true,
+        containsMatureContent: true,
         likeCount: true,
         viewCount: true,
         createdAt: true,
@@ -159,11 +179,8 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const hasNextPage = rows.length > limit;
-    const sliceRaw = hasNextPage ? rows.slice(0, limit) : rows;
-
-    const slice = await Promise.all(
-      sliceRaw.map(async (row) => {
+    const data = await Promise.all(
+      rows.map(async (row) => {
         const files = await Promise.all(
           row.showcaseFiles.map(async (file) => ({
             ...file,
@@ -173,27 +190,28 @@ export async function GET(req: NextRequest) {
         return { ...row, showcaseFiles: files };
       }),
     );
-    const lastItem = slice[slice.length - 1];
-    const nextCursor = hasNextPage && lastItem
-      ? encodeCursor({
-          createdAt: lastItem.createdAt,
-          id: lastItem.id,
-        })
-      : null;
 
     requestLogger.info("Fetched showcases list", {
-      resultCount: slice.length,
-      hasNextPage,
-      nextCursor,
+      resultCount: data.length,
+      page,
+      totalPages,
+      total,
     });
 
     return NextResponse.json({
-      data: slice,
+      data,
       meta: {
         limit,
-        hasNextPage,
-        nextCursor,
-        cursor: cursorRaw,
+        page,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+      stats,
+      filters: {
+        search,
+        tab,
       },
     });
   } catch (error) {

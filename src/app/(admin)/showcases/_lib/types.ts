@@ -3,6 +3,7 @@ export type ShowcaseItem = {
   title: string;
   isDraft: boolean;
   isFromVerifiedCommission: boolean;
+  containsMatureContent: boolean;
   likeCount: number;
   viewCount: number;
   createdAt: string;
@@ -18,13 +19,22 @@ export type ShowcaseItem = {
   showcaseFiles?: { id: string; url: string; type: string }[];
 };
 
+export type ShowcaseTabStats = Record<ShowcaseTab, number>;
+
 export type ShowcasesResponse = {
   data: ShowcaseItem[];
   meta: {
     limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
     hasNextPage: boolean;
-    nextCursor: string | null;
-    cursor: string | null;
+    hasPreviousPage: boolean;
+  };
+  stats: ShowcaseTabStats;
+  filters: {
+    search: string;
+    tab: ShowcaseTab;
   };
 };
 
@@ -35,6 +45,7 @@ export type ShowcaseDetailData = {
   isDraft: boolean;
   isFromVerifiedCommission: boolean;
   containsMatureContent: boolean;
+
   contentWarnings: unknown;
   likeCount: number;
   viewCount: number;
