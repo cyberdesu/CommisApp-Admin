@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { parsePositiveInt } from "@/lib/admin-api";
+import {
+  normalizeAdminSearch,
+  parsePositiveInt,
+  tokenizeSearch,
+} from "@/lib/admin-api";
+import { Prisma } from "@/prisma/generated/client";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
@@ -37,7 +42,8 @@ export async function GET(req: NextRequest) {
     const limit = Math.min(requestedLimit, MAX_LIMIT);
     const requestedPage = parsePositiveInt(searchParams.get("page"), 1);
 
-    const search = (searchParams.get("search") || "").trim();
+    const search = normalizeAdminSearch(searchParams.get("search"));
+    const tokens = tokenizeSearch(search);
     const role = (searchParams.get("role") || "").trim();
     const verified = parseBooleanFilter(searchParams.get("verified"));
     const verifiedArtists = parseBooleanFilter(
@@ -50,21 +56,26 @@ export async function GET(req: NextRequest) {
       page: requestedPage,
       hasSearch: Boolean(search),
       searchLength: search.length,
+      tokenCount: tokens.length,
       role: role || "all",
       verified: verified ?? "all",
       verifiedArtists: verifiedArtists ?? "all",
       hasAvatar: hasAvatar ?? "all",
     });
 
-    const whereClause = {
-      ...(search
-        ? {
-            OR: [
-              { name: { contains: search, mode: "insensitive" as const } },
-              { email: { contains: search, mode: "insensitive" as const } },
-              { username: { contains: search, mode: "insensitive" as const } },
-            ],
-          }
+    const buildUserTokenClause = (
+      token: string,
+    ): Prisma.UserWhereInput => ({
+      OR: [
+        { name: { contains: token, mode: "insensitive" } },
+        { email: { contains: token, mode: "insensitive" } },
+        { username: { contains: token, mode: "insensitive" } },
+      ],
+    });
+
+    const whereClause: Prisma.UserWhereInput = {
+      ...(tokens.length > 0
+        ? { AND: tokens.map(buildUserTokenClause) }
         : {}),
       ...(role && role !== "all" ? { role } : {}),
       ...(verified !== undefined ? { verified } : {}),

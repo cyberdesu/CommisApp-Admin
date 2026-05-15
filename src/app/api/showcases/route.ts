@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { parsePositiveInt } from "@/lib/admin-api";
+import {
+  normalizeAdminSearch,
+  parsePositiveInt,
+  tokenizeSearch,
+} from "@/lib/admin-api";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import { minio, MINIO_BUCKET_NAME } from "@/lib/minio";
@@ -65,7 +69,8 @@ export async function GET(req: NextRequest) {
     );
     const limit = Math.min(requestedLimit, MAX_LIMIT);
     const requestedPage = parsePositiveInt(searchParams.get("page"), 1);
-    const search = (searchParams.get("search") || "").trim();
+    const search = normalizeAdminSearch(searchParams.get("search"));
+    const tokens = tokenizeSearch(search);
 
     const tabRaw = (searchParams.get("tab") || "ALL").trim().toUpperCase();
     const tab: ShowcaseTabFilter = isOneOf(tabRaw, VALID_TABS)
@@ -79,11 +84,42 @@ export async function GET(req: NextRequest) {
       tab,
       hasSearch: Boolean(search),
       searchLength: search.length,
+      tokenCount: tokens.length,
     });
 
-    const baseWhere: Prisma.ShowcaseItemWhereInput = search
-      ? { title: { contains: search, mode: "insensitive" } }
-      : {};
+    const buildShowcaseTokenClause = (
+      token: string,
+    ): Prisma.ShowcaseItemWhereInput => ({
+      OR: [
+        { title: { contains: token, mode: "insensitive" } },
+        {
+          showcase: {
+            is: {
+              user: {
+                is: {
+                  OR: [
+                    { username: { contains: token, mode: "insensitive" } },
+                    { name: { contains: token, mode: "insensitive" } },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
+          tags: {
+            some: {
+              nameTag: { contains: token, mode: "insensitive" },
+            },
+          },
+        },
+      ],
+    });
+
+    const baseWhere: Prisma.ShowcaseItemWhereInput =
+      tokens.length > 0
+        ? { AND: tokens.map(buildShowcaseTokenClause) }
+        : {};
 
     const tabWhere = buildTabWhere(tab);
     const where: Prisma.ShowcaseItemWhereInput = tabWhere

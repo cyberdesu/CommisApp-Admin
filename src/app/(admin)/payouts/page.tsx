@@ -277,7 +277,7 @@ export default function PayoutsPage() {
                 <Input
                   value={searchInput}
                   onChange={(event) => setSearchInput(event.target.value)}
-                  placeholder="Search artist username/email..."
+                  placeholder="Search artist name, username, email, or PayPal..."
                   className="h-10 rounded-lg border-border bg-card pl-10 text-sm placeholder:text-muted-foreground focus-visible:border-primary focus-visible:ring-primary/20"
                 />
               </div>

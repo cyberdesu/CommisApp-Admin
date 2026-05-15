@@ -4,6 +4,7 @@ import {
   ADMIN_PRIVATE_RESPONSE_HEADERS,
   normalizeAdminSearch,
   parsePositiveInt,
+  tokenizeSearch,
 } from "@/lib/admin-api";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
@@ -51,10 +52,12 @@ export async function GET(req: NextRequest) {
       : "PENDING";
 
     const search = normalizeAdminSearch(searchParams.get("search"));
+    const tokens = tokenizeSearch(search);
     const requestLogger = logger.child({
       adminId: admin.id,
       status,
       search: search || null,
+      tokenCount: tokens.length,
       page: requestedPage,
       limit,
     });
@@ -62,24 +65,29 @@ export async function GET(req: NextRequest) {
     const statusFilter =
       status === "ALL" ? undefined : (status as "PENDING" | "SENT" | "FRAUD");
 
-    const userSearchFilters: Prisma.UserWhereInput[] = search
-      ? [
-          { username: { contains: search, mode: "insensitive" } },
-          { email: { contains: search, mode: "insensitive" } },
-          { name: { contains: search, mode: "insensitive" } },
-        ]
-      : [];
+    const buildPayoutTokenClause = (
+      token: string,
+    ): Prisma.PayoutWhereInput => ({
+      OR: [
+        { paypalEmail: { contains: token, mode: "insensitive" } },
+        {
+          artist: {
+            is: {
+              OR: [
+                { username: { contains: token, mode: "insensitive" } },
+                { email: { contains: token, mode: "insensitive" } },
+                { name: { contains: token, mode: "insensitive" } },
+              ],
+            },
+          },
+        },
+      ],
+    });
 
     const where: Prisma.PayoutWhereInput = {
       ...(statusFilter ? { status: statusFilter } : {}),
-      ...(search
-        ? {
-            artist: {
-              is: {
-                OR: userSearchFilters,
-              },
-            },
-          }
+      ...(tokens.length > 0
+        ? { AND: tokens.map(buildPayoutTokenClause) }
         : {}),
     };
 

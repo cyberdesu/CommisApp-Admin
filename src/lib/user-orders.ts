@@ -1,5 +1,6 @@
 import "server-only";
 
+import { tokenizeSearch } from "@/lib/admin-api";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/prisma/generated/client";
 import type {
@@ -503,15 +504,51 @@ export async function getAdminOrdersList(params: {
     ADMIN_ORDER_PAGE_LIMIT_MAX,
   );
   const requestedPage = Math.max(1, params.page ?? 1);
-  const search = params.search?.trim() || "";
+  const searchRaw = params.search?.trim() || "";
+  const tokens = tokenizeSearch(searchRaw);
 
-  const userSearchFilters: Prisma.UserWhereInput[] = search
-    ? [
-        { username: { contains: search, mode: "insensitive" } },
-        { email: { contains: search, mode: "insensitive" } },
-        { name: { contains: search, mode: "insensitive" } },
-      ]
-    : [];
+  // cuid prefix "cl"/"cm" matches almost every order, so only enable id
+  // prefix search when token is long enough to be discriminating.
+  const ID_PREFIX_MIN_LENGTH = 6;
+  const buildTokenClause = (token: string): Prisma.OrderWhereInput => ({
+    OR: [
+      ...(token.length >= ID_PREFIX_MIN_LENGTH
+        ? [
+            {
+              id: { startsWith: token, mode: "insensitive" as const },
+            } satisfies Prisma.OrderWhereInput,
+          ]
+        : []),
+      { titleSnapshot: { contains: token, mode: "insensitive" } },
+      {
+        service: {
+          is: { title: { contains: token, mode: "insensitive" } },
+        },
+      },
+      {
+        artist: {
+          is: {
+            OR: [
+              { username: { contains: token, mode: "insensitive" } },
+              { email: { contains: token, mode: "insensitive" } },
+              { name: { contains: token, mode: "insensitive" } },
+            ],
+          },
+        },
+      },
+      {
+        client: {
+          is: {
+            OR: [
+              { username: { contains: token, mode: "insensitive" } },
+              { email: { contains: token, mode: "insensitive" } },
+              { name: { contains: token, mode: "insensitive" } },
+            ],
+          },
+        },
+      },
+    ],
+  });
 
   const attentionWhere: Prisma.OrderWhereInput | null =
     params.attention === "FLAGGED"
@@ -541,46 +578,8 @@ export async function getAdminOrdersList(params: {
         }
       : {}),
     ...(attentionWhere ?? {}),
-    ...(search
-      ? {
-          AND: [
-            {
-              OR: [
-                { id: { equals: search } },
-                {
-                  titleSnapshot: {
-                    contains: search,
-                    mode: "insensitive",
-                  },
-                },
-                {
-                  service: {
-                    is: {
-                      title: {
-                        contains: search,
-                        mode: "insensitive",
-                      },
-                    },
-                  },
-                },
-                {
-                  artist: {
-                    is: {
-                      OR: userSearchFilters,
-                    },
-                  },
-                },
-                {
-                  client: {
-                    is: {
-                      OR: userSearchFilters,
-                    },
-                  },
-                },
-              ],
-            },
-          ],
-        }
+    ...(tokens.length > 0
+      ? { AND: tokens.map(buildTokenClause) }
       : {}),
   };
 
