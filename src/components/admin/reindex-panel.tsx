@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AlertTriangle, Loader2, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -15,14 +15,21 @@ import {
 import { apiClient } from "@/lib/api/client";
 
 type IndexResult = { indexed: number; total: number };
-type ReindexResponse = {
-  data: {
+type ReindexJobSnapshot = {
+  jobId: string | null;
+  status: "idle" | "running" | "succeeded" | "failed";
+  startedAt: number | null;
+  finishedAt: number | null;
+  durationMs: number | null;
+  startedByAdminId: number | null;
+  result: {
     services: IndexResult;
     showcases: IndexResult;
     profiles: IndexResult;
-    durationMs: number;
-  };
+  } | null;
+  error: string | null;
 };
+type ReindexJobResponse = { data: ReindexJobSnapshot };
 
 type DeleteResult = { deleted: boolean };
 type DeleteResponse = {
@@ -35,9 +42,11 @@ type DeleteResponse = {
 };
 
 type PanelState =
-  | { mode: "reindex"; data: ReindexResponse["data"] }
+  | { mode: "reindex"; data: ReindexJobSnapshot }
   | { mode: "delete"; data: DeleteResponse["data"] }
   | null;
+
+const REINDEX_POLL_INTERVAL_MS = 2_000;
 
 const INDICES: {
   key: "services" | "showcases" | "profiles";
@@ -65,22 +74,84 @@ export function ReindexPanel() {
   const [isReindexing, setIsReindexing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [result, setResult] = useState<PanelState>(null);
+  const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (pollTimerRef.current) {
+        clearTimeout(pollTimerRef.current);
+        pollTimerRef.current = null;
+      }
+    };
+  }, []);
 
   function getIndexStatus(key: (typeof INDICES)[number]["key"]): string {
     if (!result) return "—";
 
     if (result.mode === "reindex") {
-      const stats = result.data[key];
+      const stats = result.data.result?.[key];
+      if (!stats) return result.data.status === "running" ? "…" : "—";
       return `${stats.indexed}/${stats.total}`;
     }
 
     return result.data[key].deleted ? "Deleted" : "Missing";
   }
 
+  function stopPolling() {
+    if (pollTimerRef.current) {
+      clearTimeout(pollTimerRef.current);
+      pollTimerRef.current = null;
+    }
+  }
+
+  function pollReindexStatus(jobId: string) {
+    pollTimerRef.current = setTimeout(async () => {
+      try {
+        const { data } = await apiClient.get<ReindexJobResponse>(
+          "/admin/search/reindex",
+        );
+        const snap = data.data;
+        setResult({ mode: "reindex", data: snap });
+
+        if (snap.jobId !== jobId) {
+          stopPolling();
+          setIsReindexing(false);
+          return;
+        }
+
+        if (snap.status === "running") {
+          pollReindexStatus(jobId);
+          return;
+        }
+
+        stopPolling();
+        setIsReindexing(false);
+
+        if (snap.status === "succeeded") {
+          toast.success("Reindex completed", {
+            description: snap.durationMs
+              ? `Finished in ${Math.round(snap.durationMs / 1000)}s`
+              : undefined,
+          });
+        } else if (snap.status === "failed") {
+          toast.error("Reindex failed", {
+            description: snap.error ?? "Unknown error",
+          });
+        }
+      } catch (error) {
+        stopPolling();
+        setIsReindexing(false);
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
+        toast.error("Reindex status check failed", { description: message });
+      }
+    }, REINDEX_POLL_INTERVAL_MS);
+  }
+
   async function handleReindex() {
     if (isReindexing || isDeleting) return;
     const confirmed = window.confirm(
-      "Rebuild all Elasticsearch indices from Postgres? This may take a few minutes on large datasets and will temporarily increase load.",
+      "Rebuild all Elasticsearch indices from Postgres? Runs in the background — you'll see live progress here and can leave this page.",
     );
     if (!confirmed) return;
 
@@ -88,19 +159,43 @@ export function ReindexPanel() {
     setResult(null);
 
     try {
-      const { data } = await apiClient.post<ReindexResponse>(
+      const { data } = await apiClient.post<ReindexJobResponse>(
         "/admin/search/reindex",
       );
-      setResult({ mode: "reindex", data: data.data });
-      toast.success("Reindex completed", {
-        description: `Finished in ${Math.round(data.data.durationMs / 1000)}s`,
+      const snap = data.data;
+      setResult({ mode: "reindex", data: snap });
+
+      if (!snap.jobId) {
+        setIsReindexing(false);
+        toast.error("Reindex did not start");
+        return;
+      }
+
+      if (snap.status !== "running") {
+        setIsReindexing(false);
+        if (snap.status === "succeeded") {
+          toast.success("Reindex completed", {
+            description: snap.durationMs
+              ? `Finished in ${Math.round(snap.durationMs / 1000)}s`
+              : undefined,
+          });
+        } else if (snap.status === "failed") {
+          toast.error("Reindex failed", {
+            description: snap.error ?? "Unknown error",
+          });
+        }
+        return;
+      }
+
+      toast.message("Reindex started", {
+        description: "Running in background. Progress updates every 2s.",
       });
+      pollReindexStatus(snap.jobId);
     } catch (error) {
+      setIsReindexing(false);
       const message =
         error instanceof Error ? error.message : "Unknown error";
-      toast.error("Reindex failed", { description: message });
-    } finally {
-      setIsReindexing(false);
+      toast.error("Failed to start reindex", { description: message });
     }
   }
 
@@ -220,8 +315,20 @@ export function ReindexPanel() {
           </div>
           {result && (
             <p className="text-xs text-muted-foreground">
-              Last {result.mode === "reindex" ? "reindex" : "delete"} run:{" "}
-              {Math.round(result.data.durationMs / 1000)}s
+              {result.mode === "reindex"
+                ? result.data.status === "running"
+                  ? "Reindex running… elapsed " +
+                    Math.round(
+                      ((Date.now() - (result.data.startedAt ?? Date.now())) /
+                        1000),
+                    ) +
+                    "s"
+                  : `Last reindex run: ${
+                      result.data.durationMs
+                        ? Math.round(result.data.durationMs / 1000)
+                        : 0
+                    }s`
+                : `Last delete run: ${Math.round(result.data.durationMs / 1000)}s`}
             </p>
           )}
         </div>
