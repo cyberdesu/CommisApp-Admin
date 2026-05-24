@@ -14,10 +14,7 @@
     "postinstall": "prisma generate",
     "create-admin": "pnpm run create-admin:prod",
     "create-admin:dev": "APP_ENV=dev tsx scripts/create-admin.ts",
-    "create-admin:prod": "APP_ENV=prod tsx scripts/create-admin.ts",
-    "apply-realtime-triggers": "pnpm run apply-realtime-triggers:prod",
-    "apply-realtime-triggers:dev": "APP_ENV=dev tsx scripts/apply-realtime-triggers.ts",
-    "apply-realtime-triggers:prod": "APP_ENV=prod tsx scripts/apply-realtime-triggers.ts"
+    "create-admin:prod": "APP_ENV=prod tsx scripts/create-admin.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
