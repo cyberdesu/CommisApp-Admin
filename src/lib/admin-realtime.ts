@@ -1,7 +1,10 @@
 import "server-only";
 
+import { Client } from "pg";
+
 import prisma from "@/lib/prisma";
 import { createLogger } from "@/lib/logger";
+import { requireDatabaseUrl } from "@/lib/env/database-url";
 import type {
   AdminRealtimeEvent,
   AdminRealtimeTopic,
@@ -15,9 +18,14 @@ type AdminRealtimeState = {
   isPolling: boolean;
   poller: ReturnType<typeof setInterval> | null;
   subscribers: Map<string, AdminRealtimeSubscriber>;
+  listenClient: Client | null;
+  listenConnecting: Promise<Client | null> | null;
 };
 
-const ADMIN_REALTIME_POLL_INTERVAL_MS = 5_000;
+const ADMIN_REALTIME_POLL_INTERVAL_MS = 30_000;
+const PG_NOTIFY_CHANNEL = "admin_realtime";
+const LISTEN_RECONNECT_DELAY_MS = 5_000;
+const VALID_TOPICS = new Set<AdminRealtimeTopic>(["orders", "chats", "finance"]);
 const logger = createLogger({ component: "admin-realtime" });
 
 declare global {
@@ -31,10 +39,16 @@ function getState(): AdminRealtimeState {
       isPolling: false,
       poller: null,
       subscribers: new Map(),
+      listenClient: null,
+      listenConnecting: null,
     };
   }
 
   return globalThis.__adminRealtimeState;
+}
+
+function isAdminRealtimeTopic(value: string): value is AdminRealtimeTopic {
+  return VALID_TOPICS.has(value as AdminRealtimeTopic);
 }
 
 function buildFingerprint(parts: Array<string | number | null | undefined>) {
@@ -55,35 +69,15 @@ async function fetchSnapshot(): Promise<AdminRealtimeSnapshot> {
     latestMessage,
   ] = await Promise.all([
     prisma.order.count(),
-    prisma.order.aggregate({
-      _max: {
-        updatedAt: true,
-      },
-    }),
+    prisma.order.aggregate({ _max: { updatedAt: true } }),
     prisma.payment.count(),
-    prisma.payment.aggregate({
-      _max: {
-        updatedAt: true,
-      },
-    }),
+    prisma.payment.aggregate({ _max: { updatedAt: true } }),
     prisma.payout.count(),
-    prisma.payout.aggregate({
-      _max: {
-        updatedAt: true,
-      },
-    }),
+    prisma.payout.aggregate({ _max: { updatedAt: true } }),
     prisma.conversation.count(),
-    prisma.conversation.aggregate({
-      _max: {
-        updatedAt: true,
-      },
-    }),
+    prisma.conversation.aggregate({ _max: { updatedAt: true } }),
     prisma.message.count(),
-    prisma.message.aggregate({
-      _max: {
-        updatedAt: true,
-      },
-    }),
+    prisma.message.aggregate({ _max: { updatedAt: true } }),
   ]);
 
   return {
@@ -118,7 +112,7 @@ function dispatchEvent(event: AdminRealtimeEvent) {
   }
 }
 
-async function pollSnapshot() {
+async function pollSnapshot(triggeredTopics?: AdminRealtimeTopic[]) {
   const state = getState();
 
   if (state.isPolling) return;
@@ -137,14 +131,23 @@ async function pollSnapshot() {
     const previousSnapshot = state.currentSnapshot;
     state.currentSnapshot = nextSnapshot;
 
-    (Object.keys(nextSnapshot) as AdminRealtimeTopic[]).forEach((topic) => {
-      if (previousSnapshot[topic] === nextSnapshot[topic]) return;
+    const trigger: AdminRealtimeEvent["trigger"] = triggeredTopics?.length
+      ? "direct"
+      : "poll";
+    const topicsToCheck = triggeredTopics?.length
+      ? triggeredTopics
+      : (Object.keys(nextSnapshot) as AdminRealtimeTopic[]);
+
+    topicsToCheck.forEach((topic) => {
+      if (previousSnapshot[topic] === nextSnapshot[topic] && trigger === "poll") {
+        return;
+      }
 
       dispatchEvent({
         topic,
         fingerprint: nextSnapshot[topic],
         emittedAt: new Date().toISOString(),
-        trigger: "poll",
+        trigger,
       });
     });
   } catch (error) {
@@ -152,6 +155,85 @@ async function pollSnapshot() {
   } finally {
     state.isPolling = false;
   }
+}
+
+function teardownListenClient(client: Client | null) {
+  if (!client) return;
+  try {
+    client.removeAllListeners();
+    void client.end().catch(() => {});
+  } catch {}
+}
+
+async function connectListenClient(): Promise<Client | null> {
+  const state = getState();
+
+  if (state.listenClient) return state.listenClient;
+  if (state.listenConnecting) return state.listenConnecting;
+
+  state.listenConnecting = (async () => {
+    try {
+      const client = new Client({
+        connectionString: requireDatabaseUrl("admin-realtime LISTEN"),
+      });
+
+      client.on("error", (err) => {
+        logger.error("Admin realtime LISTEN client error", { error: err });
+        const current = getState();
+        if (current.listenClient === client) {
+          current.listenClient = null;
+        }
+        teardownListenClient(client);
+        scheduleListenReconnect();
+      });
+
+      client.on("end", () => {
+        const current = getState();
+        if (current.listenClient === client) {
+          current.listenClient = null;
+          scheduleListenReconnect();
+        }
+      });
+
+      client.on("notification", (msg) => {
+        if (msg.channel !== PG_NOTIFY_CHANNEL) return;
+        const payload = msg.payload?.trim();
+        if (!payload || !isAdminRealtimeTopic(payload)) {
+          logger.warn("Ignoring NOTIFY payload with unknown topic", {
+            payload,
+          });
+          return;
+        }
+        void pollSnapshot([payload]);
+      });
+
+      await client.connect();
+      await client.query(`LISTEN ${PG_NOTIFY_CHANNEL}`);
+
+      state.listenClient = client;
+      logger.info("Admin realtime LISTEN client connected", {
+        channel: PG_NOTIFY_CHANNEL,
+      });
+      return client;
+    } catch (err) {
+      logger.error("Admin realtime LISTEN client connect failed", { error: err });
+      scheduleListenReconnect();
+      return null;
+    } finally {
+      const current = getState();
+      current.listenConnecting = null;
+    }
+  })();
+
+  return state.listenConnecting;
+}
+
+function scheduleListenReconnect() {
+  setTimeout(() => {
+    const state = getState();
+    if (state.subscribers.size === 0) return;
+    void connectListenClient();
+  }, LISTEN_RECONNECT_DELAY_MS).unref?.();
 }
 
 function ensurePoller() {
@@ -181,6 +263,13 @@ function stopPollerIfIdle() {
   clearInterval(state.poller);
   state.poller = null;
   logger.info("Stopped admin realtime poller");
+
+  if (state.listenClient) {
+    const client = state.listenClient;
+    state.listenClient = null;
+    teardownListenClient(client);
+    logger.info("Closed admin realtime LISTEN client (no subscribers)");
+  }
 }
 
 export function subscribeToAdminRealtime(
@@ -191,6 +280,7 @@ export function subscribeToAdminRealtime(
 
   state.subscribers.set(subscriptionId, subscriber);
   ensurePoller();
+  void connectListenClient();
 
   return () => {
     const activeState = getState();
@@ -209,22 +299,30 @@ export async function getAdminRealtimeSnapshot() {
   return state.currentSnapshot;
 }
 
+async function emitPgNotify(topic: AdminRealtimeTopic) {
+  try {
+    await prisma.$executeRaw`SELECT pg_notify(${PG_NOTIFY_CHANNEL}, ${topic})`;
+  } catch (error) {
+    logger.error("Failed to emit pg_notify for admin realtime", {
+      topic,
+      error,
+    });
+  }
+}
+
 export function broadcastAdminRealtimeTopics(
   topics: AdminRealtimeTopic[],
-  trigger: AdminRealtimeEvent["trigger"] = "direct",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _trigger: AdminRealtimeEvent["trigger"] = "direct",
 ) {
-  const state = getState();
   const dedupedTopics = [...new Set(topics)];
 
-  dedupedTopics.forEach((topic) => {
-    const fingerprint = state.currentSnapshot?.[topic] ?? "unknown";
-    dispatchEvent({
-      topic,
-      fingerprint,
-      emittedAt: new Date().toISOString(),
-      trigger,
-    });
-  });
+  // Emit pg_notify so all Node instances LISTENing (including ours) react via
+  // the unified notification → poll path. Falls back to local poll if NOTIFY
+  // fails or listener is not connected.
+  for (const topic of dedupedTopics) {
+    void emitPgNotify(topic);
+  }
 
-  void pollSnapshot();
+  void pollSnapshot(dedupedTopics);
 }

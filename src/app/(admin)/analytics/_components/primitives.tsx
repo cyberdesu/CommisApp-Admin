@@ -1,51 +1,6 @@
 import { cn } from "@/lib/utils";
 import { fmtNum } from "../_lib/helpers";
 
-export function KpiCell({
-  label,
-  value,
-  sub,
-  icon,
-  featured,
-}: {
-  label: string;
-  value: string;
-  sub: React.ReactNode;
-  icon?: React.ReactNode;
-  featured?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "relative flex min-w-0 flex-col gap-1.5 border-r border-border/60 px-5 py-5 last:border-r-0",
-        featured && "bg-gradient-to-br from-emerald-50/70 to-transparent",
-      )}
-    >
-      {featured && (
-        <span className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full bg-emerald-500" />
-      )}
-      <div
-        className={cn(
-          "flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em]",
-          featured ? "text-emerald-700" : "text-muted-foreground",
-        )}
-      >
-        {icon}
-        {label}
-      </div>
-      <div
-        className={cn(
-          "truncate font-mono text-[22px] font-semibold tracking-tight tabular-nums",
-          featured ? "text-emerald-900" : "text-foreground",
-        )}
-      >
-        {value}
-      </div>
-      <div className="text-[11.5px]">{sub}</div>
-    </div>
-  );
-}
-
 export function FlowLegend({
   label,
   percent,
