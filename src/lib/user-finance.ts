@@ -354,56 +354,50 @@ export async function getUserFinanceDetail(userId: number) {
 }
 
 export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
+  type PaymentAggRow = {
+    currency: string;
+    total_count: number;
+    sum_amount: Prisma.Decimal | string | null;
+    sum_platform_fee: Prisma.Decimal | string | null;
+    sum_artist_net: Prisma.Decimal | string | null;
+    sum_paypal_fee: Prisma.Decimal | string | null;
+    synced_count: number;
+    pending_sync_count: number;
+  };
+
+  const toDecimal = (value: Prisma.Decimal | string | null): Prisma.Decimal => {
+    if (value === null || value === undefined) return ZERO;
+    if (value instanceof Prisma.Decimal) return value;
+    return new Prisma.Decimal(value);
+  };
+
   const [
-    paymentGroups,
-    syncedPaymentGroups,
-    pendingFeeSyncGroups,
+    paymentAggRows,
     payoutGroups,
     payoutFeeRows,
     pendingPayoutFeeSyncPayouts,
     earningArtistGroups,
     withdrawnArtistGroups,
   ] = await Promise.all([
-    prisma.payment.groupBy({
-      by: ["currency"],
-      where: {
-        status: "COMPLETED",
-      },
-      _count: {
-        _all: true,
-      },
-      _sum: {
-        amount: true,
-        platformFee: true,
-        artistNet: true,
-        paypalFee: true,
-      },
-    }),
-    prisma.payment.groupBy({
-      by: ["currency"],
-      where: {
-        status: "COMPLETED",
-        paypalFeeSyncedAt: {
-          not: null,
-        },
-      },
-      _count: {
-        _all: true,
-      },
-    }),
-    prisma.payment.groupBy({
-      by: ["currency"],
-      where: {
-        status: "COMPLETED",
-        paypalCaptureId: {
-          not: null,
-        },
-        paypalFeeSyncedAt: null,
-      },
-      _count: {
-        _all: true,
-      },
-    }),
+    prisma.$queryRaw<PaymentAggRow[]>(
+      Prisma.sql`
+        SELECT
+          currency,
+          COUNT(*)::int AS total_count,
+          SUM(amount) AS sum_amount,
+          SUM("platformFee") AS sum_platform_fee,
+          SUM("artistNet") AS sum_artist_net,
+          SUM("paypalFee") AS sum_paypal_fee,
+          COUNT(*) FILTER (WHERE "paypalFeeSyncedAt" IS NOT NULL)::int AS synced_count,
+          COUNT(*) FILTER (
+            WHERE "paypalCaptureId" IS NOT NULL
+              AND "paypalFeeSyncedAt" IS NULL
+          )::int AS pending_sync_count
+        FROM payments
+        WHERE status = 'COMPLETED'
+        GROUP BY currency
+      `,
+    ),
     prisma.payout.groupBy({
       by: ["currency", "status"],
       where: {
@@ -460,21 +454,14 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
 
   const currencyMap = new Map<string, MutableCurrencyTotals>();
   const revenueMap = new Map<string, MutablePlatformRevenueTotals>();
-  const syncedCountsByCurrency = new Map(
-    syncedPaymentGroups.map((group) => [
-      normalizeCurrency(group.currency),
-      group._count._all,
-    ]),
-  );
-  const pendingCountsByCurrency = new Map(
-    pendingFeeSyncGroups.map((group) => [
-      normalizeCurrency(group.currency),
-      group._count._all,
-    ]),
-  );
 
-  for (const payment of paymentGroups) {
-    const currency = normalizeCurrency(payment.currency);
+  for (const row of paymentAggRows) {
+    const currency = normalizeCurrency(row.currency);
+    const sumAmount = toDecimal(row.sum_amount);
+    const sumPlatformFee = toDecimal(row.sum_platform_fee);
+    const sumArtistNet = toDecimal(row.sum_artist_net);
+    const sumPaypalFee = toDecimal(row.sum_paypal_fee);
+
     const totals =
       currencyMap.get(currency) ??
       {
@@ -483,7 +470,7 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
         pendingWithdrawals: ZERO,
       };
 
-    totals.grossEarnings = totals.grossEarnings.add(payment._sum.amount ?? ZERO);
+    totals.grossEarnings = totals.grossEarnings.add(sumAmount);
     currencyMap.set(currency, totals);
 
     const rev = revenueMap.get(currency) ?? {
@@ -496,15 +483,13 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
       syncedPaymentFeePayments: 0,
       pendingPaymentFeeSyncPayments: 0,
     };
-    rev.grossVolume = rev.grossVolume.add(payment._sum.amount ?? ZERO);
-    rev.platformFees = rev.platformFees.add(payment._sum.platformFee ?? ZERO);
-    rev.paymentPaypalFees = rev.paymentPaypalFees.add(payment._sum.paypalFee ?? ZERO);
-    rev.adminNetProfit = rev.adminNetProfit.add(
-      (payment._sum.platformFee ?? ZERO).sub(payment._sum.paypalFee ?? ZERO),
-    );
-    rev.artistPayouts = rev.artistPayouts.add(payment._sum.artistNet ?? ZERO);
-    rev.syncedPaymentFeePayments = syncedCountsByCurrency.get(currency) ?? 0;
-    rev.pendingPaymentFeeSyncPayments = pendingCountsByCurrency.get(currency) ?? 0;
+    rev.grossVolume = rev.grossVolume.add(sumAmount);
+    rev.platformFees = rev.platformFees.add(sumPlatformFee);
+    rev.paymentPaypalFees = rev.paymentPaypalFees.add(sumPaypalFee);
+    rev.adminNetProfit = rev.adminNetProfit.add(sumPlatformFee.sub(sumPaypalFee));
+    rev.artistPayouts = rev.artistPayouts.add(sumArtistNet);
+    rev.syncedPaymentFeePayments = row.synced_count;
+    rev.pendingPaymentFeeSyncPayments = row.pending_sync_count;
     revenueMap.set(currency, rev);
   }
 
@@ -571,8 +556,8 @@ export async function getPlatformFinanceStats(): Promise<PlatformFinanceStats> {
   return {
     artistsWithEarnings: earningArtistGroups.length,
     artistsWithWithdrawals: withdrawnArtistGroups.length,
-    completedPayments: paymentGroups.reduce(
-      (sum, group) => sum + group._count._all,
+    completedPayments: paymentAggRows.reduce(
+      (sum, row) => sum + row.total_count,
       0,
     ),
     syncedPaymentFeePayments: revenue.reduce(

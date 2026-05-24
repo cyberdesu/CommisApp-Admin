@@ -3,7 +3,31 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSessionAdmin } from "@/lib/auth/session";
 import { createRequestLogger } from "@/lib/logger";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@/prisma/generated/client";
 import { getPlatformFinanceStats } from "@/lib/user-finance";
+
+type UserAccountCountsRow = {
+  total: number;
+  verified: number;
+  verified_artists: number;
+  admin: number;
+  banned: number;
+};
+
+async function getUserAccountCounts(): Promise<UserAccountCountsRow> {
+  const rows = await prisma.$queryRaw<UserAccountCountsRow[]>(
+    Prisma.sql`
+      SELECT
+        COUNT(*)::int AS total,
+        COUNT(*) FILTER (WHERE verified = true)::int AS verified,
+        COUNT(*) FILTER (WHERE "verifiedArtists" = true)::int AS verified_artists,
+        COUNT(*) FILTER (WHERE role = 'admin')::int AS admin,
+        COUNT(*) FILTER (WHERE "isBanned" = true)::int AS banned
+      FROM "User"
+    `,
+  );
+  return rows[0] ?? { total: 0, verified: 0, verified_artists: 0, admin: 0, banned: 0 };
+}
 
 const RESPONSE_HEADERS = {
   "Cache-Control": "private, no-store",
@@ -27,21 +51,18 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const [
-      totalUsers,
-      verifiedCount,
-      verifiedArtistCount,
-      adminCount,
-      bannedCount,
-      finance,
-    ] = await Promise.all([
-        prisma.user.count(),
-        prisma.user.count({ where: { verified: true } }),
-        prisma.user.count({ where: { verifiedArtists: true } }),
-        prisma.user.count({ where: { role: "admin" } }),
-        prisma.user.count({ where: { isBanned: true } }),
-        getPlatformFinanceStats(),
-      ]);
+    const [userCounts, finance] = await Promise.all([
+      getUserAccountCounts(),
+      getPlatformFinanceStats(),
+    ]);
+
+    const {
+      total: totalUsers,
+      verified: verifiedCount,
+      verified_artists: verifiedArtistCount,
+      admin: adminCount,
+      banned: bannedCount,
+    } = userCounts;
 
     logger.info("Fetched user stats", {
       adminId: admin.id,
