@@ -28,8 +28,6 @@ const nextBin = path.join(cwd, "node_modules", "next", "dist", "bin", "next");
 const baseApp = {
   script: nextBin,
   cwd,
-  exec_mode: "fork",
-  instances: 1,
   max_memory_restart: "1G",
   autorestart: true,
   watch: false,
@@ -45,25 +43,25 @@ module.exports = {
       ...baseApp,
       name: "admin-dev",
       args: "start -p 3011",
+      exec_mode: "fork",
+      instances: 1,
       env: {
         NODE_ENV: "production",
         APP_ENV: "dev",
         PORT: "3011",
       },
-      error_file: "/root/.pm2/logs/admin-dev-error.log",
-      out_file: "/root/.pm2/logs/admin-dev-out.log",
     },
     {
       ...baseApp,
       name: "admin-prod",
       args: "start -p 3010",
+      exec_mode: "fork",
+      instances: 1,
       env: {
         NODE_ENV: "production",
         APP_ENV: "prod",
         PORT: "3010",
       },
-      error_file: "/root/.pm2/logs/admin-prod-error.log",
-      out_file: "/root/.pm2/logs/admin-prod-out.log",
     },
   ],
 };
